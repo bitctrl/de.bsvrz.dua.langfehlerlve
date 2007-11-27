@@ -34,7 +34,7 @@ import java.util.List;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.langfehlerlve.DELzFhMessStellenGruppe;
+import de.bsvrz.dua.langfehlerlve.modell.DELzFhMessStellenGruppe;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -72,6 +72,16 @@ implements StandardApplication{
 	 */
 	private ArrayList<String> komArgumente = new ArrayList<String>();
 	
+	
+	/**
+	 * Erfragt den Namen dieser Applikation
+	 * 
+	 * @return der Name dieser Applikation
+	 */
+	public static final String getName(){
+		return "DE Langzeit-Fehlererkennung"; //$NON-NLS-1$
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -95,7 +105,10 @@ implements StandardApplication{
 		}
 		LOGGER.config(config);
 		
-		DELzFhMessStellenGruppe.initialisiere(dav, msgObjekte);
+		for(SystemObject msgObjekt:msgObjekte){
+			new DELzFhMessStellenGruppe(dav, msgObjekt, true);
+			new DELzFhMessStellenGruppe(dav, msgObjekt, false);
+		}
 	}
 	
 	
