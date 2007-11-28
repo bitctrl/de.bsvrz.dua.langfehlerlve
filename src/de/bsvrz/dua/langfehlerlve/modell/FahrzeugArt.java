@@ -71,6 +71,7 @@ public class FahrzeugArt {
 	 */
 	private FahrzeugArt(String attributName){
 		this.attributName = attributName;
+		INSTANZEN.add(this);
 	}
 	
 	

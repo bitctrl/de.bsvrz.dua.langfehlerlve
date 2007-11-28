@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.langfehlerlve.modell;
+package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dua.langfehlerlve.parameter.AtgParameterMessStellenGruppe;
@@ -34,7 +34,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 
 /**
- * TODO
+ * Grundgeruest einer Klasse, die immer die aktuellen Parameter einer Messstellengruppe
+ * in Bezug auf ein bestimmtes Vergleichsintervall (Lang- oder Kurzzeit) benoetigt
  *  
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -63,24 +64,24 @@ implements IAtgParameterMessStellenGruppeListener{
 	 */
 	protected boolean langZeit = false;
 	
-	
+		
 	/**
-	 * Standardkonstruktor
+	 * Initialisiert diese Klasse anstelle eines Konstruktors
 	 * 
 	 * @param dav Datenverteiler-Verbindung
-	 * @param messStellenGruppe die mit diesem Objekt assoziierte Messstellengruppe
-	 * @param langZeit Indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
+	 * @param messStellenGruppe die mit diesem Objekt zu assoziierende Messstellengruppe
+	 * @param langZeit indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
 	 * kuemmern soll
 	 */
-	protected AbstraktDELzFhObjekt(final ClientDavInterface dav, 
-								   final DELzFhMessStellenGruppe messStellenGruppe,
-								   final boolean langZeit){
+	protected final void init(final ClientDavInterface dav, 
+						  	  final DELzFhMessStellenGruppe messStellenGruppe,
+						  	  final boolean langZeit){
 		if(DAV == null){
 			DAV = dav;
 		}
 		this.messStellenGruppe = messStellenGruppe;
 		this.langZeit = langZeit;
-		AtgParameterMessStellenGruppe.getInstanz(dav, messStellenGruppe.getObjekt()).addListener(this);
+		AtgParameterMessStellenGruppe.getInstanz(dav, messStellenGruppe.getObjekt()).addListener(this);		
 	}
 	
 	

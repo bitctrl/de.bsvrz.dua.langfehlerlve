@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.langfehlerlve.modell;
+package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +45,7 @@ import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
@@ -120,17 +121,19 @@ implements ClientReceiverInterface{
 									DELzFhMessStellenGruppe messStellenGruppe,
 									final boolean langZeit)
 	throws DUAInitialisierungsException{
-		super(dav, messStellenGruppe, langZeit);
 		this.mqObjekt = mqObjekt;
+		
 		DataDescription fsAnalyseDatenBeschreibung = new DataDescription(
-				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_FS),
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
 				dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
+		super.init(dav, messStellenGruppe, langZeit);
+		
 		dav.subscribeReceiver(this,
 				mqObjekt,
 				fsAnalyseDatenBeschreibung,
 				ReceiveOptions.normal(),
-				ReceiverRole.receiver());			
+				ReceiverRole.receiver());
 	}
 
 	

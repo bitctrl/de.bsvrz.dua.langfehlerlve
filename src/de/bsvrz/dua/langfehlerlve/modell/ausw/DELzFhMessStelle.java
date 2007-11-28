@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.langfehlerlve.modell;
+package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,6 +39,7 @@ import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
@@ -125,10 +126,36 @@ implements IDELzFhDatenListener,
 							   SystemObject msObjekt,
 							   DELzFhMessStellenGruppe messStellenGruppe,
 							   final boolean langZeit)
-	throws Exception{
-		super(dav, messStellenGruppe, langZeit);
-		
+	throws Exception{		
 		this.messStelle = MessStelle.getInstanz(msObjekt);
+		
+		this.mqKanal = new PublikationsKanal(dav);
+		this.msKanal = new PublikationsKanal(dav);
+		
+		this.mqDb = new DataDescription(
+				dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
+		this.msDb = new DataDescription(
+				dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.messStelleKurzZeit")); //$NON-NLS-1$
+		if(langZeit){
+			this.mqDb = new DataDescription(
+					dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+					dav.getDataModel().getAspect("asp.messQuerschnittLangZeit")); //$NON-NLS-1$
+			this.msDb = new DataDescription(
+					dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+					dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
+		}
+		
+		dav.subscribeSender(this, this.messStelle.getSystemObject(),
+						this.mqDb, 
+						SenderRole.source());
+		dav.subscribeSender(this, this.messStelle.getSystemObject(),
+						this.msDb, 
+						SenderRole.source());
+		
+		super.init(dav, messStellenGruppe, langZeit);
+		
 		if(this.messStelle != null){			
 			if(this.messStelle.getPruefling() != null){
 				messStellenGruppe.getMq(this.messStelle.getPruefling().getSystemObject()).addListener(this);
@@ -143,31 +170,7 @@ implements IDELzFhDatenListener,
 			}else{
 				throw new DUAInitialisierungsException("Messstelle " + msObjekt + //$NON-NLS-1$
 					" besitzt keinen Pruefling (MQ)"); //$NON-NLS-1$				
-			}
-			
-			this.mqKanal = new PublikationsKanal(dav);
-			this.msKanal = new PublikationsKanal(dav);
-			this.mqDb = new DataDescription(
-					dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-					dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
-			this.msDb = new DataDescription(
-					dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-					dav.getDataModel().getAspect("asp.messStelleKurzZeit")); //$NON-NLS-1$
-			if(langZeit){
-				this.mqDb = new DataDescription(
-						dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-						dav.getDataModel().getAspect("asp.messQuerschnittLangZeit")); //$NON-NLS-1$
-				this.msDb = new DataDescription(
-						dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-						dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
-			}
-			
-			dav.subscribeSender(this, this.messStelle.getSystemObject(),
-							this.mqDb, 
-							SenderRole.source());
-			dav.subscribeSender(this, this.messStelle.getSystemObject(),
-							this.msDb, 
-							SenderRole.source());
+			}			
 		}else{
 			throw new DUAInitialisierungsException("Messstelle " + msObjekt + //$NON-NLS-1$
 					" konnte nicht ausgelesen werden"); //$NON-NLS-1$
@@ -320,7 +323,7 @@ implements IDELzFhDatenListener,
 					qAbfahrt += abfahrtsDatum.getQ(art);
 				}
 			}			
-		}		
+		}
 		
 		return q + qZufahrt - qAbfahrt; 
 	}
@@ -342,23 +345,28 @@ implements IDELzFhDatenListener,
 			if(aktuellesIntervall != null){
 				intervall = aktuellesIntervall;
 
+				boolean brk = false;
 				if(this.messStelle.getPruefling().getSystemObject().equals(mq)){
 					pDatum = aktuellesIntervall.getDatum();
+					brk = true;
 				}
 				
-				boolean brk = false;
-				for(MessQuerschnittAllgemein zufahrt:this.messStelle.getZufahrten()){
-					if(zufahrt.getSystemObject().equals(mq)){
-						zufahrtsDaten.add(aktuellesIntervall.getDatum());
-						brk = true;
-						break;
+				if(!brk){
+					for(MessQuerschnittAllgemein zufahrt:this.messStelle.getZufahrten()){
+						if(zufahrt.getSystemObject().equals(mq)){
+							zufahrtsDaten.add(aktuellesIntervall.getDatum());
+							brk = true;
+							break;
+						}
 					}
 				}
-				if(brk)break;
-				for(MessQuerschnittAllgemein abfahrt:this.messStelle.getZufahrten()){
-					if(abfahrt.getSystemObject().equals(mq)){
-						abfahrtsDaten.add(aktuellesIntervall.getDatum());
-						break;
+				
+				if(!brk){
+					for(MessQuerschnittAllgemein abfahrt:this.messStelle.getAbfahrten()){
+						if(abfahrt.getSystemObject().equals(mq)){
+							abfahrtsDaten.add(aktuellesIntervall.getDatum());
+							break;
+						}
 					}
 				}
 			}
@@ -397,7 +405,7 @@ implements IDELzFhDatenListener,
 		
 		Data nutzDaten = DAV.createData(this.msDb.getAttributeGroup());
 		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
-			if(this.fertigesIntervall.getDatum().getQ(fahrzeugArt) >= 0.0){
+			if(this.fertigesIntervall.getDatum().getQ(fahrzeugArt) < 0.0){
 				nutzDaten.getUnscaledValue(
 						fahrzeugArt.getAttributName()).set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}else{
@@ -447,7 +455,7 @@ implements IDELzFhDatenListener,
 			if(!intervallDatum.getDatum().isKeineDaten()){
 				nutzDaten = DAV.createData(this.mqDb.getAttributeGroup());
 				for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
-					if(intervallDatum.getDatum().getQ(fahrzeugArt) >= 0.0){
+					if(intervallDatum.getDatum().getQ(fahrzeugArt) < 0.0){
 						nutzDaten.getUnscaledValue(
 								fahrzeugArt.getAttributName()).set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					}else{

@@ -34,7 +34,7 @@ import java.util.List;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.langfehlerlve.modell.DELzFhMessStellenGruppe;
+import de.bsvrz.dua.langfehlerlve.modell.ausw.DELzFhMessStellenGruppe;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -96,8 +96,10 @@ implements StandardApplication{
 				this.komArgumente));
 				
 		Collection<SystemObject> msgObjekte = 
-			DUAUtensilien.getBasisInstanzen(dav.getDataModel().getType(DUAKonstanten.TYP_MESS_STELLEN_GRUPPE),
-						dav, kbFilter);
+			DUAUtensilien.getBasisInstanzen(
+					dav.getDataModel().getType(DUAKonstanten.TYP_MESS_STELLEN_GRUPPE),
+					dav,
+					kbFilter);
 		
 		String config = "Betrachtete Messstellengruppen:\n"; //$NON-NLS-1$
 		for(SystemObject msgObjekt:msgObjekte){
@@ -106,8 +108,8 @@ implements StandardApplication{
 		LOGGER.config(config);
 		
 		for(SystemObject msgObjekt:msgObjekte){
-			new DELzFhMessStellenGruppe(dav, msgObjekt, true);
-			new DELzFhMessStellenGruppe(dav, msgObjekt, false);
+			new DELzFhMessStellenGruppe(dav, msgObjekt, DELzFhMessStellenGruppe.LANGZEIT_AUSWERTUNG);
+			new DELzFhMessStellenGruppe(dav, msgObjekt, DELzFhMessStellenGruppe.KURZZEIT_AUSWERTUNG);
 		}
 	}
 	

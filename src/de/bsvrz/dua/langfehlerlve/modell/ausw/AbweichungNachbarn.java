@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.langfehlerlve.modell;
+package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -43,12 +43,15 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung;
+import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
+import de.bsvrz.dua.langfehlerlve.modell.Rechenwerk;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
 import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
@@ -146,7 +149,7 @@ implements ClientSenderInterface,
 								 DELzFhMessQuerschnitt messQuerschnitt,
 								 boolean langZeit)
 	throws Exception{
-		super(dav, messStellenGruppe, langZeit);
+		super.init(dav, messStellenGruppe, langZeit);
 		
 		if(PUB_BESCHREIBUNG_LZ == null){
 			PUB_BESCHREIBUNG_LZ = new DataDescription(
@@ -179,7 +182,6 @@ implements ClientSenderInterface,
 	 * Initialisiert (loescht) den Online-Puffer dieser Klasse
 	 */
 	private final synchronized void initPuffer(){
-		this.puffer.put(this.messStelle.getMessStelle().getSystemObject(), null);
 		this.puffer.put(this.messQuerschnitt.getObjekt(), null);
 		for(SystemObject rms:this.restMessStellen){
 			this.puffer.put(rms, null);
@@ -203,27 +205,25 @@ implements ClientSenderInterface,
 			this.initPuffer();
 		}else{
 			synchronized (this.puffer) {				
-				if(!intervallDatum.getDatum().isKeineDaten()){
-					long pufferZeit = -1;
-					for(SystemObject obj:this.puffer.keySet()){
-						if(this.puffer.get(obj) != null){
-							pufferZeit = this.puffer.get(obj).getStart();
-							break;
-						}
+				long pufferZeit = -1;
+				for(SystemObject obj:this.puffer.keySet()){
+					if(this.puffer.get(obj) != null){
+						pufferZeit = this.puffer.get(obj).getStart();
+						break;
 					}
-					if(pufferZeit == -1){
+				}
+				if(pufferZeit == -1){
+					AbweichungNachbarn.this.puffer.put(objekt, intervallDatum);
+				}else{
+					if(pufferZeit == intervallDatum.getStart()){
 						AbweichungNachbarn.this.puffer.put(objekt, intervallDatum);
-					}else{
-						if(pufferZeit == intervallDatum.getStart()){
-							AbweichungNachbarn.this.puffer.put(objekt, intervallDatum);
+					}else{	
+						this.initPuffer();
+						if(pufferZeit > intervallDatum.getStart()){
+							LOGGER.warning("Veralteten Datensatz fuer " +  //$NON-NLS-1$
+									objekt + " empfangen:\n" + intervallDatum); //$NON-NLS-1$
 						}else{
-							this.initPuffer();
-							if(pufferZeit > intervallDatum.getStart()){
-								LOGGER.warning("Veralteten Datensatz fuer " +  //$NON-NLS-1$
-										objekt + " empfangen:\n" + intervallDatum); //$NON-NLS-1$
-							}else{
-								AbweichungNachbarn.this.puffer.put(objekt, intervallDatum);
-							}
+							AbweichungNachbarn.this.puffer.put(objekt, intervallDatum);
 						}
 					}
 				}
@@ -231,7 +231,7 @@ implements ClientSenderInterface,
 				boolean datenVollstaendig = true;
 				for(SystemObject obj:this.puffer.keySet()){
 					if(this.puffer.get(obj) == null){
-						datenVollstaendig = true;
+						datenVollstaendig = false;
 						break;
 					}
 				}
@@ -255,8 +255,8 @@ implements ClientSenderInterface,
 		long intervallEnde = -1;
 		
 		synchronized (this.puffer) {
-			datenZeit = this.puffer.get(this.messStelle).getStart();
-			intervallEnde = this.puffer.get(this.messStelle).getEnde();
+			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt()).getStart();
+			intervallEnde = this.puffer.get(this.messQuerschnitt.getObjekt()).getEnde();
 			
 			Collection<IDELzFhDatum> restDaten = new HashSet<IDELzFhDatum>();
 			for(SystemObject rms:this.restMessStellen){
@@ -265,7 +265,7 @@ implements ClientSenderInterface,
 			
 			abweichung = Rechenwerk.multipliziere(
 								Rechenwerk.dividiere(
-										this.puffer.get(this.messQuerschnitt).getDatum(),
+										this.puffer.get(this.messQuerschnitt.getObjekt()).getDatum(),
 										Rechenwerk.durchschnitt(restDaten)),
 								100.0);			
 		}
@@ -334,18 +334,9 @@ implements ClientSenderInterface,
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereMsDatum(SystemObject msObjekt,
-			Intervall intervallDatum) {
-		AbweichungNachbarn.this.versucheBerechnung(msObjekt, intervallDatum);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void aktualisiereDatum(SystemObject mqObjekt,
-			Intervall intervallDatum) {
-		AbweichungNachbarn.this.versucheBerechnung(mqObjekt, intervallDatum);
+	public void aktualisiereDatum(SystemObject objekt,
+			Intervall intervallDatum) {		
+		AbweichungNachbarn.this.versucheBerechnung(objekt, intervallDatum);
 	}
 
 	
@@ -355,92 +346,7 @@ implements ClientSenderInterface,
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungMessStellenGruppe();
-		this.vergleichsIntervall = this.getVergleichsIntervallInText(parameter.getVergleichsIntervall()); 
-	}
-	
-	
-	/**
-	 * Wandelt eine Zeitspanne in Millisekunden in einen Text um
-	 * 
-	 * @param vergleichsIntervallInMs zeit in Millisekunden
-	 * @return die uebergebene Zeitspanne in Millisekunden als Text
-	 */
-	protected final String getVergleichsIntervallInText(long vergleichsIntervallInMs){
-		StringBuffer text = new StringBuffer();
-			
-		try {
-			long val = vergleichsIntervallInMs;
-			int millis = (int)(val % 1000);
-			val /= 1000;
-			int seconds = (int)(val % 60);
-			val /= 60;
-			int minutes = (int)(val % 60);
-			val /= 60;
-			int hours = (int)(val % 24);
-			val /= 24;
-			long days = val;
-			if(days != 0) {
-				if(days == 1) {
-					text.append("1 Tag "); //$NON-NLS-1$
-				}
-				else if(days == -1) {
-					text.append("-1 Tag "); //$NON-NLS-1$
-				}
-				else {
-					text.append(days).append(" Tage "); //$NON-NLS-1$
-				}
-			}
-			if(hours != 0) {
-				if(hours == 1) {
-					text.append("1 Stunde "); //$NON-NLS-1$
-				}
-				else if(hours == -1) {
-					text.append("-1 Stunde "); //$NON-NLS-1$
-				}
-				else {
-					text.append(hours).append(" Stunden "); //$NON-NLS-1$
-				}
-			}
-			if(minutes != 0) {
-				if(minutes == 1) {
-					text.append("1 Minute "); //$NON-NLS-1$
-				}
-				else if(minutes == -1) {
-					text.append("-1 Minute "); //$NON-NLS-1$
-				}
-				else {
-					text.append(minutes).append(" Minuten "); //$NON-NLS-1$
-				}
-			}
-			if(seconds != 0 || (days == 0 && hours == 0 && minutes == 0 && millis == 0)) {
-				if(seconds == 1) {
-					text.append("1 Sekunde "); //$NON-NLS-1$
-				}
-				else if(seconds == -1) {
-					text.append("-1 Sekunde "); //$NON-NLS-1$
-				}
-				else {
-					text.append(seconds).append(" Sekunden "); //$NON-NLS-1$
-				}
-			}
-			if(millis != 0) {
-				if(millis == 1) {
-					text.append("1 Millisekunde "); //$NON-NLS-1$
-				}
-				else if(millis == -1) {
-					text.append("-1 Millisekunde "); //$NON-NLS-1$
-				}
-				else {
-					text.append(millis).append(" Millisekunden "); //$NON-NLS-1$
-				}
-			}
-			text.setLength(text.length() - 1);
-		}
-		catch(Exception e) {
-			return "[" + vergleichsIntervallInMs + "ms]";  //$NON-NLS-1$//$NON-NLS-2$
-		}
-
-		return text.toString();
+		this.vergleichsIntervall = DUAUtensilien.getVergleichsIntervallInText(parameter.getVergleichsIntervall()); 
 	}
 
 }

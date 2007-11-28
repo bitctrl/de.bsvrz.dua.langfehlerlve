@@ -266,7 +266,7 @@ public class Rechenwerk {
 		 * {@inheritDoc}
 		 */
 		public double getQ(FahrzeugArt fahrzeugArt) {
-			return 0;
+			return this.werte.get(fahrzeugArt);
 		}
 
 		
