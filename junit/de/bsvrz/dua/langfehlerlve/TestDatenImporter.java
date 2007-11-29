@@ -1,5 +1,5 @@
-/** 
- * Segment 4 Datenübernahme und Aufbereitung (DUA)
+/**
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -56,14 +56,24 @@ public class TestDatenImporter extends CSVImporter {
 	protected static final int OFFSET = 1;
 	
 	/**
+	 * Wo die Ausgabedaten beginnen
+	 */
+	protected static final int AUSGABE_OFFSET = 15;
+	
+	/**
 	 * Die Attributgruppe der Daten
 	 */
-	protected static AttributeGroup ATG;
+	protected AttributeGroup ATG;
 	
 	/**
 	 * Die summarisierte werte
 	 */
-	protected static long [] ausgabe;
+	protected long [] ausgabe;
+	
+	/**
+	 * Bestimmt, ob die gerade geparste linine auch eine Ausgabe enthaelt
+	 */
+	protected boolean hatAusgabe = false;
 
 	/**
 	 * Standardkonstruktor
@@ -86,8 +96,8 @@ public class TestDatenImporter extends CSVImporter {
 	}
 	
 	/**
-	 * Erfragt die nächste Zeile innerhalb der CSV-Datei als einen
-	 * Datensatz der übergebenen Attributgruppe
+	 * Erfragt die nächste Zeile innerhalb der CSV-Datei als eine Liste von 
+	 * Datensätzen der übergebenen Attributgruppe
 	 * 
 	 * @param atg eine Attributgruppe (KZD oder LZD)
 	 * @return ein Datensatz der übergebenen Attributgruppe mit den Daten der nächsten Zeile
@@ -107,15 +117,20 @@ public class TestDatenImporter extends CSVImporter {
 					setDatenLeer(datensatz);
 					setAttribut(testAttribut, wert, datensatz);
 					datenSaetze.add(datensatz);
+					
 				}
-				if(zeile.length > OFFSET + 10 && ! zeile[OFFSET + 11].equals("")) {
+				if(zeile.length > AUSGABE_OFFSET  && ! zeile[AUSGABE_OFFSET].equals("")) {
 					ausgabe = new long[14]; 
 					for(int i=0; i<14; i++) {
-						long wert = Long.parseLong( zeile[OFFSET + 10 + i]);
+						long wert = Long.parseLong( zeile[AUSGABE_OFFSET + i]);
 						ausgabe[i] = wert;
 					}
+					hatAusgabe = true;
 				}
-				else ausgabe = null;
+				else {
+					ausgabe = null;
+					hatAusgabe = false;
+				}
 				
 			} catch(NumberFormatException ex) {
 				System.err.println("Fehler beim parsing von: " + zeile[0] );
@@ -129,7 +144,21 @@ public class TestDatenImporter extends CSVImporter {
 		else return null;
 	}
 	
-	public static long [] getAusgabe() {
+	/**
+	 * Erfragt ob die letzte bearbeitete Zeile auch Ausgabedaten enthält
+	 *  
+	 * @return <code>true</code> wenn Ausgabedaten aus der CSV-Datei gelesen wurden 
+	 */
+	public  boolean hatAusgabe() {
+		 return this.hatAusgabe;
+	}
+	
+	/**
+	 * Leifert die Ausgabedaten wenn sie ausgelesen worden sind 
+	 * 
+	 * @return
+	 */
+	public long [] getAusgabe() {
 		return ausgabe;
 	}
 	
@@ -146,7 +175,9 @@ public class TestDatenImporter extends CSVImporter {
 		datensatz.getItem(attributName).getItem("Wert").asUnscaledValue().set(wert);
 		datensatz.getItem(attributName).getItem("Status").getItem("Erfassung").getUnscaledValue("NichtErfasst").set(0);
 		datensatz.getItem(attributName).getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").set(0);
-		datensatz.getItem(attributName).getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").set(0);			
+		datensatz.getItem(attributName).getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").set(0);
+		datensatz.getItem(attributName).getItem("Status").getItem("PlLogisch").getUnscaledValue("WertMaxLogisch").set(0);
+		datensatz.getItem(attributName).getItem("Status").getItem("PlLogisch").getUnscaledValue("WertMinLogisch").set(0);	
 		datensatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").set(0);
 		datensatz.getItem(attributName).getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Interpoliert").set(0);
 		datensatz.getItem(attributName).getItem("Güte").getUnscaledValue("Index").set(1000);
