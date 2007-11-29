@@ -295,15 +295,6 @@ implements ClientSenderInterface,
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereMsDatum(SystemObject msObjekt,
-			Intervall intervallDatum) {
-		MessStellenBilanz.this.versucheBerechnung(msObjekt, intervallDatum);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereDatum(SystemObject mqObjekt,
 			Intervall intervallDatum) {
 		MessStellenBilanz.this.versucheBerechnung(mqObjekt, intervallDatum);
