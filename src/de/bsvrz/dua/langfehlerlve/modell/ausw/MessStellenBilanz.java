@@ -249,11 +249,11 @@ implements ClientSenderInterface,
 			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt()).getStart();
 			
 			IDELzFhDatum zwischenBilanzI = Rechenwerk.subtrahiere(this.puffer.get(this.messQuerschnitt.getObjekt()).getDatum(),
-					  											  this.puffer.get(this.messStelleMinus1.getMessStelle().getSystemObject()).getDatum());
+					  											  this.puffer.get(this.messStelleMinus1.getMessStelle().getSystemObject()).getDatum(), false);
 			IDELzFhDatum zwischenBilanzIPlus1 = Rechenwerk.subtrahiere(this.puffer.get(this.messQuerschnittPlus1.getObjekt()).getDatum(),
-								  									   this.puffer.get(this.messStelle.getMessStelle().getSystemObject()).getDatum());
+								  									   this.puffer.get(this.messStelle.getMessStelle().getSystemObject()).getDatum(), false);
 			
-			bilanz = Rechenwerk.subtrahiere(zwischenBilanzI, zwischenBilanzIPlus1);
+			bilanz = Rechenwerk.subtrahiere(zwischenBilanzI, zwischenBilanzIPlus1, true);
 		}
 		
 		DataDescription datenBeschreibung = this.langZeit?PUB_BESCHREIBUNG_LZ:PUB_BESCHREIBUNG_KZ;

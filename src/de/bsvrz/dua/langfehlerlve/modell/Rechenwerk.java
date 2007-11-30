@@ -131,9 +131,10 @@ public class Rechenwerk {
 	 * 
 	 * @param minuend der Minuend
 	 * @param subtrahend der Subtrahend
+	 * @param negativErlaubt ob Negative Ausgangswerte erlaubt sind
 	 * @return die Differenz von Minuend und Subtrahend
 	 */
-	public static final IDELzFhDatum subtrahiere(IDELzFhDatum minuend, IDELzFhDatum subtrahend){
+	public static final IDELzFhDatum subtrahiere(IDELzFhDatum minuend, IDELzFhDatum subtrahend, boolean negativErlaubt){
 		if(minuend.isKeineDaten() || subtrahend.isKeineDaten()){
 			return KEINE_DATEN;
 		}
@@ -141,7 +142,7 @@ public class Rechenwerk {
 		RechenErgebnis ergebnis = new RechenErgebnis();
 		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
 			double summe = -1.0;
-			if(minuend.getQ(fahrzeugArt) >= 0 && subtrahend.getQ(fahrzeugArt) >= 0){
+			if(negativErlaubt || (minuend.getQ(fahrzeugArt) >= 0 && subtrahend.getQ(fahrzeugArt) >= 0)){
 				summe = minuend.getQ(fahrzeugArt) - subtrahend.getQ(fahrzeugArt); 
 			}
 			ergebnis.setQ(fahrzeugArt, summe);
