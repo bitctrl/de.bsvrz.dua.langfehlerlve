@@ -259,36 +259,32 @@ implements ClientSenderInterface,
 		Data nutzDatum = DAV.createData(datenBeschreibung.getAttributeGroup());
 		
 		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
-			if(abweichung.getQ(fahrzeugArt) < 0.0){
-				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			long abweichungMinus100Abs = Math.abs(Math.round(abweichung.getQ(fahrzeugArt) - 100.0));
+			if(abweichungMinus100Abs >= 0 && abweichungMinus100Abs <= 100){ 
+				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(abweichungMinus100Abs);
 			}else{
-				long abweichungMinus100Abs = Math.abs(Math.round(abweichung.getQ(fahrzeugArt) - 100.0));
-
-				synchronized (this) {
-					if(this.abweichungMax >= 0){
-						if(abweichungMinus100Abs > this.abweichungMax){
-							MessageSender.getInstance().sendMessage(
-									MessageType.APPLICATION_DOMAIN,
-									DELangZeitFehlerErkennung.getName(),
-									MessageGrade.ERROR,
-									this.messStelle.getMessStelle().getSystemObject(),
-									new MessageCauser(DAV.getLocalUser(),
-													  Konstante.LEERSTRING,
-													  DELangZeitFehlerErkennung.getName()),
-									"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " +  //$NON-NLS-1$ //$NON-NLS-2$
-									abweichungMinus100Abs + "% vom erwarteten Wert im Intervall " + //$NON-NLS-1$ 
-									FORMAT.format(new Date(datenZeit)) + " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
-									" ("+ this.vergleichsIntervall + ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					}		
-				}
-					
-				if(abweichungMinus100Abs >= 0 && abweichungMinus100Abs <= 100){ 
-					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(abweichungMinus100Abs);
-				}else{
-					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-				}
+				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
+
+			synchronized (this) {
+				if(this.abweichungMax >= 0){
+					if(abweichungMinus100Abs > this.abweichungMax){
+						MessageSender.getInstance().sendMessage(
+								MessageType.APPLICATION_DOMAIN,
+								DELangZeitFehlerErkennung.getName(),
+								MessageGrade.ERROR,
+								this.messStelle.getMessStelle().getSystemObject(),
+								new MessageCauser(DAV.getLocalUser(),
+										Konstante.LEERSTRING,
+										DELangZeitFehlerErkennung.getName()),
+										"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " +  //$NON-NLS-1$ //$NON-NLS-2$
+										abweichungMinus100Abs + "% vom erwarteten Wert im Intervall " + //$NON-NLS-1$ 
+										FORMAT.format(new Date(datenZeit)) + " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
+										" ("+ this.vergleichsIntervall + ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				}		
+			}
+
 		}
 		
 		ResultData publikationsDatum = new ResultData(this.messStelle.getMessStelle().getSystemObject(), 

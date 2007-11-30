@@ -40,6 +40,7 @@ import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
+import de.bsvrz.dua.langfehlerlve.modell.Rechenwerk;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
@@ -280,56 +281,6 @@ implements IDELzFhDatenListener,
 	
 	
 	/**
-	 * Berechnet (wenn alle Basis-Werte vorhanden sind) die Gesamtverkehrsstaerke
-	 * an der Messstelle in Bezug auf eine bestimmte Fahrzeugart 
-	 * 
-	 * @param art die Fahrzeugart
-	 * @param pDatum das Datum des Prueflings an der Messstelle
-	 * @param abfahrtsDaten die Daten der Abfahrten
-	 * @param zufahrtsDaten die Daten der Zufahrten
-	 * @return die Gesamtverkehrsstaerke
-	 * an der Messstelle in Bezug auf die uebergebene Fahrzeugart
-	 */
-	private final double getQMessStelle(FahrzeugArt art, 
-										IDELzFhDatum pDatum,
-										Set<IDELzFhDatum> abfahrtsDaten,
-										Set<IDELzFhDatum> zufahrtsDaten){
-		double q = 0;
-		double qZufahrt = 0;
-		double qAbfahrt = 0;
-
-		if(pDatum != null &&
-			abfahrtsDaten.size() == this.messStelle.getAbfahrten().size() &&
-			zufahrtsDaten.size() == this.messStelle.getZufahrten().size()){
-			
-			if(pDatum.getQ(art) < 0.0){
-				return -1.0;
-			}else{
-				q = pDatum.getQ(art);
-			}
-			
-			for(IDELzFhDatum zufahrtsDatum:zufahrtsDaten){
-				if(zufahrtsDatum.getQ(art) < 0.0){
-					return -1.0;
-				}else{
-					qZufahrt += zufahrtsDatum.getQ(art);
-				}
-			}
-			
-			for(IDELzFhDatum abfahrtsDatum:abfahrtsDaten){
-				if(abfahrtsDatum.getQ(art) < 0.0){
-					return -1.0;
-				}else{
-					qAbfahrt += abfahrtsDatum.getQ(art);
-				}
-			}			
-		}
-		
-		return q + qZufahrt - qAbfahrt; 
-	}
-	
-	
-	/**
 	 * Berechnet und veroeffentlicht ein MS-Datum auf Basis der im MQ-Puffer gespeicherten
 	 * Daten. Danach werde alle gepufferten Daten wieder gelöscht
 	 */
@@ -372,36 +323,15 @@ implements IDELzFhDatenListener,
 			}
 		}
 		
-		final double qKfz = this.getQMessStelle(FahrzeugArt.KFZ, pDatum, abfahrtsDaten, zufahrtsDaten);
-		final double qLkw = this.getQMessStelle(FahrzeugArt.LKW, pDatum, abfahrtsDaten, zufahrtsDaten);
-		final double qPkw = this.getQMessStelle(FahrzeugArt.PKW, pDatum, abfahrtsDaten, zufahrtsDaten);
+		IDELzFhDatum ergebnis = Rechenwerk.subtrahiere(
+									Rechenwerk.addiere(
+											pDatum,
+											Rechenwerk.durchschnitt(zufahrtsDaten)),
+									Rechenwerk.durchschnitt(abfahrtsDaten));
 		
 		this.fertigesIntervall = new Intervall(intervall.getStart(),
 											   intervall.getEnde(),
-											   new IDELzFhDatum(){
-
-												public double getQ(
-														FahrzeugArt fahrzeugArt) {
-													double ergebnis = -1;
-													
-													if(fahrzeugArt.equals(FahrzeugArt.KFZ)){
-														ergebnis = qKfz;
-													}else
-													if(fahrzeugArt.equals(FahrzeugArt.LKW)){
-														ergebnis = qLkw;
-													}else
-													if(fahrzeugArt.equals(FahrzeugArt.PKW)){
-														ergebnis = qPkw;
-													}
-													
-													return ergebnis;
-												}
-
-												public boolean isKeineDaten() {
-													return false;
-												}
-			
-		});
+											   ergebnis);
 		
 		Data nutzDaten = DAV.createData(this.msDb.getAttributeGroup());
 		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){

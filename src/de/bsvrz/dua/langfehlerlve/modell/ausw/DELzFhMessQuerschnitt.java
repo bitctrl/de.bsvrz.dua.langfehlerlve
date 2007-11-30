@@ -46,6 +46,7 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
+import de.bsvrz.dua.langfehlerlve.modell.Rechenwerk;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
@@ -184,6 +185,11 @@ implements ClientReceiverInterface{
 										public boolean isKeineDaten() {
 											return true;
 										}
+
+										public boolean isAuswertbar(
+												FahrzeugArt fahrzeugArt) {
+											return false;
+										}
 							
 								}); 
 							
@@ -277,59 +283,14 @@ implements ClientReceiverInterface{
 	 * @param ende Intervallende (absolute Zeit in ms)
 	 */
 	private final void berechneFertigesIntervall(final long start, final long ende){
-		double qKfz = 0;
-		double qKfzZaehler = 0;
-		double qLkw = 0;
-		double qLkwZaehler = 0;
-		double qPkw = 0;
-		double qPkwZaehler = 0;
-				
+		Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
 		for(MQDatum mQDatum:this.puffer){
-			if(start <= mQDatum.getZeitStempel() && mQDatum.getZeitStempel() < ende){				
-				if(mQDatum.getQ(FahrzeugArt.KFZ) >= 0){
-					qKfzZaehler++;
-					qKfz += mQDatum.getQ(FahrzeugArt.KFZ); 
-				}
-
-				if(mQDatum.getQ(FahrzeugArt.LKW) >= 0){
-					qLkwZaehler++;
-					qLkw += mQDatum.getQ(FahrzeugArt.LKW); 
-				}
-
-				if(mQDatum.getQ(FahrzeugArt.PKW) >= 0){
-					qPkwZaehler++;
-					qPkw += mQDatum.getQ(FahrzeugArt.PKW); 
-				}
+			if(start <= mQDatum.getZeitStempel() && mQDatum.getZeitStempel() < ende){
+				datenImIntervall.add(mQDatum);
 			}
 		}
 		
-		final double qKfzf = qKfzZaehler > 0?qKfz / qKfzZaehler:-1.0;
-		final double qLkwf = qLkwZaehler > 0?qLkw / qLkwZaehler:-1.0;
-		final double qPkwf = qPkwZaehler > 0?qPkw / qPkwZaehler:-1.0;
-
-		this.fertigesIntervall = new Intervall(start, ende, new IDELzFhDatum() {
-
-			public boolean isKeineDaten() {
-				return false;
-			}
-
-			public double getQ(FahrzeugArt fahrzeugArt) {
-				double ergebnis = -1.0;
-				
-				if(fahrzeugArt.equals(FahrzeugArt.KFZ)){
-					ergebnis = qKfzf;
-				}else
-				if(fahrzeugArt.equals(FahrzeugArt.LKW)){
-					ergebnis = qLkwf;
-				}else
-				if(fahrzeugArt.equals(FahrzeugArt.PKW)){
-					ergebnis = qPkwf;
-				}
-				
-				return ergebnis;
-			}
-			
-		});
+		this.fertigesIntervall = new Intervall(start, ende, Rechenwerk.durchschnitt(datenImIntervall));
 		
 		for(IDELzFhDatenListener listener:this.listenerMenge){
 			listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall);
@@ -529,6 +490,26 @@ implements ClientReceiverInterface{
 				ergebnis = qPkw;
 			}
 			
+			return ergebnis;
+		}
+
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
+			boolean ergebnis = true;
+
+			if(fahrzeugArt.equals(FahrzeugArt.KFZ)){
+				ergebnis = qKfz >= 0.0;
+			}else
+			if(fahrzeugArt.equals(FahrzeugArt.LKW)){
+				ergebnis = qLkw >= 0.0;
+			}else
+			if(fahrzeugArt.equals(FahrzeugArt.PKW)){
+				ergebnis = qPkw >= 0.0;
+			}
+
 			return ergebnis;
 		}
 
