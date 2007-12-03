@@ -166,7 +166,8 @@ public class DELzFhMessStellenGruppe{
 						   messQuerschnitt != null &&
 						   !restMessStellen.isEmpty()){
 							new AbweichungNachbarn(dav, messStelle, this,
-													restMessStellen, messQuerschnitt, langZeit);						
+													restMessStellen.toArray(new DELzFhMessStelle[0]),
+													messQuerschnitt, langZeit);						
 						}else{
 							LOGGER.warning("Ermittlung der Abweichung zu den Nachbarn konnte nicht angestossen werden\nfuer Messstelle: " +  //$NON-NLS-1$
 									msFeld[i].getSystemObject() + "\nan Messstellengruppe: " + this); //$NON-NLS-1$
@@ -187,9 +188,9 @@ public class DELzFhMessStellenGruppe{
 						   messQuerschnitt != null &&
 						   messStelleMinus1 != null){
 							new AbweichungVorgaenger(dav, messStelle, this,
-													messStelleMinus1, messQuerschnitt, langZeit);						
+									messStelleMinus1, messQuerschnitt, langZeit);						
 						}else{
-							LOGGER.warning("Ermittlung der Abweichung zu den Nachbarn konnte nicht angestossen werden\nfuer Messstelle: " +  //$NON-NLS-1$
+							LOGGER.warning("Ermittlung der Abweichung zum Vorgaenger konnte nicht angestossen werden\nfuer Messstelle: " +  //$NON-NLS-1$
 									msFeld[i].getSystemObject() + "\nan Messstellengruppe: " + this); //$NON-NLS-1$
 						}
 					}				

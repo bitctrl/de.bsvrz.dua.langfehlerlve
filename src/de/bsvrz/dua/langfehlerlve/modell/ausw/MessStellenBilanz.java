@@ -43,7 +43,6 @@ import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -57,6 +56,22 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class MessStellenBilanz
 implements ClientSenderInterface,
 		   IDELzFhDatenListener{
+	
+	/**
+	 * Untere Grenze des Attributtyps <code>att.verkehrsStärkeStundeBilanz<code>
+	 */
+	private static final double BILANZ_MIN = -100000000.0;
+	
+	/**
+	 * Obere Grenze des Attributtyps <code>att.verkehrsStärkeStundeBilanz<code>
+	 */
+	private static final double BILANZ_MAX = 100000000.0;
+	
+	/**
+	 * Zustand des <code>nicht ermittelbar/fehlerhaft</code> des Attributtyps 
+	 * <code>att.verkehrsStärkeStundeBilanz<code>
+	 */
+	private static final long NICHT_ERMITTELBAR_BZW_FEHLERHAFT = -100000003;
 	
 	/**
 	 * Debug-Logger
@@ -260,10 +275,12 @@ implements ClientSenderInterface,
 		Data nutzDatum = DAV.createData(datenBeschreibung.getAttributeGroup());
 		
 		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
-			if(bilanz.getQ(fahrzeugArt) < 0.0){
-				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-			}else{
+			if(bilanz.isAuswertbar(fahrzeugArt) && 
+				bilanz.getQ(fahrzeugArt) >= BILANZ_MIN &&
+				bilanz.getQ(fahrzeugArt) <= BILANZ_MAX){
 				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(bilanz.getQ(fahrzeugArt));
+			}else{
+				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 		}
 		
