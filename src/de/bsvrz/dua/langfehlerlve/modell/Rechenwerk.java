@@ -124,6 +124,44 @@ public class Rechenwerk {
 		return ergebnis;
 	}
 	
+	/**
+	 * Summiert die Elemente in allen Attributen
+	 * 
+	 * @param elemente alle Elemente, ueber die der Durchschnitt ermittelt werden soll
+	 * @return die Summe ueber allen Einzelattributen innerhalb
+	 * der uebergebenen Elemente
+	 */
+	public static final IDELzFhDatum addiere(Collection<IDELzFhDatum> elemente){
+		if(elemente.isEmpty()){
+			return NICHT_AUSWERTBAR;
+		}
+		
+		for(IDELzFhDatum element:elemente){
+			if(element.isKeineDaten()){
+				return KEINE_DATEN;
+			}
+		}
+		
+		if(elemente.size() == 1){
+			return elemente.iterator().next();
+		}
+
+		RechenErgebnis ergebnis = new RechenErgebnis();
+		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
+			double summe = 0.0;
+			for(IDELzFhDatum element:elemente){
+				if(element.isAuswertbar(fahrzeugArt)){
+					summe += element.getQ(fahrzeugArt);
+				}
+			}
+
+			ergebnis.setQ(fahrzeugArt, summe );
+			ergebnis.setAuswertbar(fahrzeugArt, true);			
+		}
+		
+		return ergebnis;
+	}
+	
 	
 	/**
 	 * Summiert die Argumente in allen Attributen

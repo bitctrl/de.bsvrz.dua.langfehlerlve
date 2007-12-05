@@ -48,7 +48,7 @@ public class PublikationsKanal{
 	/**
 	 * statische Datenverteiler-Verbindung
 	 */
-	private static ClientDavInterface DAV = null;
+	protected static ClientDavInterface DAV = null;
 	
 	/**
 	 * indiziert ob dieser Kanal z.Z. auf <code>keine Daten</code> steht

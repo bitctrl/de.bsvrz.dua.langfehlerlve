@@ -326,8 +326,8 @@ implements IDELzFhDatenListener,
 		IDELzFhDatum ergebnis = Rechenwerk.subtrahiere(
 									Rechenwerk.addiere(
 											pDatum,
-											Rechenwerk.durchschnitt(zufahrtsDaten)),
-									Rechenwerk.durchschnitt(abfahrtsDaten));
+											Rechenwerk.addiere(zufahrtsDaten)),
+									Rechenwerk.addiere(abfahrtsDaten));
 		
 		this.fertigesIntervall = new Intervall(intervall.getStart(),
 											   intervall.getEnde(),
