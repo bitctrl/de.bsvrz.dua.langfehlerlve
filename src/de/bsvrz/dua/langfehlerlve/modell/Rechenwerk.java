@@ -149,14 +149,18 @@ public class Rechenwerk {
 		RechenErgebnis ergebnis = new RechenErgebnis();
 		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
 			double summe = 0.0;
+			boolean  auswertbar = true;
 			for(IDELzFhDatum element:elemente){
-				if(element.isAuswertbar(fahrzeugArt)){
+				if(element.isAuswertbar(fahrzeugArt)) {
 					summe += element.getQ(fahrzeugArt);
 				}
+				else {
+					auswertbar = false;
+					break;
+				}
 			}
-
-			ergebnis.setQ(fahrzeugArt, summe );
-			ergebnis.setAuswertbar(fahrzeugArt, true);			
+			if(auswertbar) ergebnis.setQ(fahrzeugArt, summe );
+			ergebnis.setAuswertbar(fahrzeugArt, auswertbar);
 		}
 		
 		return ergebnis;

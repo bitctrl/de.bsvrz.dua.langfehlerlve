@@ -55,7 +55,7 @@ implements ClientReceiverInterface{
 	/**
 	 * statische Instanzen dieser Klasse
 	 */
-	private static Map<SystemObject, AtgParameterMessStellenGruppe> INSTANZEN =
+	protected static Map<SystemObject, AtgParameterMessStellenGruppe> INSTANZEN =
 								Collections.synchronizedMap(new HashMap<SystemObject, AtgParameterMessStellenGruppe>());
 	
 	/**
@@ -107,7 +107,7 @@ implements ClientReceiverInterface{
 	 * @param dav Verbindung zum Datenverteiler
 	 * @param objekt ein Objekt vom Typ <code>typ.messStellenGruppe</code>
 	 */
-	private AtgParameterMessStellenGruppe(ClientDavInterface dav,
+	protected AtgParameterMessStellenGruppe(ClientDavInterface dav,
 										  SystemObject objekt){
 		dav.subscribeReceiver(this, 
 							  objekt,

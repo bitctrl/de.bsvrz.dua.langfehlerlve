@@ -26,12 +26,15 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
 import org.junit.Test;
+
 
 import junit.framework.Assert;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -61,9 +64,9 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	/**
 	 * Pfade zum Testdaten
 	 */
-	public static final String datenQuelle1 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_negativ_neu.csv";
-	public static final String datenQuelle2 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_positiv_neu.csv";
-	public static final String datenQuelle3 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_nicht_ermittelbar_neu.csv";
+	public static final String datenQuelle1 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_positiv.csv";
+	public static final String datenQuelle2 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_negativ.csv";
+	public static final String datenQuelle3 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_nicht_ermittelbar.csv";
 	
 	/**
 	 * Die aktuell benutzte Pfade
@@ -148,6 +151,11 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	private static String fahrzeugTyp = "QKfz"; 
 	
 	/**
+	 *  Aggreagtionsintervall der Kurzzeitdaten
+	 */
+	private long intervallKurzZeit = 0;
+	
+	/**
 	 * Parametriert die Messstellengruppe
 	 * @param mg MessStellengruppe
 	 * @param kurzZeitAgg Aggregationsintervall der Kurzzeitdaten in Minuten 
@@ -170,6 +178,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		data.getItem("maxAbweichungVorgängerLangZeit").asUnscaledValue().set(100);
 		data.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(100);
 		
+		this.intervallKurzZeit = kurzZeitAgg;
 		resultat = new ResultData(mg, DD_PARAM, System.currentTimeMillis(), data);
 		dav.sendData(resultat);
 	}
@@ -200,52 +209,51 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	}
 	
 	/**
-	 * Der Test
+	 * Der Test #1
 	 * 
 	 */
 	@Test
 	public void test1() {
 		try {
-			System.out.println("===== QKFz Test === " + datenQuelle1 + " ==== ");
-			test("QKfz", datenQuelle1, 5, 8, 12);
+			System.out.println("===== QKFz Test ===== Pozitiver MessFehler ==== Quelle: " + datenQuelle1 + " ==== ");
+			test("QKfz", datenQuelle1, 5, 5, 20);
 		} catch (Exception e) {
 			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
-	 * Der Test
+	 * Der Test #2
 	 * 
 	 */
 	@Test
 	public void test2() {
 		try {
-			System.out.println("===== QPkw Test === " + datenQuelle2 + " ==== ");
+			System.out.println("===== QPkw Test ===== Negatover MessFehler ==== Quelle: " + datenQuelle2 + " ==== ");
 			test("QPkw", datenQuelle2, 5, 8, 12);
 		} catch (Exception e) {
 			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
-	
-//	/**
-//	 * Der Test
-//	 * 
-//	 */
-//	@Test
-//	public void test3() {
-//		try {
-//
-//			System.out.println("===== QLkw Test === " + datenQuelle3 + " ==== ");
-//			test("QLkw", datenQuelle3, 5, 8, 12);
-//			
-//		} catch (Exception e) {
-//			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
-//			e.printStackTrace();
-//		}
-//	}
+
+	/**
+	 * Der Test #3
+	 * 
+	 */
+	@Test
+	public void test3() {
+		try {
+
+			System.out.println("===== QLkw Test  ===== Nicht ermittelbare Eingabedaten ==== Quelle: " + datenQuelle3 + " ==== ");
+			test("QLkw", datenQuelle3, 5, 10, 15);
+			
+		} catch (Exception e) {
+			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
+			e.printStackTrace();
+		}
+	}
 	
 	
 	/**
@@ -291,10 +299,10 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 					
 					// Die erwaretete Betriebsmeldungen 0 bedeutet keine
 					for(int j=0; j<2; j++) {
-						if(Math.abs(ausgabe[ABW_MG_OFFSET+j]) >  maxAbwGrp) 
+						if(Math.abs(ausgabe[ABW_MG_OFFSET+j]) >  maxAbwGrp && ausgabe[ABW_MG_OFFSET+j] > -100000) 
 							betriebsmeldung[j] = ausgabe[ABW_MG_OFFSET+j];
 						else betriebsmeldung[j] = 0;
-						if(Math.abs(ausgabe[ABW_VOR_OFFSET+j]) >  maxAbwVor) 
+						if(Math.abs(ausgabe[ABW_VOR_OFFSET+j]) >  maxAbwVor && ausgabe[ABW_VOR_OFFSET+j] > -100000) 
 							betriebsmeldung[2+j] = ausgabe[ABW_VOR_OFFSET+j];
 						else betriebsmeldung[2+j] = 0;
 					}
@@ -314,6 +322,8 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	 * Loescht alle instanzen von statischen Klassen
 	 */
 	private static void Reset() {
+		AtgParameterMessStellenGruppeTest.Reset();
+		BmClientTest.Reset();
 		FahrstreifenTest.Reset();
 		MessQuerschnittTest.Reset();
 		MessQuerschnittVirtuellTest.Reset();
@@ -339,7 +349,6 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		
 		DELzFhTester.dav = dav;
 		
-		BmClientTest.Reset();
 		BmClient.getInstanz(dav).addListener(this);
 		
 		try {
@@ -587,21 +596,61 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 			String text) {
 		int mq_index = 0;
 		int typ_offset = 2;
+		long lint = 0, lproc = 0;
+		Date dvon = new Date(), dbis  = new Date();
 		
 		// Wir  vergleichen nur Betriebsmeldungen von MQ 2 und 3
 		if(obj.getPid().equals("gr1.ms3.mq")) mq_index = 1;
 		else if(obj.getPid().equals("gr1.ms2.mq")) mq_index = 0;
-		else return;
+		else {
+			return;
+		}
+
+		try {
 			
+			String typ, von, bis, intervall, prozent, abwTyp;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		
+			typ = text.replaceFirst("Der Wert ", "");
+			prozent = typ.replaceFirst("Q... weicht um mehr als ", "");
+			abwTyp = prozent.replaceFirst("-?[\\d]+% vom erwarteten Wert im Intervall \\(Vergleich mit ", "");
+			von = abwTyp.replaceFirst("[\\w]+\\) ", "");
+			bis = von.replaceFirst("[\\.\\d]+ [\\d:]+ - ", "");
+			intervall = bis.replaceFirst("[\\.\\d]+ [\\d:]+ \\(", "");
+			
+			typ = typ.substring(0, 4);
+			von = von.substring(0, 17);
+			bis = bis.substring(0, 17);
+			prozent = prozent.split("% ")[0];
+			intervall = intervall.split(" Min")[0];
+			
+			if( abwTyp.startsWith("Vorgaenger") ) typ_offset = 2;
+			else if( abwTyp.startsWith("Nachbarn") ) typ_offset = 0;
+			
+			lproc = Long.parseLong(prozent);
+			lint = Long.parseLong(intervall);
+			dvon = dateFormat.parse(von);
+			dbis = dateFormat.parse(bis);
+			
+		} catch (ParseException e) {
+			System.out.println("Fehler beim Parsing des Datums :" + e.getMessage());
+		} catch (NumberFormatException e) {
+			System.out.println("Fehler beim Parsing einer Nummer :" + e.getMessage());
+		}
+		
 		synchronized (dav) {
-			if(betriebsmeldung[mq_index] == 0 && betriebsmeldung[mq_index + typ_offset] == 0)
-				Assert.fail("Falsche Betriebsmedlung " + obj + " " + text + betriebsmeldung[0] + betriebsmeldung[1] + betriebsmeldung[2] + betriebsmeldung[3]);
-			else {
-				if(betriebsmeldung[mq_index] == 0)
-					betriebsmeldung[mq_index + typ_offset] = 0;
-				else  betriebsmeldung[mq_index] = 0;
-			}
-			System.out.println(String.format("[ %4d ] BETRIEBSMELDUNG OK ", idx));
+
+			System.out.println(String.format("[ %4d ] VOR BETRIEBSMELDUNG  %s ( %d %%)", idx, obj.getPid(), lproc) + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3]);
+			
+			Assert.assertEquals("Falsche Betriebsmedlung " + obj + " " + text + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3], 
+					betriebsmeldung[mq_index + typ_offset], lproc);
+			betriebsmeldung[mq_index + typ_offset] = 0;
+			Assert.assertEquals("Intervall Von : ", dvon.getTime(), ausgabeZeitStempel);
+			Assert.assertEquals("Intervall Dauer : ", dbis.getTime() - dvon.getTime(), lint * MINUTE_IN_MS);
+			Assert.assertEquals("Intervall Dauer : ", lint * MINUTE_IN_MS, intervallKurzZeit * MINUTE_IN_MS);
+				
+			System.out.println(String.format("[ %4d ] BETRIEBSMELDUNG OK %s ( %d %%)", idx, obj.getPid(), lproc) + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3]);
+
 			//  Wenn alle Werte im Array ausgabe schon kontroliert worden sind
 			//  die mit Long.MAX_VALUE gekennzeichnet sind, koennen wir den array loeschen 
 			uberprufeAusgaben();
