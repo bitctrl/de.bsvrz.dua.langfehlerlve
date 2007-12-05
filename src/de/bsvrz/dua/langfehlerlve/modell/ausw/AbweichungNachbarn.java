@@ -95,4 +95,13 @@ extends AbstraktAbweichung{
 		return "asp.messQuerschnittDerMessStellenGruppeLangZeit"; //$NON-NLS-1$
 	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getVergleichsIdentifikation() {
+		return "Vergleich mit Nachbarn"; //$NON-NLS-1$
+	}
+
 }

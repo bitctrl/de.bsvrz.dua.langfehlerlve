@@ -155,6 +155,14 @@ implements ClientSenderInterface,
 	 */
 	protected abstract String getLzAspPid();
 	
+	
+	/**
+	 * Erfragt eine Identifikation der Vergleichsmethode
+	 * 
+	 * @return eine Identifikation der Vergleichsmethode
+	 */
+	protected abstract String getVergleichsIdentifikation();
+	
 
 	/**
 	 * Standardkonstruktor
@@ -329,7 +337,8 @@ implements ClientSenderInterface,
 											Konstante.LEERSTRING,
 											DELangZeitFehlerErkennung.getName()),
 											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " +  //$NON-NLS-1$ //$NON-NLS-2$
-											abweichungMinus100 + "% vom erwarteten Wert im Intervall " + //$NON-NLS-1$ 
+											abweichungMinus100 + "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
+											this.getVergleichsIdentifikation() + ") " + //$NON-NLS-1$ 
 											FORMAT.format(new Date(datenZeit)) + " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
 											" ("+ this.vergleichsIntervall + ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
 						}

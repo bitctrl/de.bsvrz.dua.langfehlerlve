@@ -96,4 +96,13 @@ extends AbstraktAbweichung{
 		return "asp.messQuerschnittZumVorgängerLangZeit"; //$NON-NLS-1$
 	}
 	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getVergleichsIdentifikation() {
+		return "Vergleich mit Vorgaenger"; //$NON-NLS-1$
+	}
+
 }
