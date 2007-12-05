@@ -29,11 +29,11 @@ package de.bsvrz.dua.langfehlerlve;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-
-import junit.framework.Assert;
+import java.util.Date;
 
 import org.junit.Test;
 
+import junit.framework.Assert;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
@@ -46,6 +46,8 @@ import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
+import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
+import de.bsvrz.sys.funclib.bitctrl.dua.bm.IBmListener;
 
 /**
  * Testet den Modul DE Langzeit-Fehlererkennung
@@ -54,14 +56,14 @@ import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
  *
  */
 public class DELzFhTester extends DELangZeitFehlerErkennung 
-	implements ClientSenderInterface, ClientReceiverInterface {
+	implements ClientSenderInterface, ClientReceiverInterface, IBmListener {
 
 	/**
 	 * Pfade zum Testdaten
 	 */
-	public static final String datenQuelle1 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_positiv.csv";
-	public static final String datenQuelle2 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_positiv2.csv";
-	public static final String datenQuelle3 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_negativ.csv";
+	public static final String datenQuelle1 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_negativ_neu.csv";
+	public static final String datenQuelle2 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_positiv_neu.csv";
+	public static final String datenQuelle3 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_nicht_ermittelbar_neu.csv";
 	
 	/**
 	 * Die aktuell benutzte Pfade
@@ -77,7 +79,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 			"-authentifizierung=c:\\passwd",
 			"-debugLevelStdErrText=WARNING",
 			"-debugLevelFileText=WARNING",
-			"-KonfigurationsBeriechsPid=kb.deLzFhTest"};
+			"-KonfigurationsBereichsPid=kb.deLzFhTest"};
 	
 	/***
 	 * Verbindung zum DAV
@@ -87,8 +89,13 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	/**
 	 * Konstanten
 	 */
-	private static long MINUTE_IN_MS = 60 * 1000;
-	private static long STUNDE_IN_MS = 60 * MINUTE_IN_MS;
+	private final long MINUTE_IN_MS = 60 * 1000;
+	private final long STUNDE_IN_MS = 60 * MINUTE_IN_MS;
+	private final int IVS_MS_OFFSET = 0;
+	private final int IVS_MQ_OFFSET = 4;
+	private final int BILANZ_OFFSET = 8;
+	private final int ABW_MG_OFFSET = 10;
+	private final int ABW_VOR_OFFSET = 12;
 	
 	/**
 	 * Die Messtellengruppe
@@ -103,12 +110,17 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	/**
 	 * datenbeschreibung fuer testdaten
 	 */
-	private static DataDescription DD_VDKZ, DD_IVS_DATEN, DD_BVS_DATEN, DD_ABWVS1_DATEN, DD_ABWVS2_DATEN, DD_PARAM;
+	private static DataDescription DD_VDKZ, DD_IVS_DATEN1, DD_IVS_DATEN2, DD_BVS_DATEN, DD_ABWVS1_DATEN, DD_ABWVS2_DATEN, DD_PARAM;
 	
 	/**
-	 * Die erwerteten Ausgabedaten
+	 * Die erwarteten Ausgabedaten
 	 */
 	private static long [] ausgabe;
+	
+	/**
+	 * Die erwarteten Betriebsmeldungen
+	 */
+	private static long [] betriebsmeldung;
 	
 	/**
 	 * Menge aller Messquerschnitte in der Messstellengruppe
@@ -121,7 +133,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	private static ArrayList<SystemObject> mengeMs = new ArrayList<SystemObject>();
 
 	/**
-	 * Index der letzten überprüften ausgabedatei
+	 * Index der letzten überprüften Ausgabedatei
 	 */
 	private static int idx = 0;
 	
@@ -140,21 +152,23 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	 * @param mg MessStellengruppe
 	 * @param kurzZeitAgg Aggregationsintervall der Kurzzeitdaten in Minuten 
 	 * @param langZeitAgg Aggregationsintervall der Langzeitdaten in Stunden 
+	 * @param maxAbwVor Maximale Abweichung fuer KZD zum Vorgaenger
+	 * @param maxAbwGrp Maximale Abweichung fuer KZD zur Gruppe
 	 * @throws Exception Wird beim Sende-fehler geworfen
 	 */
-	protected void parametriere(SystemObject mg, long kurzZeitAgg, long langZeitAgg) throws Exception {
+	protected void parametriere(SystemObject mg, long kurzZeitAgg, long langZeitAgg, long maxAbwVor, long maxAbwGrp) throws Exception {
 		
 		Data data;
 		ResultData resultat;
 		data = dav.createData(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"));
 		
 		data.getItem("VergleichsIntervallKurzZeit").asUnscaledValue().set(kurzZeitAgg);
-		data.getItem("maxAbweichungVorgängerKurzZeit").asUnscaledValue().set(0);
-		data.getItem("maxAbweichungMessStellenGruppeKurzZeit").asUnscaledValue().set(0);
+		data.getItem("maxAbweichungVorgängerKurzZeit").asUnscaledValue().set(maxAbwVor);
+		data.getItem("maxAbweichungMessStellenGruppeKurzZeit").asUnscaledValue().set(maxAbwGrp);
 		
 		data.getItem("VergleichsIntervallLangZeit").asUnscaledValue().set(langZeitAgg);
-		data.getItem("maxAbweichungVorgängerLangZeit").asUnscaledValue().set(0);
-		data.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(0);
+		data.getItem("maxAbweichungVorgängerLangZeit").asUnscaledValue().set(100);
+		data.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(100);
 		
 		resultat = new ResultData(mg, DD_PARAM, System.currentTimeMillis(), data);
 		dav.sendData(resultat);
@@ -180,31 +194,59 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		if(stunden) {
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 		}
-		//cal.set(Calendar.MILLISECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
 		return cal.getTimeInMillis();
 	}
 	
 	/**
 	 * Der Test
 	 * 
-	 * @throws Exception
 	 */
-	public void test() {
+	@Test
+	public void test1() {
 		try {
-			test("QKfz", datenQuelle1, 5);
-			test("QPkw", datenQuelle1, 5);
-			test("QLkw", datenQuelle1, 5);
-			
+			System.out.println("===== QKFz Test === " + datenQuelle1 + " ==== ");
+			test("QKfz", datenQuelle1, 5, 8, 12);
 		} catch (Exception e) {
 			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
+	
 
 	/**
-	 * Test nr. 2
-	 * @throws Exception
+	 * Der Test
+	 * 
 	 */
+	@Test
+	public void test2() {
+		try {
+			System.out.println("===== QPkw Test === " + datenQuelle2 + " ==== ");
+			test("QPkw", datenQuelle2, 5, 8, 12);
+		} catch (Exception e) {
+			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+//	/**
+//	 * Der Test
+//	 * 
+//	 */
+//	@Test
+//	public void test3() {
+//		try {
+//
+//			System.out.println("===== QLkw Test === " + datenQuelle3 + " ==== ");
+//			test("QLkw", datenQuelle3, 5, 8, 12);
+//			
+//		} catch (Exception e) {
+//			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
+	
 	
 	/**
 	 * Allgemeine Testmethode
@@ -212,18 +254,24 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	 * @param fahrzeugTyp Bezeichnet den Typ des Fahrzeuges - "QKfz", "QPkw", "QLkw" 
 	 * @param datenQuelle Pfade zur CSV-Datei
 	 * @param intervallKurzzeit der Aggregationsintervall
+	 * @param maxAbwVor Maximale Abweichung fuer KZD zum Vorgaenger
+	 * @param maxAbwGrp Maximale Abweichung fuer KZD zur Gruppe
 	 * @throws Exception  
 	 */
-	public void test(final String fahrzeugTyp, final String datenQuelle, final long intervallKurzzeit) throws Exception {
+	public void test(final String fahrzeugTyp, final String datenQuelle, final long intervallKurzzeit, final long maxAbwVor, final long maxAbwGrp) throws Exception {
 		DELzFhTester.fahrzeugTyp = fahrzeugTyp;
 		DELzFhTester.datenQuelle = datenQuelle;
 		
 		DELzFhTester tester = new DELzFhTester();
-		StandardApplicationRunner.run(tester, CON_DATA);
+		String connArgs [] =   new String [CON_DATA.length] ;
+		for(int i=0; i<CON_DATA.length; i++)
+			connArgs[i] = CON_DATA[i];
+		StandardApplicationRunner.run(tester, connArgs);
+		
 		Thread.sleep(1000);
 		
 		ResultData resultat;
-		tester.parametriere(mg, intervallKurzzeit, 1);
+		tester.parametriere(mg, intervallKurzzeit, 1, maxAbwVor, maxAbwGrp);
 		
 		long zeitStempel = System.currentTimeMillis() - STUNDE_IN_MS;
 		zeitStempel = abschneiden(zeitStempel, false, true, true);
@@ -231,37 +279,73 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		Collection<Data> dsListe = dtImporter.getDatenSaetzeNaechstenIntervall(fahrzeugTyp);
 		
 		while(dsListe != null) {
-			int i = 0;
-			for(Data ds : dsListe) {
-				resultat = new ResultData(mengeMq.get(i++), DD_VDKZ, zeitStempel, ds );
-				dav.sendData(resultat);
-			}
-			if(dtImporter.hatAusgabe()) {
-				while(ausgabe != null) Thread.sleep(100);
-				ausgabe = dtImporter.getAusgabe();
-				ausgabeZeitStempel = zeitStempel - (intervallKurzzeit - 1)*MINUTE_IN_MS;
+			synchronized (dav) {
+				int i = 0;
+				for(Data ds : dsListe) {
+					resultat = new ResultData(mengeMq.get(i++), DD_VDKZ, zeitStempel, ds );
+					dav.sendData(resultat);
+				}
+				if(dtImporter.hatAusgabe()) {
+					while(ausgabe != null) dav.wait();
+					ausgabe = dtImporter.getAusgabe();
+					
+					// Die erwaretete Betriebsmeldungen 0 bedeutet keine
+					for(int j=0; j<2; j++) {
+						if(Math.abs(ausgabe[ABW_MG_OFFSET+j]) >  maxAbwGrp) 
+							betriebsmeldung[j] = ausgabe[ABW_MG_OFFSET+j];
+						else betriebsmeldung[j] = 0;
+						if(Math.abs(ausgabe[ABW_VOR_OFFSET+j]) >  maxAbwVor) 
+							betriebsmeldung[2+j] = ausgabe[ABW_VOR_OFFSET+j];
+						else betriebsmeldung[2+j] = 0;
+					}
+
+					ausgabeZeitStempel = zeitStempel - (intervallKurzzeit - 1)*MINUTE_IN_MS;
+					dav.notify();
+				}
 			}
 			zeitStempel += MINUTE_IN_MS;
 			dsListe = dtImporter.getDatenSaetzeNaechstenIntervall(fahrzeugTyp);
 		}
 		dav.disconnect(false, "");
+		Thread.sleep(3000);
 	}
 	
-	
+	/**
+	 * Loescht alle instanzen von statischen Klassen
+	 */
+	private static void Reset() {
+		FahrstreifenTest.Reset();
+		MessQuerschnittTest.Reset();
+		MessQuerschnittVirtuellTest.Reset();
+		MessStellenGruppeTest.Reset();
+		MessStelleTest.Reset();
+		PublikationsKanalTest.Reset();
+		mengeMs.clear();
+		mengeMq.clear();
+		ausgabe = null;
+		ausgabeZeitStempel = 0;
+		idx = 0;
+		dav = null;
+	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override 
 	public void initialize(ClientDavInterface dav) throws Exception {
+		
+		Reset();
 		super.initialize(dav);
 		
 		DELzFhTester.dav = dav;
 		
+		BmClientTest.Reset();
+		BmClient.getInstanz(dav).addListener(this);
+		
 		try {
 			dtImporter = new TestDatenImporter(dav, datenQuelle);
 		} catch (Exception e) {
-			System.out.println("Fehler beim oeffnen der Testdaten " + e.getMessage());
+			System.out.println("Fehler beim Oeffnen der Testdaten " + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -287,6 +371,9 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		ms3_mq     =  dav.getDataModel().getObject("gr1.ms3.mq");
 		ms4_mq     =  dav.getDataModel().getObject("gr1.ms4.mq");
 		
+		// fuer 2 Messsquerschnitte und 2 Attributsgruppen werden Betriebsmeldungen erzeugt
+		betriebsmeldung = new long[4];
+		
 		mengeMq.add(ms1_mq);
 		mengeMq.add(ms1_mq_ab1);
 		mengeMq.add(ms1_mq_ab2);
@@ -306,8 +393,19 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		DD_VDKZ = new DataDescription(dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), 
 				dav.getDataModel().getAspect("asp.analyse"));
 		
-		DD_IVS_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
+		DD_PARAM = new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"),
+				dav.getDataModel().getAspect("asp.parameterVorgabe"));
+		
+		
+		dav.subscribeSender(this, mengeMq, DD_VDKZ, SenderRole.source());
+		dav.subscribeSender(this, mg, DD_PARAM, SenderRole.sender());
+		
+	
+		DD_IVS_DATEN1 = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
 				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit"));
+		
+		DD_IVS_DATEN2 = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
+				dav.getDataModel().getAspect("asp.messStelleKurzZeit"));
 		
 		DD_BVS_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsStärke"),
 				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit"));
@@ -317,15 +415,9 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		
 		DD_ABWVS2_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.abweichungVerkehrsStärke"),
 				dav.getDataModel().getAspect("asp.messQuerschnittZumVorgängerKurzZeit"));
-		
-		DD_PARAM = new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"),
-				dav.getDataModel().getAspect("asp.parameterVorgabe"));
 	
-		
-		dav.subscribeSender(this, mengeMq, DD_VDKZ, SenderRole.source());
-		dav.subscribeSender(this, mg, DD_PARAM, SenderRole.sender());
-		
-		dav.subscribeReceiver(this, mengeMs, DD_IVS_DATEN, ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, mengeMs, DD_IVS_DATEN1, ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, mengeMs, DD_IVS_DATEN2, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, mengeMs, DD_BVS_DATEN, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, mengeMs, DD_ABWVS1_DATEN, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, mengeMs, DD_ABWVS2_DATEN, ReceiveOptions.normal(), ReceiverRole.receiver());
@@ -337,8 +429,6 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -346,7 +436,6 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -355,120 +444,167 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	 */
 	public void update(ResultData[] results) {
 		for(ResultData resDatei : results) {
+				Data data = resDatei.getData();
+				String pid = resDatei.getObject().getPid();
+				long zeitSempel = resDatei.getDataTime();
+				if(data == null) continue;
+				
+				int ms_index=0;
 			
-			Data data = resDatei.getData();
-			String pid = resDatei.getObject().getPid();
-			long zeitSempel = resDatei.getDataTime();
-			if(data == null) continue;
-			
-			final int IVS_MS_OFFSET = 0;
-			final int IVS_MQ_OFFSET = 4;
-			final int BILANZ_OFFSET = 8;
-			final int ABW_MG_OFFSET = 10;
-			final int ABW_VOR_OFFSET = 12;
-			
-			int ms_index = 0;
-			
-			if(pid.equals("gr1.ms1")) ms_index = 0;
-			else if(pid.equals("gr1.ms2")) ms_index = 1;
-			else if(pid.equals("gr1.ms3")) ms_index = 2;
-			else if(pid.equals("gr1.ms4")) ms_index = 3;
-			
-			Assert.assertEquals(ausgabeZeitStempel, zeitSempel);
-			System.out.println(String.format("[ %4d ] Zeitstempel OK ", idx));
-			
-			if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-					"atg.intervallVerkehrsStärke") &&
+				
+			synchronized (dav) {
+				
+				/*
+				 * Die Verkehrstaerke ist fuer alle Messstellen berechnet 
+				 */
+				if(pid.equals("gr1.ms1")) ms_index = 0;
+				else if(pid.equals("gr1.ms2")) ms_index = 1;
+				else if(pid.equals("gr1.ms3")) ms_index = 2;
+				else if(pid.equals("gr1.ms4")) ms_index = 3;
+
+				if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
+						"atg.intervallVerkehrsStärke") &&
+						resDatei.getDataDescription().getAspect().getPid().equals(
+						"asp.messQuerschnittKurzZeit")) 
+				{
+					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
+					Assert.assertEquals("IVS MQ", ausgabe[ms_index + IVS_MQ_OFFSET],x);
+					System.out.println(String.format("[ %4d ] IVS MQ %8d = %8d", idx, ausgabe[ms_index + IVS_MQ_OFFSET], x));
+					ausgabe[ms_index + IVS_MQ_OFFSET] = Long.MAX_VALUE;
+					
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					
+				}
+				
+				if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
+						"atg.intervallVerkehrsStärke") &&
 					resDatei.getDataDescription().getAspect().getPid().equals(
-					"asp.messQuerschnittKurzZeit")) 
-			{
-				long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-				Assert.assertEquals(ausgabe[ms_index + IVS_MQ_OFFSET],x);
-				System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[ms_index + IVS_MQ_OFFSET], x));
-				ausgabe[ms_index + IVS_MQ_OFFSET] = Long.MAX_VALUE;
+							"asp.messStelleKurzZeit"))
+				{
+					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
+					Assert.assertEquals("IVS MS", ausgabe[ms_index + IVS_MS_OFFSET],x);
+					System.out.println(String.format("[ %4d ] IVS MS %8d = %8d", idx, ausgabe[ms_index + IVS_MS_OFFSET], x));
+					ausgabe[ms_index + IVS_MS_OFFSET] = Long.MAX_VALUE;
+					
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					
+				}
+				
+				/*
+				 * Die Bilanz und die Abweichungen werden nur fuer die MessStellen 2 und 3 ausgewertet
+				 * 
+				 */
+				if(pid.equals("gr1.ms2")) ms_index = 0;
+				else if(pid.equals("gr1.ms3")) ms_index = 1;
+				else ms_index = 5;
+				
+				if(ms_index < 3 && resDatei.getDataDescription().getAttributeGroup().getPid().equals(
+						"atg.bilanzVerkehrsStärke")) 
+				{
+				
+					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
+
+					Assert.assertEquals("BILANZ",ausgabe[BILANZ_OFFSET+ms_index],x);
+					System.out.println(String.format("[ %4d ] BILANZ %8d = %8d", idx, ausgabe[BILANZ_OFFSET+ms_index], x));
+					ausgabe[BILANZ_OFFSET+ms_index] = Long.MAX_VALUE;
+					
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					
+				}
+				
+				if(ms_index < 3 && resDatei.getDataDescription().getAttributeGroup().getPid().equals(
+						"atg.abweichungVerkehrsStärke") &&
+					resDatei.getDataDescription().getAspect().getPid().equals(
+					"asp.messQuerschnittZumVorgängerKurzZeit")) 
+				{
+					
+					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
+					Assert.assertEquals("ABW_VOR",ausgabe[ABW_VOR_OFFSET+ms_index],x);
+					System.out.println(String.format("[ %4d ] ABW_VOR %8d = %8d", idx, ausgabe[ABW_VOR_OFFSET+ms_index], x));
+					ausgabe[ABW_VOR_OFFSET+ms_index] = Long.MAX_VALUE;
+					
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					
+				}
+				
+				if(ms_index < 3 &&  resDatei.getDataDescription().getAttributeGroup().getPid().equals(
+						"atg.abweichungVerkehrsStärke") &&
+					resDatei.getDataDescription().getAspect().getPid().equals(
+							"asp.messQuerschnittDerMessStellenGruppeKurzZeit"))
+				{
+
+					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
+					Assert.assertEquals("ABW_GRP",ausgabe[ABW_MG_OFFSET+ms_index],x);
+					System.out.println(String.format("[ %4d ] ABW_GRP %8d = %8d", idx, ausgabe[ABW_MG_OFFSET+ms_index], x));
+				
+					ausgabe[ABW_MG_OFFSET+ms_index] = Long.MAX_VALUE;
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					
+				}
+				
+				//  Wenn alle Werte im Array ausgabe schon kontroliert worden sind
+				//  die mit Long.MAX_VALUE gekennzeichnet sind, koennen wir den array loeschen 
+				uberprufeAusgaben();
+				
 			}
+		}
+	}
+	
+	/**
+	 * Ueberprufet ob wir schon alle ausgaben kontrolliert haben, falls ja, 
+	 * signalisiert, dass wir weitere Eingabedaten an DAV abschicken koennen
+	 */
+	public void uberprufeAusgaben() {
+		int i;
+		for(i=0; i<ausgabe.length; i++) {
+			if(ausgabe[i] != Long.MAX_VALUE) break;
+		}
+		int j;
+		for(j=0; j<betriebsmeldung.length; j++) {
+			if(betriebsmeldung[j] != 0) break;
+		}
+		if(i>=ausgabe.length && j>=betriebsmeldung.length) {
+			System.out.println(String.format("[ %4d ] ------ Alle parameter OK ---- ", idx));
+			ausgabeZeitStempel = 0;
+			ausgabe = null;
+			idx++;
+			try {
+				dav.notify();
+				while(ausgabe == null) dav.wait();
+			} catch (Exception e) { }
+		}
+	}
+
+	/**
+	 * Vergleicht die einkommenden Betriebsmeldungen mit den erwarteten
+	 */
+	public void aktualisiereBetriebsMeldungen(SystemObject obj, long zeit,
+			String text) {
+		int mq_index = 0;
+		int typ_offset = 2;
+		
+		// Wir  vergleichen nur Betriebsmeldungen von MQ 2 und 3
+		if(obj.getPid().equals("gr1.ms3.mq")) mq_index = 1;
+		else if(obj.getPid().equals("gr1.ms2.mq")) mq_index = 0;
+		else return;
 			
-			if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-					"atg.intervallVerkehrsStärke") &&
-				resDatei.getDataDescription().getAspect().getPid().equals(
-						"asp.messStelleKurzZeit"))
-			{
-				long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-				Assert.assertEquals(ausgabe[ms_index + IVS_MS_OFFSET],x);
-				System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[ms_index + IVS_MS_OFFSET], x));
-				ausgabe[ms_index + IVS_MS_OFFSET] = Long.MAX_VALUE;
+		synchronized (dav) {
+			if(betriebsmeldung[mq_index] == 0 && betriebsmeldung[mq_index + typ_offset] == 0)
+				Assert.fail("Falsche Betriebsmedlung " + obj + " " + text + betriebsmeldung[0] + betriebsmeldung[1] + betriebsmeldung[2] + betriebsmeldung[3]);
+			else {
+				if(betriebsmeldung[mq_index] == 0)
+					betriebsmeldung[mq_index + typ_offset] = 0;
+				else  betriebsmeldung[mq_index] = 0;
 			}
-			
-			
-			if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-					"atg.bilanzVerkehrsStärke")) 
-			{
-				if(pid.equals("gr1.ms2")) {
-					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals(ausgabe[BILANZ_OFFSET],x);
-					System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[BILANZ_OFFSET], x));
-					ausgabe[BILANZ_OFFSET] = Long.MAX_VALUE;
-				}
-				else if(pid.equals("gr1.ms3")) {
-					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals(ausgabe[BILANZ_OFFSET+1],x);
-					System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[BILANZ_OFFSET+1], x));
-					ausgabe[BILANZ_OFFSET+1] = Long.MAX_VALUE;
-				}
-			}
-			
-			if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-					"atg.abweichungVerkehrsStärke") &&
-				resDatei.getDataDescription().getAspect().getPid().equals(
-				"asp.messQuerschnittZumVorgängerKurzZeit")) 
-			{
-				if(pid.equals("gr1.ms2")) {
-					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals(ausgabe[ABW_VOR_OFFSET],x);
-					System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[ABW_VOR_OFFSET], x));
-					ausgabe[ABW_VOR_OFFSET] = Long.MAX_VALUE;
-				}
-				else if(pid.equals("gr1.ms3")) {
-					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals(ausgabe[ABW_VOR_OFFSET+1],x);
-					System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[ABW_VOR_OFFSET+1], x));
-					ausgabe[ABW_VOR_OFFSET+1] = Long.MAX_VALUE;
-				}
-			}
-			
-			if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-					"atg.abweichungVerkehrsStärke") &&
-				resDatei.getDataDescription().getAspect().getPid().equals(
-						"asp.messQuerschnittDerMessStellenGruppeKurzZeit"))
-			{
-				if(pid.equals("gr1.ms2")) {
-					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals(ausgabe[ABW_MG_OFFSET],x);
-					System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[ABW_MG_OFFSET], x));
-					ausgabe[ABW_MG_OFFSET] = Long.MAX_VALUE;
-				}
-				else if(pid.equals("gr1.ms3")) {
-					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals(ausgabe[ABW_MG_OFFSET+1],x);
-					System.out.println(String.format("[ %4d ] %8d = %8d", idx, ausgabe[ABW_MG_OFFSET+1], x));
-					ausgabe[ABW_MG_OFFSET+1] = Long.MAX_VALUE;
-				}
-			}
-			
+			System.out.println(String.format("[ %4d ] BETRIEBSMELDUNG OK ", idx));
 			//  Wenn alle Werte im Array ausgabe schon kontroliert worden sind
-			//  die mit LongMAX_VALUE gekennzeichnet sind, koennen wir den array loeschen 
-			
-			if(ausgabe != null) {
-				int i;
-				for(i=0; i<ausgabe.length; i++) {
-					if(ausgabe[i] != Long.MAX_VALUE) break;
-				}
-				if(i>=ausgabe.length) {
-					ausgabe = null;
-					idx++;
-					System.out.println(String.format("[ %4d ] ------ Alle parameter OK ---- ", idx));
-				}
-			}
+			//  die mit Long.MAX_VALUE gekennzeichnet sind, koennen wir den array loeschen 
+			uberprufeAusgaben();
 		}
 	}
 }
