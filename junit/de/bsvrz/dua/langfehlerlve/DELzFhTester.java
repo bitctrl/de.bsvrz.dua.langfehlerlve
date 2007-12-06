@@ -215,7 +215,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	@Test
 	public void test1() {
 		try {
-			System.out.println("===== QKFz Test ===== Pozitiver MessFehler ==== Quelle: " + datenQuelle1 + " ==== ");
+			System.out.println("===== QKFz Test ===== Positiver MessFehler ==== Quelle: " + datenQuelle1 + " ==== ");
 			test("QKfz", datenQuelle1, 5, 5, 20);
 		} catch (Exception e) {
 			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
@@ -230,7 +230,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	@Test
 	public void test2() {
 		try {
-			System.out.println("===== QPkw Test ===== Negatover MessFehler ==== Quelle: " + datenQuelle2 + " ==== ");
+			System.out.println("===== QPkw Test ===== Negativer MessFehler ==== Quelle: " + datenQuelle2 + " ==== ");
 			test("QPkw", datenQuelle2, 5, 8, 12);
 		} catch (Exception e) {
 			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
@@ -602,9 +602,10 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		// Wir  vergleichen nur Betriebsmeldungen von MQ 2 und 3
 		if(obj.getPid().equals("gr1.ms3.mq")) mq_index = 1;
 		else if(obj.getPid().equals("gr1.ms2.mq")) mq_index = 0;
-		else {
-			return;
-		}
+		else return;
+		
+		// Nur Betriebsmeldungen fuer Kurzzeitdaten werden betrachtet
+		if(text.contains("Stunde")) return;
 
 		try {
 			
@@ -640,7 +641,6 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		
 		synchronized (dav) {
 
-			System.out.println(String.format("[ %4d ] VOR BETRIEBSMELDUNG  %s ( %d %%)", idx, obj.getPid(), lproc) + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3]);
 			
 			Assert.assertEquals("Falsche Betriebsmedlung " + obj + " " + text + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3], 
 					betriebsmeldung[mq_index + typ_offset], lproc);
@@ -649,7 +649,8 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 			Assert.assertEquals("Intervall Dauer : ", dbis.getTime() - dvon.getTime(), lint * MINUTE_IN_MS);
 			Assert.assertEquals("Intervall Dauer : ", lint * MINUTE_IN_MS, intervallKurzZeit * MINUTE_IN_MS);
 				
-			System.out.println(String.format("[ %4d ] BETRIEBSMELDUNG OK %s ( %d %%)", idx, obj.getPid(), lproc) + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3]);
+			System.out.println(String.format("[ %4d ] BETRIEBSMELDUNG OK %s ( %d %%)", idx, obj.getPid(), lproc)
+			+ "Noch Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3]);
 
 			//  Wenn alle Werte im Array ausgabe schon kontroliert worden sind
 			//  die mit Long.MAX_VALUE gekennzeichnet sind, koennen wir den array loeschen 
