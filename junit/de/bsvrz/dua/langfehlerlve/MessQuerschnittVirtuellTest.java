@@ -40,7 +40,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
 public class MessQuerschnittVirtuellTest extends MessQuerschnittVirtuell {
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkontruktor
+	 * 
+	 * @param mqvObjekt ein Systemobjekt vom Typ <code>typ.messQuerschnittVirtuell</code>
+	 * @throws DUAInitialisierungsException wenn der virtuelle Messquerschnitt nicht 
+	 * initialisiert werden konnte
 	 */
 	protected MessQuerschnittVirtuellTest(final SystemObject mqvObjekt) throws DUAInitialisierungsException {
 		super(mqvObjekt);

@@ -64,25 +64,14 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	/**
 	 * Pfade zum Testdaten
 	 */
-	public static final String datenQuelle1 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_positiv.csv";
-	public static final String datenQuelle2 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_negativ.csv";
-	public static final String datenQuelle3 = "c:\\temp\\dav\\SWE_DE_LZ_Fehlererkennung_nicht_ermittelbar.csv";
+	public static final String datenQuelle1 = Verbindung.TEST_DATEN_VERZ + "SWE_DE_LZ_Fehlererkennung_positiv.csv"; //$NON-NLS-1$
+	public static final String datenQuelle2 = Verbindung.TEST_DATEN_VERZ + "SWE_DE_LZ_Fehlererkennung_negativ.csv"; //$NON-NLS-1$
+	public static final String datenQuelle3 = Verbindung.TEST_DATEN_VERZ + "SWE_DE_LZ_Fehlererkennung_nicht_ermittelbar.csv"; //$NON-NLS-1$
 	
 	/**
 	 * Die aktuell benutzte Pfade
 	 */
 	private static String datenQuelle;
-	
-	/**
-	 * Verbindungsdaten
-	 */
-	public static final String[] CON_DATA = new String[] {
-			"-datenverteiler=localhost:8083", 
-			"-benutzer=Tester", 
-			"-authentifizierung=c:\\passwd",
-			"-debugLevelStdErrText=WARNING",
-			"-debugLevelFileText=WARNING",
-			"-KonfigurationsBereichsPid=kb.deLzFhTest"};
 	
 	/***
 	 * Verbindung zum DAV
@@ -148,7 +137,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	/**
 	 * Der Typ der getesteten Fahrzeugen
 	 */
-	private static String fahrzeugTyp = "QKfz"; 
+	private static String fahrzeugTyp = "QKfz";  //$NON-NLS-1$
 	
 	/**
 	 *  Aggreagtionsintervall der Kurzzeitdaten
@@ -168,15 +157,15 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		
 		Data data;
 		ResultData resultat;
-		data = dav.createData(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"));
+		data = dav.createData(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe")); //$NON-NLS-1$
 		
-		data.getItem("VergleichsIntervallKurzZeit").asUnscaledValue().set(kurzZeitAgg);
-		data.getItem("maxAbweichungVorgängerKurzZeit").asUnscaledValue().set(maxAbwVor);
-		data.getItem("maxAbweichungMessStellenGruppeKurzZeit").asUnscaledValue().set(maxAbwGrp);
+		data.getItem("VergleichsIntervallKurzZeit").asUnscaledValue().set(kurzZeitAgg); //$NON-NLS-1$
+		data.getItem("maxAbweichungVorgängerKurzZeit").asUnscaledValue().set(maxAbwVor); //$NON-NLS-1$
+		data.getItem("maxAbweichungMessStellenGruppeKurzZeit").asUnscaledValue().set(maxAbwGrp); //$NON-NLS-1$
 		
-		data.getItem("VergleichsIntervallLangZeit").asUnscaledValue().set(langZeitAgg);
-		data.getItem("maxAbweichungVorgängerLangZeit").asUnscaledValue().set(100);
-		data.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(100);
+		data.getItem("VergleichsIntervallLangZeit").asUnscaledValue().set(langZeitAgg); //$NON-NLS-1$
+		data.getItem("maxAbweichungVorgängerLangZeit").asUnscaledValue().set(100); //$NON-NLS-1$
+		data.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(100); //$NON-NLS-1$
 		
 		this.intervallKurzZeit = kurzZeitAgg;
 		resultat = new ResultData(mg, DD_PARAM, System.currentTimeMillis(), data);
@@ -215,10 +204,10 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	@Test
 	public void test1() {
 		try {
-			System.out.println("===== QKFz Test ===== Positiver MessFehler ==== Quelle: " + datenQuelle1 + " ==== ");
-			test("QKfz", datenQuelle1, 5, 5, 20);
+			System.out.println("===== QKFz Test ===== Positiver MessFehler ==== Quelle: " + datenQuelle1 + " ==== "); //$NON-NLS-1$ //$NON-NLS-2$
+			test("QKfz", datenQuelle1, 5, 5, 20); //$NON-NLS-1$
 		} catch (Exception e) {
-			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
+			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}
@@ -230,10 +219,10 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	@Test
 	public void test2() {
 		try {
-			System.out.println("===== QPkw Test ===== Negativer MessFehler ==== Quelle: " + datenQuelle2 + " ==== ");
-			test("QPkw", datenQuelle2, 5, 8, 12);
+			System.out.println("===== QPkw Test ===== Negativer MessFehler ==== Quelle: " + datenQuelle2 + " ==== "); //$NON-NLS-1$ //$NON-NLS-2$
+			test("QPkw", datenQuelle2, 5, 8, 12); //$NON-NLS-1$
 		} catch (Exception e) {
-			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
+			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}
@@ -246,11 +235,11 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 	public void test3() {
 		try {
 
-			System.out.println("===== QLkw Test  ===== Nicht ermittelbare Eingabedaten ==== Quelle: " + datenQuelle3 + " ==== ");
-			test("QLkw", datenQuelle3, 5, 10, 15);
+			System.out.println("===== QLkw Test  ===== Nicht ermittelbare Eingabedaten ==== Quelle: " + datenQuelle3 + " ==== "); //$NON-NLS-1$ //$NON-NLS-2$
+			test("QLkw", datenQuelle3, 5, 10, 15); //$NON-NLS-1$
 			
 		} catch (Exception e) {
-			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage());
+			System.out.println("FEHLER BEIM TEST AUFGETRETEN:\n" + e.getMessage()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}
@@ -271,9 +260,9 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		DELzFhTester.datenQuelle = datenQuelle;
 		
 		DELzFhTester tester = new DELzFhTester();
-		String connArgs [] =   new String [CON_DATA.length] ;
-		for(int i=0; i<CON_DATA.length; i++)
-			connArgs[i] = CON_DATA[i];
+		String connArgs [] =   new String [Verbindung.CON_DATA.length] ;
+		for(int i=0; i<Verbindung.CON_DATA.length; i++)
+			connArgs[i] = Verbindung.CON_DATA[i];
 		StandardApplicationRunner.run(tester, connArgs);
 		
 		Thread.sleep(1000);
@@ -314,7 +303,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 			zeitStempel += MINUTE_IN_MS;
 			dsListe = dtImporter.getDatenSaetzeNaechstenIntervall(fahrzeugTyp);
 		}
-		dav.disconnect(false, "");
+		dav.disconnect(false, ""); //$NON-NLS-1$
 		Thread.sleep(3000);
 	}
 	
@@ -354,7 +343,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		try {
 			dtImporter = new TestDatenImporter(dav, datenQuelle);
 		} catch (Exception e) {
-			System.out.println("Fehler beim Oeffnen der Testdaten " + e.getMessage());
+			System.out.println("Fehler beim Oeffnen der Testdaten " + e.getMessage()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		
@@ -362,23 +351,23 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		SystemObject ms1_mq, ms1_mq_zu1, ms1_mq_zu2, ms1_mq_ab1, ms1_mq_ab2, ms2_mq, ms2_mq_zu1, ms2_mq_ab1, ms3_mq, ms4_mq;
 		
 		
-		mg = dav.getDataModel().getObject("gr1");
+		mg = dav.getDataModel().getObject("gr1"); //$NON-NLS-1$
 			
-		ms1 = dav.getDataModel().getObject("gr1.ms1");
-		ms2 = dav.getDataModel().getObject("gr1.ms2");
-		ms3 = dav.getDataModel().getObject("gr1.ms3");
-		ms4 = dav.getDataModel().getObject("gr1.ms4");
+		ms1 = dav.getDataModel().getObject("gr1.ms1"); //$NON-NLS-1$
+		ms2 = dav.getDataModel().getObject("gr1.ms2"); //$NON-NLS-1$
+		ms3 = dav.getDataModel().getObject("gr1.ms3"); //$NON-NLS-1$
+		ms4 = dav.getDataModel().getObject("gr1.ms4"); //$NON-NLS-1$
 		
-		ms1_mq     =  dav.getDataModel().getObject("gr1.ms1.mq");
-		ms1_mq_zu1 =  dav.getDataModel().getObject("gr1.ms1.zu1");
-		ms1_mq_zu2 =  dav.getDataModel().getObject("gr1.ms1.zu2");
-		ms1_mq_ab1 =  dav.getDataModel().getObject("gr1.ms1.ab1");
-		ms1_mq_ab2 =  dav.getDataModel().getObject("gr1.ms1.ab2");
-		ms2_mq     =  dav.getDataModel().getObject("gr1.ms2.mq");
-		ms2_mq_zu1 =  dav.getDataModel().getObject("gr1.ms2.zu1");
-		ms2_mq_ab1 =  dav.getDataModel().getObject("gr1.ms2.ab1");
-		ms3_mq     =  dav.getDataModel().getObject("gr1.ms3.mq");
-		ms4_mq     =  dav.getDataModel().getObject("gr1.ms4.mq");
+		ms1_mq     =  dav.getDataModel().getObject("gr1.ms1.mq"); //$NON-NLS-1$
+		ms1_mq_zu1 =  dav.getDataModel().getObject("gr1.ms1.zu1"); //$NON-NLS-1$
+		ms1_mq_zu2 =  dav.getDataModel().getObject("gr1.ms1.zu2"); //$NON-NLS-1$
+		ms1_mq_ab1 =  dav.getDataModel().getObject("gr1.ms1.ab1"); //$NON-NLS-1$
+		ms1_mq_ab2 =  dav.getDataModel().getObject("gr1.ms1.ab2"); //$NON-NLS-1$
+		ms2_mq     =  dav.getDataModel().getObject("gr1.ms2.mq"); //$NON-NLS-1$
+		ms2_mq_zu1 =  dav.getDataModel().getObject("gr1.ms2.zu1"); //$NON-NLS-1$
+		ms2_mq_ab1 =  dav.getDataModel().getObject("gr1.ms2.ab1"); //$NON-NLS-1$
+		ms3_mq     =  dav.getDataModel().getObject("gr1.ms3.mq"); //$NON-NLS-1$
+		ms4_mq     =  dav.getDataModel().getObject("gr1.ms4.mq"); //$NON-NLS-1$
 		
 		// fuer 2 Messsquerschnitte und 2 Attributsgruppen werden Betriebsmeldungen erzeugt
 		betriebsmeldung = new long[4];
@@ -399,31 +388,31 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		mengeMs.add(ms3);
 		mengeMs.add(ms4);
 		
-		DD_VDKZ = new DataDescription(dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"), 
-				dav.getDataModel().getAspect("asp.analyse"));
+		DD_VDKZ = new DataDescription(dav.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitMq"),  //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.analyse")); //$NON-NLS-1$
 		
-		DD_PARAM = new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"),
-				dav.getDataModel().getAspect("asp.parameterVorgabe"));
+		DD_PARAM = new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.parameterVorgabe")); //$NON-NLS-1$
 		
 		
 		dav.subscribeSender(this, mengeMq, DD_VDKZ, SenderRole.source());
 		dav.subscribeSender(this, mg, DD_PARAM, SenderRole.sender());
 		
 	
-		DD_IVS_DATEN1 = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
-				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit"));
+		DD_IVS_DATEN1 = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
 		
-		DD_IVS_DATEN2 = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
-				dav.getDataModel().getAspect("asp.messStelleKurzZeit"));
+		DD_IVS_DATEN2 = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.messStelleKurzZeit")); //$NON-NLS-1$
 		
-		DD_BVS_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsStärke"),
-				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit"));
+		DD_BVS_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsStärke"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
 		
-		DD_ABWVS1_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.abweichungVerkehrsStärke"),
-				dav.getDataModel().getAspect("asp.messQuerschnittDerMessStellenGruppeKurzZeit"));
+		DD_ABWVS1_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.abweichungVerkehrsStärke"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.messQuerschnittDerMessStellenGruppeKurzZeit")); //$NON-NLS-1$
 		
-		DD_ABWVS2_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.abweichungVerkehrsStärke"),
-				dav.getDataModel().getAspect("asp.messQuerschnittZumVorgängerKurzZeit"));
+		DD_ABWVS2_DATEN = new DataDescription(dav.getDataModel().getAttributeGroup("atg.abweichungVerkehrsStärke"), //$NON-NLS-1$
+				dav.getDataModel().getAspect("asp.messQuerschnittZumVorgängerKurzZeit")); //$NON-NLS-1$
 	
 		dav.subscribeReceiver(this, mengeMs, DD_IVS_DATEN1, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, mengeMs, DD_IVS_DATEN2, ReceiveOptions.normal(), ReceiverRole.receiver());
@@ -466,38 +455,38 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 				/*
 				 * Die Verkehrstaerke ist fuer alle Messstellen berechnet 
 				 */
-				if(pid.equals("gr1.ms1")) ms_index = 0;
-				else if(pid.equals("gr1.ms2")) ms_index = 1;
-				else if(pid.equals("gr1.ms3")) ms_index = 2;
-				else if(pid.equals("gr1.ms4")) ms_index = 3;
+				if(pid.equals("gr1.ms1")) ms_index = 0; //$NON-NLS-1$
+				else if(pid.equals("gr1.ms2")) ms_index = 1; //$NON-NLS-1$
+				else if(pid.equals("gr1.ms3")) ms_index = 2; //$NON-NLS-1$
+				else if(pid.equals("gr1.ms4")) ms_index = 3; //$NON-NLS-1$
 
 				if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-						"atg.intervallVerkehrsStärke") &&
+						"atg.intervallVerkehrsStärke") && //$NON-NLS-1$
 						resDatei.getDataDescription().getAspect().getPid().equals(
-						"asp.messQuerschnittKurzZeit")) 
+						"asp.messQuerschnittKurzZeit"))  //$NON-NLS-1$
 				{
 					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals("IVS MQ", ausgabe[ms_index + IVS_MQ_OFFSET],x);
-					System.out.println(String.format("[ %4d ] IVS MQ %8d = %8d", idx, ausgabe[ms_index + IVS_MQ_OFFSET], x));
+					Assert.assertEquals("IVS MQ", ausgabe[ms_index + IVS_MQ_OFFSET],x); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] IVS MQ %8d = %8d", idx, ausgabe[ms_index + IVS_MQ_OFFSET], x)); //$NON-NLS-1$
 					ausgabe[ms_index + IVS_MQ_OFFSET] = Long.MAX_VALUE;
 					
-					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
-					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel))); //$NON-NLS-1$
 					
 				}
 				
 				if(resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-						"atg.intervallVerkehrsStärke") &&
+						"atg.intervallVerkehrsStärke") && //$NON-NLS-1$
 					resDatei.getDataDescription().getAspect().getPid().equals(
-							"asp.messStelleKurzZeit"))
+							"asp.messStelleKurzZeit")) //$NON-NLS-1$
 				{
 					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals("IVS MS", ausgabe[ms_index + IVS_MS_OFFSET],x);
-					System.out.println(String.format("[ %4d ] IVS MS %8d = %8d", idx, ausgabe[ms_index + IVS_MS_OFFSET], x));
+					Assert.assertEquals("IVS MS", ausgabe[ms_index + IVS_MS_OFFSET],x); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] IVS MS %8d = %8d", idx, ausgabe[ms_index + IVS_MS_OFFSET], x)); //$NON-NLS-1$
 					ausgabe[ms_index + IVS_MS_OFFSET] = Long.MAX_VALUE;
 					
-					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
-					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel))); //$NON-NLS-1$
 					
 				}
 				
@@ -505,54 +494,54 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 				 * Die Bilanz und die Abweichungen werden nur fuer die MessStellen 2 und 3 ausgewertet
 				 * 
 				 */
-				if(pid.equals("gr1.ms2")) ms_index = 0;
-				else if(pid.equals("gr1.ms3")) ms_index = 1;
+				if(pid.equals("gr1.ms2")) ms_index = 0; //$NON-NLS-1$
+				else if(pid.equals("gr1.ms3")) ms_index = 1; //$NON-NLS-1$
 				else ms_index = 5;
 				
 				if(ms_index < 3 && resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-						"atg.bilanzVerkehrsStärke")) 
+						"atg.bilanzVerkehrsStärke"))  //$NON-NLS-1$
 				{
 				
 					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
 
-					Assert.assertEquals("BILANZ",ausgabe[BILANZ_OFFSET+ms_index],x);
-					System.out.println(String.format("[ %4d ] BILANZ %8d = %8d", idx, ausgabe[BILANZ_OFFSET+ms_index], x));
+					Assert.assertEquals("BILANZ",ausgabe[BILANZ_OFFSET+ms_index],x); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] BILANZ %8d = %8d", idx, ausgabe[BILANZ_OFFSET+ms_index], x)); //$NON-NLS-1$
 					ausgabe[BILANZ_OFFSET+ms_index] = Long.MAX_VALUE;
 					
-					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
-					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel))); //$NON-NLS-1$
 					
 				}
 				
 				if(ms_index < 3 && resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-						"atg.abweichungVerkehrsStärke") &&
+						"atg.abweichungVerkehrsStärke") && //$NON-NLS-1$
 					resDatei.getDataDescription().getAspect().getPid().equals(
-					"asp.messQuerschnittZumVorgängerKurzZeit")) 
+					"asp.messQuerschnittZumVorgängerKurzZeit"))  //$NON-NLS-1$
 				{
 					
 					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals("ABW_VOR",ausgabe[ABW_VOR_OFFSET+ms_index],x);
-					System.out.println(String.format("[ %4d ] ABW_VOR %8d = %8d", idx, ausgabe[ABW_VOR_OFFSET+ms_index], x));
+					Assert.assertEquals("ABW_VOR",ausgabe[ABW_VOR_OFFSET+ms_index],x); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] ABW_VOR %8d = %8d", idx, ausgabe[ABW_VOR_OFFSET+ms_index], x)); //$NON-NLS-1$
 					ausgabe[ABW_VOR_OFFSET+ms_index] = Long.MAX_VALUE;
 					
-					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
-					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel))); //$NON-NLS-1$
 					
 				}
 				
 				if(ms_index < 3 &&  resDatei.getDataDescription().getAttributeGroup().getPid().equals(
-						"atg.abweichungVerkehrsStärke") &&
+						"atg.abweichungVerkehrsStärke") && //$NON-NLS-1$
 					resDatei.getDataDescription().getAspect().getPid().equals(
-							"asp.messQuerschnittDerMessStellenGruppeKurzZeit"))
+							"asp.messQuerschnittDerMessStellenGruppeKurzZeit")) //$NON-NLS-1$
 				{
 
 					long x = data.getItem(fahrzeugTyp).asUnscaledValue().longValue();
-					Assert.assertEquals("ABW_GRP",ausgabe[ABW_MG_OFFSET+ms_index],x);
-					System.out.println(String.format("[ %4d ] ABW_GRP %8d = %8d", idx, ausgabe[ABW_MG_OFFSET+ms_index], x));
+					Assert.assertEquals("ABW_GRP",ausgabe[ABW_MG_OFFSET+ms_index],x); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] ABW_GRP %8d = %8d", idx, ausgabe[ABW_MG_OFFSET+ms_index], x)); //$NON-NLS-1$
 				
 					ausgabe[ABW_MG_OFFSET+ms_index] = Long.MAX_VALUE;
-					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel);
-					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel)));
+					Assert.assertEquals(String.format("DIFFERENZ: %d, %s", ausgabeZeitStempel - zeitSempel, data), ausgabeZeitStempel, zeitSempel); //$NON-NLS-1$
+					System.out.println(String.format("[ %4d ] Zeitstempel OK ---  %d (%s)", idx, zeitSempel, new Date(zeitSempel))); //$NON-NLS-1$
 					
 				}
 				
@@ -578,7 +567,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 			if(betriebsmeldung[j] != 0) break;
 		}
 		if(i>=ausgabe.length && j>=betriebsmeldung.length) {
-			System.out.println(String.format("[ %4d ] ------ Alle parameter OK ---- ", idx));
+			System.out.println(String.format("[ %4d ] ------ Alle parameter OK ---- ", idx)); //$NON-NLS-1$
 			ausgabeZeitStempel = 0;
 			ausgabe = null;
 			idx++;
@@ -600,33 +589,33 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		Date dvon = new Date(), dbis  = new Date();
 		
 		// Wir  vergleichen nur Betriebsmeldungen von MQ 2 und 3
-		if(obj.getPid().equals("gr1.ms3.mq")) mq_index = 1;
-		else if(obj.getPid().equals("gr1.ms2.mq")) mq_index = 0;
+		if(obj.getPid().equals("gr1.ms3.mq")) mq_index = 1; //$NON-NLS-1$
+		else if(obj.getPid().equals("gr1.ms2.mq")) mq_index = 0; //$NON-NLS-1$
 		else return;
 		
 		// Nur Betriebsmeldungen fuer Kurzzeitdaten werden betrachtet
-		if(text.contains("Stunde")) return;
+		if(text.contains("Stunde")) return; //$NON-NLS-1$
 
 		try {
 			
 			String typ, von, bis, intervall, prozent, abwTyp;
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm"); //$NON-NLS-1$
 		
-			typ = text.replaceFirst("Der Wert ", "");
-			prozent = typ.replaceFirst("Q... weicht um mehr als ", "");
-			abwTyp = prozent.replaceFirst("-?[\\d]+% vom erwarteten Wert im Intervall \\(Vergleich mit ", "");
-			von = abwTyp.replaceFirst("[\\w]+\\) ", "");
-			bis = von.replaceFirst("[\\.\\d]+ [\\d:]+ - ", "");
-			intervall = bis.replaceFirst("[\\.\\d]+ [\\d:]+ \\(", "");
+			typ = text.replaceFirst("Der Wert ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			prozent = typ.replaceFirst("Q... weicht um mehr als ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			abwTyp = prozent.replaceFirst("-?[\\d]+% vom erwarteten Wert im Intervall \\(Vergleich mit ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			von = abwTyp.replaceFirst("[\\w]+\\) ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			bis = von.replaceFirst("[\\.\\d]+ [\\d:]+ - ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			intervall = bis.replaceFirst("[\\.\\d]+ [\\d:]+ \\(", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			typ = typ.substring(0, 4);
 			von = von.substring(0, 17);
 			bis = bis.substring(0, 17);
-			prozent = prozent.split("% ")[0];
-			intervall = intervall.split(" Min")[0];
+			prozent = prozent.split("% ")[0]; //$NON-NLS-1$
+			intervall = intervall.split(" Min")[0]; //$NON-NLS-1$
 			
-			if( abwTyp.startsWith("Vorgaenger") ) typ_offset = 2;
-			else if( abwTyp.startsWith("Nachbarn") ) typ_offset = 0;
+			if( abwTyp.startsWith("Vorgaenger") ) typ_offset = 2; //$NON-NLS-1$
+			else if( abwTyp.startsWith("Nachbarn") ) typ_offset = 0; //$NON-NLS-1$
 			
 			lproc = Long.parseLong(prozent);
 			lint = Long.parseLong(intervall);
@@ -634,23 +623,23 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 			dbis = dateFormat.parse(bis);
 			
 		} catch (ParseException e) {
-			System.out.println("Fehler beim Parsing des Datums :" + e.getMessage());
+			System.out.println("Fehler beim Parsing des Datums :" + e.getMessage()); //$NON-NLS-1$
 		} catch (NumberFormatException e) {
-			System.out.println("Fehler beim Parsing einer Nummer :" + e.getMessage());
+			System.out.println("Fehler beim Parsing einer Nummer :" + e.getMessage()); //$NON-NLS-1$
 		}
 		
 		synchronized (dav) {
 
 			
-			Assert.assertEquals("Falsche Betriebsmedlung " + obj + " " + text + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3], 
+			Assert.assertEquals("Falsche Betriebsmedlung " + obj + " " + text + "Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3],  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					betriebsmeldung[mq_index + typ_offset], lproc);
 			betriebsmeldung[mq_index + typ_offset] = 0;
-			Assert.assertEquals("Intervall Von : ", dvon.getTime(), ausgabeZeitStempel);
-			Assert.assertEquals("Intervall Dauer : ", dbis.getTime() - dvon.getTime(), lint * MINUTE_IN_MS);
-			Assert.assertEquals("Intervall Dauer : ", lint * MINUTE_IN_MS, intervallKurzZeit * MINUTE_IN_MS);
+			Assert.assertEquals("Intervall Von : ", dvon.getTime(), ausgabeZeitStempel); //$NON-NLS-1$
+			Assert.assertEquals("Intervall Dauer : ", dbis.getTime() - dvon.getTime(), lint * MINUTE_IN_MS); //$NON-NLS-1$
+			Assert.assertEquals("Intervall Dauer : ", lint * MINUTE_IN_MS, intervallKurzZeit * MINUTE_IN_MS); //$NON-NLS-1$
 				
-			System.out.println(String.format("[ %4d ] BETRIEBSMELDUNG OK %s ( %d %%)", idx, obj.getPid(), lproc)
-			+ "Noch Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3]);
+			System.out.println(String.format("[ %4d ] BETRIEBSMELDUNG OK %s ( %d %%)", idx, obj.getPid(), lproc) //$NON-NLS-1$
+			+ "Noch Erwartet: " + betriebsmeldung[0] + " " + betriebsmeldung[1] + " " + betriebsmeldung[2] + " " + betriebsmeldung[3]); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  //$NON-NLS-4$
 
 			//  Wenn alle Werte im Array ausgabe schon kontroliert worden sind
 			//  die mit Long.MAX_VALUE gekennzeichnet sind, koennen wir den array loeschen 

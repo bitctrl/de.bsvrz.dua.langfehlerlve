@@ -349,8 +349,10 @@ implements IDELzFhDatenListener,
 		   		this.msDb, this.fertigesIntervall.getStart(), nutzDaten);
 		this.msKanal.publiziere(msIntervallVSResultat);
 		
-		for(IDELzFhDatenListener listener:this.listenerMenge){
-			listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
+		synchronized (this.listenerMenge) {
+			for(IDELzFhDatenListener listener:this.listenerMenge){
+				listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
+			}			
 		}
 		
 		/**
@@ -370,8 +372,10 @@ implements IDELzFhDatenListener,
 					this.messStelle.getPruefling().getSystemObject(),
 					this.msDb, intervallDatum.getStart(), null);
 			this.fertigesIntervall = intervallDatum;
-			for(IDELzFhDatenListener listener:this.listenerMenge){
-				listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
+			synchronized(this.listenerMenge){
+				for(IDELzFhDatenListener listener:this.listenerMenge){
+					listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
+				}
 			}
 			this.msKanal.publiziere(msIntervallVSResultat);
 		}else{

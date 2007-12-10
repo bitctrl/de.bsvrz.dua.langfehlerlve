@@ -40,7 +40,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStellenGruppe;
 public class MessStellenGruppeTest extends MessStellenGruppe {
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkontruktor
+	 * 
+	 * @param msgObjekt ein Systemobjekt vom Typ <code>typ.messStellenGruppe</code>
+	 * @throws DUAInitialisierungsException wenn die Messstellengruppe nicht 
+	 * initialisiert werden konnte
 	 */
 	protected MessStellenGruppeTest(final SystemObject msgObjekt) throws DUAInitialisierungsException {
 		super(msgObjekt);

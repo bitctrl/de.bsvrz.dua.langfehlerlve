@@ -26,32 +26,29 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
-
-
 /**
- * 
- * Ermoeglicht die Singleton Klasse PublikationsKanal neustarten
- * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * Haelt alle Startparameter, die zur Durchfuehrung des Tests notwendig sind
+ * (Datenverteiler-Verbindung, Basisverzeichnis fuer Quelldaten)   
+ *  
+ * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class PublikationsKanalTest extends PublikationsKanal {
+public class Verbindung {
 
 	/**
-	 * Standardkonstruktor
-	 * 
-	 * @param dav Datenverteiler-Verbindung
+	 * Verbindungsdaten
 	 */
-	public PublikationsKanalTest(ClientDavInterface dav){
-		super(dav);
-	}
+	public static final String[] CON_DATA = new String[] {
+			"-datenverteiler=localhost:8083",   //$NON-NLS-1$
+			"-benutzer=Tester",  //$NON-NLS-1$
+			"-authentifizierung=c:\\passwd1",  //$NON-NLS-1$
+			"-KonfigurationsBereichsPid=kb.deLzFhTest",  //$NON-NLS-1$
+			"-debugLevelStdErrText=INFO", //$NON-NLS-1$
+			"-debugLevelFileText=INFO" }; //$NON-NLS-1$
 	
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden
 	 */
-	static public void Reset() {
-		DAV = null;
-	}
+	public static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\"; //$NON-NLS-1$
+	
 }

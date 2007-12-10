@@ -32,8 +32,12 @@ import de.bsvrz.dua.langfehlerlve.parameter.AtgParameterMessStellenGruppe;
 public class AtgParameterMessStellenGruppeTest extends
 		AtgParameterMessStellenGruppe {
 
+	
 	/**
-	 * {@inheritDoc}
+	 * Standardkonstruktor
+	 * 
+	 * @param dav Verbindung zum Datenverteiler
+	 * @param objekt ein Objekt vom Typ <code>typ.messStellenGruppe</code>
 	 */
 	protected AtgParameterMessStellenGruppeTest(ClientDavInterface dav,
 			SystemObject objekt) {

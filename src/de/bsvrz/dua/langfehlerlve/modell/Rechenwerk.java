@@ -196,7 +196,6 @@ public class Rechenwerk {
 	 * 
 	 * @param minuend der Minuend
 	 * @param subtrahend der Subtrahend
-	 * @param negativErlaubt ob Negative Ausgangswerte erlaubt sind
 	 * @return die Differenz von Minuend und Subtrahend
 	 */
 	public static final IDELzFhDatum subtrahiere(IDELzFhDatum minuend, IDELzFhDatum subtrahend){

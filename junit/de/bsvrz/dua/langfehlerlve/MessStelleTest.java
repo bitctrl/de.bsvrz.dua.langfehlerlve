@@ -40,7 +40,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
 public class MessStelleTest extends MessStelle {
 	
 	/**
-	 * {@inheritDoc}
+	 * Standardkontruktor
+	 * 
+	 * @param msObjekt ein Systemobjekt vom Typ <code>typ.messStelle</code>
+	 * @throws DUAInitialisierungsException wenn die Messstelle nicht 
+	 * initialisiert werden konnte
 	 */
 	protected MessStelleTest(final SystemObject msObjekt) throws DUAInitialisierungsException {
 		super(msObjekt);

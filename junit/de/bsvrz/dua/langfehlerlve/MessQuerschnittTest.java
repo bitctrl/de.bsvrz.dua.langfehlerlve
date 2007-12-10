@@ -39,7 +39,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 public class MessQuerschnittTest extends MessQuerschnitt {
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkontruktor
+	 * 
+	 * @param mqObjekt ein Systemobjekt vom Typ <code>typ.messQuerschnitt</code>
 	 */
 	protected MessQuerschnittTest(final SystemObject mqObjekt) {
 		super(mqObjekt);

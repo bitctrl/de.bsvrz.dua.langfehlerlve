@@ -40,7 +40,36 @@ Datenverteiler-Applikation):
 	
 - Tests:
 
-	
+Alle Tests befinden sich unterhalb des Verzeichnisses junit und sind als JUnit-Tests ausführbar.
+Dabei wird implizit eine Instanz der SWE 4.DELzFh DE Langzeit-Fehlererkennung gestartet. Die implizit
+gestartete SWE 4.DELzFh DE Langzeit-Fehlererkennung wird dann ueber den Datenverteiler mit Testdaten
+versorgt waehrend die Rueckmeldungen (auch ueber DAV empfangen) mit den erwarteten Rueckmeldungen
+verglichen werden.
+
+Voraussetzungen:
+- Start der Test-Konfiguration (extra/testKonfig.zip)
+- Anpassung der DAV-Start-Parameter (Variable CON_DATA) innerhalb von 
+	junit/de.bsvrz.dua.langfehlerlve.Verbindung.java
+
+Inhalt/Verlauf DAV-Tests:
+
+Da die Provokation aller moeglichen Zustaende fuer das System nicht moeglich ist,
+wird im Folgenden versucht besonders prominente Fehlersituationen zu ueberpruefen.
+Dies wird in drei Testroutinen fuer die drei Q-Attribute wie folgt vorgenommen
+(test1-3 aus junit/de.bsvrz.dua.langfehlerlve.DELzFsTester.java):
+
+Es werden folgende Daten gesendet (bzw. erwartet): 
+- extra/testDaten/SWE_DE_LZ_Fehlererkennung_negativ.csv
+  (Provoziert negative Bilanz- und Abweichungsergebnisse)
+- extra/testDaten/SWE_DE_LZ_Fehlererkennung_nicht_ermittelbar.csv
+  (Provoziert als "nicht ermittelbar" gekennzeichnet Ergebnis-Werte)
+- extra/testDaten/SWE_DE_LZ_Fehlererkennung_positiv.csv 
+  (Provoziert normale (positive) Ergebnis-Werte)
+
+In den Tabellen stehen jeweils links, die fuer die MQs des Testkonfigurationsbereichs
+(kb.deLzFhTest) gesendeten Werte. Rechts stehen die Werte, die als Ergebnisse in den
+unterschiedlichen Attributgruppen erwartet werden.
+		
 Die Tests wurden so bereits erfolgreich ausgeführt.
 
 

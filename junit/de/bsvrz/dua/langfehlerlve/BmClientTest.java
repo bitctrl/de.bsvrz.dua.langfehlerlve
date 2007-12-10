@@ -38,7 +38,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
 public class BmClientTest extends BmClient {
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkonstruktor
+	 * 
+	 * @param dav Datenverteiler-Verbindung
 	 */
 	protected BmClientTest(ClientDavInterface dav) {
 		super(dav);

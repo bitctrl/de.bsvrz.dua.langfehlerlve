@@ -41,7 +41,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 public class FahrstreifenTest extends FahrStreifen {
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkontruktor
+	 * 
+	 * @param fsObjekt ein Systemobjekt vom Typ <code>typ.fahrStreifen</code>
+	 * @throws DUAInitialisierungsException wenn der Fahrstreifen nicht 
+	 * initialisiert werden konnte
 	 */
 	private FahrstreifenTest(final SystemObject fsObjekt) throws DUAInitialisierungsException {
 		super(fsObjekt);
