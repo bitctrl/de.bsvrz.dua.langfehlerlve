@@ -29,6 +29,12 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.parameter.AtgParameterMessStellenGruppe;
 
+/**
+ * Test
+ * 
+ * @author BitCtrl Systems GmbH, Bachraty
+ *
+ */
 public class AtgParameterMessStellenGruppeTest extends
 		AtgParameterMessStellenGruppe {
 

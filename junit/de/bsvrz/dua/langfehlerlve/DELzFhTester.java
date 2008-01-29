@@ -33,10 +33,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
-
-import junit.framework.Assert;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
@@ -280,7 +280,12 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 				int i = 0;
 				for(Data ds : dsListe) {
 					resultat = new ResultData(mengeMq.get(i++), DD_VDKZ, zeitStempel, ds );
-					dav.sendData(resultat);
+					try{
+						dav.sendData(resultat);
+					}catch(Exception ex){
+						ex.printStackTrace();
+						System.out.println(resultat);
+					}
 				}
 				if(dtImporter.hatAusgabe()) {
 					while(ausgabe != null) dav.wait();
@@ -319,6 +324,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		MessStellenGruppeTest.Reset();
 		MessStelleTest.Reset();
 		PublikationsKanalTest.Reset();
+		DUAVerkehrsNetzTest.Reset();
 		mengeMs.clear();
 		mengeMq.clear();
 		ausgabe = null;

@@ -49,6 +49,6 @@ public class Verbindung {
 	/**
 	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden
 	 */
-	public static final String TEST_DATEN_VERZ = ".\\extra\\testDaten\\"; //$NON-NLS-1$
+	public static final String TEST_DATEN_VERZ = "..\\testDaten\\"; //$NON-NLS-1$
 	
 }
