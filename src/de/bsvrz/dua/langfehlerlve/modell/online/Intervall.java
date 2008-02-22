@@ -28,9 +28,10 @@ package de.bsvrz.dua.langfehlerlve.modell.online;
 
 import java.util.Date;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Zeitintervall. Zwei Intervalle sind dann gleich, wenn sie
@@ -147,7 +148,7 @@ public class Intervall {
 	 */
 	@Override
 	public String toString() {
-		String s = Konstante.LEERSTRING;
+		String s = Constants.EMPTY_STRING;
 		
 		if(this.datum.isKeineDaten()){
 			s += "keine Daten";  //$NON-NLS-1$

@@ -37,6 +37,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -54,7 +56,6 @@ import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IZeitStempel;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Klasse korrespondiert mit einem DAV-Objekt vom Typ <code>typ.messQuerschnittAllgemein</code>
@@ -79,7 +80,7 @@ implements ClientReceiverInterface{
 	/**
 	 * aktuelle Maximallaenge des Pufferintervalls
 	 */
-	private long intervallLaenge = Konstante.TAG_24_IN_MS;
+	private long intervallLaenge = Constants.MILLIS_PER_DAY;
 	
 	/**
 	 * zeigt an, ob die Intervalllaenge bereits initialisiert wurde
@@ -313,7 +314,7 @@ implements ClientReceiverInterface{
 		nullElement.set(Calendar.SECOND, 0);
 		nullElement.set(Calendar.MILLISECOND, 0);
 		
-		if(this.intervallLaenge > Konstante.STUNDE_IN_MS){
+		if(this.intervallLaenge > Constants.MILLIS_PER_HOUR){
 			nullElement.set(Calendar.HOUR_OF_DAY, 0);
 		}
 

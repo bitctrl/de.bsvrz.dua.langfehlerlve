@@ -35,6 +35,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
@@ -49,7 +51,6 @@ import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
@@ -133,7 +134,7 @@ implements ClientSenderInterface,
 	/**
 	 * Die Laenge des Vergleichsintervalls als Text
 	 */
-	protected String vergleichsIntervall = Konstante.LEERSTRING;
+	protected String vergleichsIntervall = Constants.EMPTY_STRING;
 
 	
 	/**
@@ -334,7 +335,7 @@ implements ClientSenderInterface,
 									MessageGrade.ERROR,
 									this.messStelle.getMessStelle().getPruefling().getSystemObject(),
 									new MessageCauser(DAV.getLocalUser(),
-											Konstante.LEERSTRING,
+											Constants.EMPTY_STRING,
 											DELangZeitFehlerErkennung.getName()),
 											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " +  //$NON-NLS-1$ //$NON-NLS-2$
 											abweichungMinus100 + "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 

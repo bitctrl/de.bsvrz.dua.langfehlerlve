@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
@@ -40,7 +42,6 @@ import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Korrespondiert mit einem Objekt vom Typ <code>typ.messStellenGruppe</code>
@@ -145,7 +146,7 @@ implements ClientReceiverInterface{
 						final int maxAbweichungVorgaengerKZ =
 							resultat.getData().getUnscaledValue("maxAbweichungVorgängerKurzZeit").intValue(); //$NON-NLS-1$
 						final long vergleichsIntervallKZ =
-							resultat.getData().getUnscaledValue("VergleichsIntervallKurzZeit").longValue() * Konstante.MINUTE_IN_MS; //$NON-NLS-1$					
+							resultat.getData().getUnscaledValue("VergleichsIntervallKurzZeit").longValue() * Constants.MILLIS_PER_MINUTE; //$NON-NLS-1$					
 						this.kzParameter = new IMsgDatenartParameter(){
 
 							public int getMaxAbweichungMessStellenGruppe() {
@@ -167,7 +168,7 @@ implements ClientReceiverInterface{
 						final int maxAbweichungVorgaengerLZ =
 							resultat.getData().getUnscaledValue("maxAbweichungVorgängerLangZeit").intValue(); //$NON-NLS-1$
 						final long vergleichsIntervallLZ =
-							resultat.getData().getUnscaledValue("VergleichsIntervallLangZeit").longValue() * Konstante.STUNDE_IN_MS; //$NON-NLS-1$
+							resultat.getData().getUnscaledValue("VergleichsIntervallLangZeit").longValue() * Constants.MILLIS_PER_HOUR; //$NON-NLS-1$
 						this.lzParameter = new IMsgDatenartParameter(){
 
 							public int getMaxAbweichungMessStellenGruppe() {
