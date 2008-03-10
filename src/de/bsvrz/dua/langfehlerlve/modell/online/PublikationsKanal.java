@@ -27,7 +27,9 @@
 package de.bsvrz.dua.langfehlerlve.modell.online;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.DataNotSubscribedException;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SendSubscriptionNotConfirmed;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -84,12 +86,14 @@ public class PublikationsKanal{
 					this.keineDaten = true;
 					DAV.sendData(resultat);
 				}
-			}		
-		} catch (Exception e) {
+			}
+		} catch (DataNotSubscribedException  e) {
+			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
+			e.printStackTrace();
+		} catch (SendSubscriptionNotConfirmed e){
 			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
 			e.printStackTrace();
 		}
-
 	}
 
 }
