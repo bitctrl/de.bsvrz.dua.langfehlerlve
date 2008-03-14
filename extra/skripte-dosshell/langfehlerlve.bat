@@ -19,7 +19,7 @@ SET dav1AppPort=8083
 
 REM Applikation starten
 CHCP 1252
-TITLE DE Fehleranalyse fehlende Messdaten
+TITLE Langzeit-Fehlererkennung
 java %jvmArgs% ^
 de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung ^
 -debugLevelStdErrText=info ^
