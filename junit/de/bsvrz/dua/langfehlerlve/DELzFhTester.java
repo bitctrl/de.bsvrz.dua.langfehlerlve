@@ -49,6 +49,7 @@ import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
+import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.IBmListener;
 
@@ -425,6 +426,8 @@ public class DELzFhTester extends DELangZeitFehlerErkennung
 		dav.subscribeReceiver(this, mengeMs, DD_BVS_DATEN, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, mengeMs, DD_ABWVS1_DATEN, ReceiveOptions.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, mengeMs, DD_ABWVS2_DATEN, ReceiveOptions.normal(), ReceiverRole.receiver());
+		
+		Pause.warte(5000);
 
 	}
 

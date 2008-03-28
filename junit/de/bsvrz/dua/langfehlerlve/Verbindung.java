@@ -26,6 +26,8 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
+import java.io.File;
+
 /**
  * Haelt alle Startparameter, die zur Durchfuehrung des Tests notwendig sind
  * (Datenverteiler-Verbindung, Basisverzeichnis fuer Quelldaten)   
@@ -46,9 +48,10 @@ public class Verbindung {
 			"-debugLevelStdErrText=INFO", //$NON-NLS-1$
 			"-debugLevelFileText=INFO" }; //$NON-NLS-1$
 	
+
 	/**
 	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden
 	 */
-	public static final String TEST_DATEN_VERZ = "..\\testDaten\\"; //$NON-NLS-1$
+	public static final String TEST_DATEN_VERZ = ".." + File.separator + "testDaten" + File.separator; //$NON-NLS-1$ //$NON-NLS-2$
 	
 }
