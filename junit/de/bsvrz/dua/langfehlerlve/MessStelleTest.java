@@ -54,7 +54,7 @@ public class MessStelleTest extends MessStelle {
 	 * Setzt den initial-Status der Klasse
 	 */
 	public static void Reset() {
-		DAV = null;
-		SYS_OBJ_MS_OBJ_MAP.clear();
+		sDav = null;
+		sysObjMsObjMap.clear();
 	}
 }

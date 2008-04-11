@@ -15,7 +15,7 @@ extends DuaVerkehrsNetz{
 	 * Setzt den initial-Status der Klasse
 	 */
 	public static void Reset() {
-		INITIALISIERT = false;
+		initialisiert = false;
 	}
 	
 }

@@ -55,7 +55,7 @@ public class MessQuerschnittVirtuellTest extends MessQuerschnittVirtuell {
 	 * Setzt den initial-Status der Klasse
 	 */
 	public static void Reset() {
-		DAV = null;
-		SYS_OBJ_MQV_OBJ_MAP.clear();
+		sDav = null;
+		sysObjMqvObjMap.clear();
 	}
 }

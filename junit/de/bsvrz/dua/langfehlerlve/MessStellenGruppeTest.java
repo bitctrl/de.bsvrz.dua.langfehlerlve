@@ -54,7 +54,7 @@ public class MessStellenGruppeTest extends MessStellenGruppe {
 	 * Setzt den initial-Status der Klasse
 	 */
 	public static void Reset() {
-		DAV = null;
-		SYS_OBJ_MSG_OBJ_MAP.clear();
+		sDav = null;
+		sysObjMsgObjMap.clear();
 	}
 }

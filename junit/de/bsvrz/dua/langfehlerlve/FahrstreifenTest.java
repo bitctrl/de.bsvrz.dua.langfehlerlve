@@ -55,7 +55,7 @@ public class FahrstreifenTest extends FahrStreifen {
 	 * Setzt den initial-Status der Klasse
 	 */
 	public static void Reset() {
-		DAV = null;
-		SYS_OBJ_FS_OBJ_MAP.clear();
+		sDav = null;
+		sysObjFsObjMap.clear();
 	}
 }

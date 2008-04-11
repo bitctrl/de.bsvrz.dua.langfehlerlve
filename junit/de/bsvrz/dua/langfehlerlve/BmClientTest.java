@@ -50,6 +50,6 @@ public class BmClientTest extends BmClient {
 	 * Setzt den initial-Status der Klasse
 	 */
 	public static void Reset() {
-		INSTANZ = null;
+		instanz = null;
 	}
 }

@@ -51,7 +51,7 @@ public class MessQuerschnittTest extends MessQuerschnitt {
 	 * Setzt den initial-Status der Klasse
 	 */
 	public static void Reset() {
-		DAV = null;
-		SYS_OBJ_MQ_OBJ_MAP.clear();
+		sDav = null;
+		sysObjMqObjMap.clear();
 	}
 }
