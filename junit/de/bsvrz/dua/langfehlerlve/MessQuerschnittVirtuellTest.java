@@ -23,38 +23,42 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.langfehlerlve;
 
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
 
-
 /**
- * 
- * Ermoeglicht die statische instanzen der Klasse MessQuerschnittVirtuell neustarten
+ * Ermoeglicht die statische instanzen der Klasse MessQuerschnittVirtuell
+ * neustarten.
  * 
  * @author BitCtrl Systems GmbH, Bachraty
- *
+ * 
+ * @version $Id$
  */
 public class MessQuerschnittVirtuellTest extends MessQuerschnittVirtuell {
 
 	/**
-	 * Standardkontruktor
+	 * Standardkontruktor.
 	 * 
-	 * @param mqvObjekt ein Systemobjekt vom Typ <code>typ.messQuerschnittVirtuell</code>
-	 * @throws DUAInitialisierungsException wenn der virtuelle Messquerschnitt nicht 
-	 * initialisiert werden konnte
+	 * @param mqvObjekt
+	 *            ein Systemobjekt vom Typ
+	 *            <code>typ.messQuerschnittVirtuell</code>
+	 * @throws DUAInitialisierungsException
+	 *             wenn der virtuelle Messquerschnitt nicht initialisiert werden
+	 *             konnte
 	 */
-	protected MessQuerschnittVirtuellTest(final SystemObject mqvObjekt) throws DUAInitialisierungsException {
+	protected MessQuerschnittVirtuellTest(final SystemObject mqvObjekt)
+			throws DUAInitialisierungsException {
 		super(mqvObjekt);
 	}
-	
 
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Setzt den initial-Status der Klasse.
 	 */
-	public static void Reset() {
+	public static void reset() {
 		sDav = null;
 		sysObjMqvObjMap.clear();
 	}

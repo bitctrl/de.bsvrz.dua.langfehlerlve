@@ -29,28 +29,31 @@ package de.bsvrz.dua.langfehlerlve.modell.online;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 
 /**
- * Hoert auf Aktualisierungen der DELzFh-Intervalldaten eines Messquerschnitts bzw. 
- * einer Messstelle. Dies sind:<br>
- * 
- * - <code>QKfz(MessQuerschnitt)</code><br>
- * - <code>QLkw(MessQuerschnitt)</code><br>
- * - <code>QPkw(MessQuerschnitt)</code><br>
+ * Hoert auf Aktualisierungen der DELzFh-Intervalldaten eines Messquerschnitts
+ * bzw. einer Messstelle. Dies sind:<br>
+ *  - <code>QKfz(MessQuerschnitt)</code><br> -
+ * <code>QLkw(MessQuerschnitt)</code><br> -
+ * <code>QPkw(MessQuerschnitt)</code><br>
  * 
  * berechnet analog DUA-BW-C1C2-2
- *  
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IDELzFhDatenListener {
 
 	/**
-	 * Aktualisiert die DELzFh-Intervalldaten eines Messquerschnitts bzw. einer Messstelle
-	 * immer wenn ein Intervall als abgeschlossen wargenommen wurde bzw. wenn keine Daten
-	 * empfangen wurden
+	 * Aktualisiert die DELzFh-Intervalldaten eines Messquerschnitts bzw. einer
+	 * Messstelle immer wenn ein Intervall als abgeschlossen wargenommen wurde
+	 * bzw. wenn keine Daten empfangen wurden
 	 * 
-	 * @param objekt ein Systemobjekt eines Messquerschnitts fuer das die Daten sind
-	 * @param intervallDatum ein Intervalldatum <code>!= null</code>
+	 * @param objekt
+	 *            ein Systemobjekt eines Messquerschnitts fuer das die Daten
+	 *            sind
+	 * @param intervallDatum
+	 *            ein Intervalldatum <code>!= null</code>
 	 */
-	public void aktualisiereDatum(SystemObject objekt, Intervall intervallDatum);
-	
+	void aktualisiereDatum(SystemObject objekt, Intervall intervallDatum);
+
 }

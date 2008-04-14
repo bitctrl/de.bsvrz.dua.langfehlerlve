@@ -27,21 +27,25 @@
 package de.bsvrz.dua.langfehlerlve.parameter;
 
 /**
- * Hoert auf Veraenderungen der Attributgruppe (<code>atg.parameterMessStellenGruppe</code>) 
- *  
+ * Hoert auf Veraenderungen der Attributgruppe (<code>atg.parameterMessStellenGruppe</code>).
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IAtgParameterMessStellenGruppeListener {
 
 	/**
-	 * Aktualisiert die Parameter der Attributgruppe <code>atg.parameterMessStellenGruppe</code>
-	 * getrennt fuer die KZD- und LZD-Ueberwachung 
+	 * Aktualisiert die Parameter der Attributgruppe
+	 * <code>atg.parameterMessStellenGruppe</code> getrennt fuer die KZD- und
+	 * LZD-Ueberwachung.
 	 * 
-	 * @param kzParameter aktuelle Parameter fuer die KZD-Ueberwachung
-	 * @param lzParameter aktuelle Parameter fuer die LZD-Ueberwachung
+	 * @param kzParameter
+	 *            aktuelle Parameter fuer die KZD-Ueberwachung
+	 * @param lzParameter
+	 *            aktuelle Parameter fuer die LZD-Ueberwachung
 	 */
-	public void aktualisiereMsgParameter(IMsgDatenartParameter kzParameter,
-										 IMsgDatenartParameter lzParameter);
-	
+	void aktualisiereMsgParameter(IMsgDatenartParameter kzParameter,
+			IMsgDatenartParameter lzParameter);
+
 }

@@ -32,90 +32,93 @@ import de.bsvrz.dua.langfehlerlve.parameter.IAtgParameterMessStellenGruppeListen
 import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-
 /**
- * Grundgeruest einer Klasse, die immer die aktuellen Parameter einer Messstellengruppe
- * in Bezug auf ein bestimmtes Vergleichsintervall (Lang- oder Kurzzeit) benoetigt
- *  
+ * Grundgeruest einer Klasse, die immer die aktuellen Parameter einer
+ * Messstellengruppe in Bezug auf ein bestimmtes Vergleichsintervall (Lang- oder
+ * Kurzzeit) benoetigt.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public abstract class AbstraktDELzFhObjekt 
-implements IAtgParameterMessStellenGruppeListener{
+public abstract class AbstraktDELzFhObjekt implements
+		IAtgParameterMessStellenGruppeListener {
 
 	/**
-	 * Debug-Logger
+	 * Debug-Logger.
 	 */
 	protected static final Debug LOGGER = Debug.getLogger();
-	
+
 	/**
-	 * statische Datenverteiler-Verbindung
+	 * statische Datenverteiler-Verbindung.
 	 */
-	protected static ClientDavInterface DAV = null;
-	
+	protected static ClientDavInterface dDav = null;
+
 	/**
-	 * die mit diesem Objekt assoziierte Messstellengruppe
+	 * die mit diesem Objekt assoziierte Messstellengruppe.
 	 */
 	protected DELzFhMessStellenGruppe messStellenGruppe = null;
-	
+
 	/**
 	 * Indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
-	 * kuemmern soll
+	 * kuemmern soll.
 	 */
 	protected boolean langZeit = false;
-	
-		
+
 	/**
-	 * Initialisiert diese Klasse anstelle eines Konstruktors
+	 * Initialisiert diese Klasse anstelle eines Konstruktors.
 	 * 
-	 * @param dav Datenverteiler-Verbindung
-	 * @param messStellenGruppe die mit diesem Objekt zu assoziierende Messstellengruppe
-	 * @param langZeit indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
-	 * kuemmern soll
+	 * @param dav
+	 *            Datenverteiler-Verbindung
+	 * @param messStellenGruppe1
+	 *            die mit diesem Objekt zu assoziierende Messstellengruppe
+	 * @param langZeit1
+	 *            indiziert, ob sich dieses Objekt um das
+	 *            Langzeit-Vergleichsintervall kuemmern soll
 	 */
-	protected final void init(final ClientDavInterface dav, 
-						  	  final DELzFhMessStellenGruppe messStellenGruppe,
-						  	  final boolean langZeit){
-		if(DAV == null){
-			DAV = dav;
+	protected final void init(final ClientDavInterface dav,
+			final DELzFhMessStellenGruppe messStellenGruppe1,
+			final boolean langZeit1) {
+		if (dDav == null) {
+			dDav = dav;
 		}
-		this.messStellenGruppe = messStellenGruppe;
-		this.langZeit = langZeit;
-		AtgParameterMessStellenGruppe.getInstanz(dav, messStellenGruppe.getObjekt()).addListener(this);		
+		this.messStellenGruppe = messStellenGruppe1;
+		this.langZeit = langZeit1;
+		AtgParameterMessStellenGruppe.getInstanz(dav,
+				messStellenGruppe1.getObjekt()).addListener(this);
 	}
-	
-	
+
 	/**
 	 * Aktualisiert die Parameter der assoziierten Messstellengruppe fuer dieses
-	 * Objekt (und dieses Vergleichsintervall)
-	 *  
-	 * @param parameter aktuelle Parameter fuer die Ueberwachung
+	 * Objekt (und dieses Vergleichsintervall).
+	 * 
+	 * @param parameter
+	 *            aktuelle Parameter fuer die Ueberwachung
 	 */
-	protected abstract void aktualisiereMsgParameter(IMsgDatenartParameter parameter);
-	
-	
+	protected abstract void aktualisiereMsgParameter(
+			IMsgDatenartParameter parameter);
+
 	/**
 	 * Indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
-	 * kuemmert
+	 * kuemmert.
 	 * 
 	 * @return ob sich dieses Objekt um das Langzeit-Vergleichsintervall
-	 * kuemmert
+	 *         kuemmert
 	 */
-	protected final boolean isLangZeit(){
+	protected final boolean isLangZeit() {
 		return this.langZeit;
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void aktualisiereMsgParameter(IMsgDatenartParameter kzParameter,
-										 IMsgDatenartParameter lzParameter) {
-		if(this.isLangZeit()){
+			IMsgDatenartParameter lzParameter) {
+		if (this.isLangZeit()) {
 			this.aktualisiereMsgParameter(lzParameter);
-		}else{
+		} else {
 			this.aktualisiereMsgParameter(kzParameter);
 		}
-	}	
-	
+	}
+
 }

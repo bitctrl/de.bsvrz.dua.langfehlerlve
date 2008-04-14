@@ -33,64 +33,65 @@ import de.bsvrz.dav.daf.main.SendSubscriptionNotConfirmed;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Ausgabekanal fuer die Daten eines Systemobjektes und einer Datenbeschreibung. 
- * Sorgt dafuer, dass <code>keine Daten</code> nicht unmittelbar zweimal aufeinander
- * folgt
+ * Ausgabekanal fuer die Daten eines Systemobjektes und einer Datenbeschreibung.
+ * Sorgt dafuer, dass <code>keine Daten</code> nicht unmittelbar zweimal
+ * aufeinander folgt
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class PublikationsKanal{
-	
+public class PublikationsKanal {
+
 	/**
-	 * Debug-Logger
+	 * Debug-Logger.
 	 */
 	private static final Debug LOGGER = Debug.getLogger();
-	
+
 	/**
-	 * statische Datenverteiler-Verbindung
+	 * statische Datenverteiler-Verbindung.
 	 */
-	protected static ClientDavInterface DAV = null;
-	
+	protected static ClientDavInterface sDav = null;
+
 	/**
-	 * indiziert ob dieser Kanal z.Z. auf <code>keine Daten</code> steht
+	 * indiziert ob dieser Kanal z.Z. auf <code>keine Daten</code> steht.
 	 */
 	private boolean keineDaten = true;
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindung
+	 * @param dav
+	 *            Datenverteiler-Verbindung
 	 */
-	public PublikationsKanal(ClientDavInterface dav){
-		if(DAV == null){
-			DAV = dav;
+	public PublikationsKanal(ClientDavInterface dav) {
+		if (sDav == null) {
+			sDav = dav;
 		}
 	}
-	
-	
+
 	/**
 	 * Publiziert ein Datum. Sorgt dafuer, dass <code>keine Daten</code> nicht
-	 * unmittelbar zweimal aufeinander publiziert wird
+	 * unmittelbar zweimal aufeinander publiziert wird.
 	 * 
-	 * @param resultat ein Datum
+	 * @param resultat
+	 *            ein Datum
 	 */
-	public final void publiziere(final ResultData resultat){
+	public final void publiziere(final ResultData resultat) {
 		try {
-			if(resultat.getData() != null){
+			if (resultat.getData() != null) {
 				this.keineDaten = false;
-				DAV.sendData(resultat);
-			}else{
-				if(!this.keineDaten){
+				sDav.sendData(resultat);
+			} else {
+				if (!this.keineDaten) {
 					this.keineDaten = true;
-					DAV.sendData(resultat);
+					sDav.sendData(resultat);
 				}
 			}
-		} catch (DataNotSubscribedException  e) {
+		} catch (DataNotSubscribedException e) {
 			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
 			e.printStackTrace();
-		} catch (SendSubscriptionNotConfirmed e){
+		} catch (SendSubscriptionNotConfirmed e) {
 			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
 			e.printStackTrace();
 		}

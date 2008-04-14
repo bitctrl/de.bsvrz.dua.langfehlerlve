@@ -23,6 +23,7 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.langfehlerlve;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
@@ -30,20 +31,22 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.parameter.AtgParameterMessStellenGruppe;
 
 /**
- * Test
+ * Test.
  * 
  * @author BitCtrl Systems GmbH, Bachraty
- *
+ * 
+ * @version $Id$
  */
 public class AtgParameterMessStellenGruppeTest extends
 		AtgParameterMessStellenGruppe {
 
-	
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param objekt ein Objekt vom Typ <code>typ.messStellenGruppe</code>
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param objekt
+	 *            ein Objekt vom Typ <code>typ.messStellenGruppe</code>
 	 */
 	protected AtgParameterMessStellenGruppeTest(ClientDavInterface dav,
 			SystemObject objekt) {
@@ -51,10 +54,10 @@ public class AtgParameterMessStellenGruppeTest extends
 	}
 
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Setzt den initial-Status der Klasse.
 	 */
-	public static void Reset() {
-		INSTANZEN.clear();
+	public static void reset() {
+		instanzen.clear();
 	}
 
 }

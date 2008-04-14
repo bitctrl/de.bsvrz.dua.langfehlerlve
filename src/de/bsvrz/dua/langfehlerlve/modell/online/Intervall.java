@@ -34,98 +34,96 @@ import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
- * Zeitintervall. Zwei Intervalle sind dann gleich, wenn sie
- * den gleichen Anfang und das gleiche Ende besitzen (unabhaengig
- * von den im Intervall gespeicherten Daten)
- *  
+ * Zeitintervall. Zwei Intervalle sind dann gleich, wenn sie den gleichen Anfang
+ * und das gleiche Ende besitzen (unabhaengig von den im Intervall gespeicherten
+ * Daten)
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public class Intervall {
 
 	/**
-	 * Intervallbegin (absolute Zeit in ms)
+	 * Intervallbegin (absolute Zeit in ms).
 	 */
 	private long start = -1;
-	
+
 	/**
-	 * Intervallende (absolute Zeit in ms)
+	 * Intervallende (absolute Zeit in ms).
 	 */
 	private long ende = -1;
-	
+
 	/**
-	 * Das Datum, das zu diesem Intervall gehoert
+	 * Das Datum, das zu diesem Intervall gehoert.
 	 */
 	private IDELzFhDatum datum = null;
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param start Intervallbegin (absolute Zeit in ms)
-	 * @param ende Intervallende (absolute Zeit in ms)
-	 * @param datum das Datum, das zu diesem Intervall gehoert
+	 * @param start
+	 *            Intervallbegin (absolute Zeit in ms)
+	 * @param ende
+	 *            Intervallende (absolute Zeit in ms)
+	 * @param datum
+	 *            das Datum, das zu diesem Intervall gehoert
 	 */
-	public Intervall(final long start, final long ende, IDELzFhDatum datum){
-		if(ende < start){
-			throw new RuntimeException("Intervallende (" +   //$NON-NLS-1$
-					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende)) +
-					") liegt vor Intervallbegin (" +  //$NON-NLS-1$
-					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start)) + ")"); //$NON-NLS-1$
+	public Intervall(final long start, final long ende, IDELzFhDatum datum) {
+		if (ende < start) {
+			throw new RuntimeException("Intervallende (" + //$NON-NLS-1$
+					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
+					+ ") liegt vor Intervallbegin (" + //$NON-NLS-1$
+					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
+					+ ")"); //$NON-NLS-1$
 		}
 		this.start = start;
 		this.ende = ende;
-		
-		if(datum == null){
+
+		if (datum == null) {
 			throw new NullPointerException("Es wurde kein Datum uebergeben"); //$NON-NLS-1$
 		}
-		
+
 		this.datum = datum;
 	}
-	
-	
+
 	/**
-	 * Erfragt Intervallbegin (absolute Zeit in ms)
+	 * Erfragt Intervallbegin (absolute Zeit in ms).
 	 * 
 	 * @return Intervallbegin (absolute Zeit in ms)
 	 */
-	public final long getStart(){
+	public final long getStart() {
 		return this.start;
 	}
-	
-	
+
 	/**
-	 * Erfragt Intervallende (absolute Zeit in ms)
+	 * Erfragt Intervallende (absolute Zeit in ms).
 	 * 
 	 * @return Intervallende (absolute Zeit in ms)
 	 */
-	public final long getEnde(){
+	public final long getEnde() {
 		return this.ende;
 	}
-	
-	
+
 	/**
-	 * Erfragt das Datum, das zu diesem Intervall gehoert
+	 * Erfragt das Datum, das zu diesem Intervall gehoert.
 	 * 
 	 * @return das Datum, das zu diesem Intervall gehoert
 	 */
-	public final IDELzFhDatum getDatum(){
+	public final IDELzFhDatum getDatum() {
 		return this.datum;
 	}
-	
-	
+
 	/**
-	 * Erfragt, ob der uebergebene Wert im Intervall
-	 * [begin, ende) liegt
+	 * Erfragt, ob der uebergebene Wert im Intervall [begin, ende) liegt.
 	 * 
-	 * @param wert ein Wert
-	 * @return ob der uebergebene Wert im Intervall
-	 * [begin, ende) liegt
+	 * @param wert
+	 *            ein Wert
+	 * @return ob der uebergebene Wert im Intervall [begin, ende) liegt
 	 */
-	public final boolean isInIntervall(final long wert){
+	public final boolean isInIntervall(final long wert) {
 		return this.start <= wert && wert < this.ende;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -133,15 +131,14 @@ public class Intervall {
 	@Override
 	public boolean equals(Object obj) {
 		boolean gleich = false;
-		
-		if(obj != null && obj instanceof Intervall){
-			Intervall that = (Intervall)obj;
+
+		if (obj != null && obj instanceof Intervall) {
+			Intervall that = (Intervall) obj;
 			gleich = this.start == that.start && this.ende == that.ende;
 		}
-		
+
 		return gleich;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -149,19 +146,20 @@ public class Intervall {
 	@Override
 	public String toString() {
 		String s = Constants.EMPTY_STRING;
-		
-		if(this.datum.isKeineDaten()){
-			s += "keine Daten";  //$NON-NLS-1$
-		}else{
-			s += "QKfz: " + this.datum.getQ(FahrzeugArt.KFZ) +  //$NON-NLS-1$
-			" , QLkw: " + this.datum.getQ(FahrzeugArt.LKW) + //$NON-NLS-1$
-			" , QPkw: " + this.datum.getQ(FahrzeugArt.PKW); //$NON-NLS-1$
+
+		if (this.datum.isKeineDaten()) {
+			s += "keine Daten"; //$NON-NLS-1$
+		} else {
+			s += "QKfz: " + this.datum.getQ(FahrzeugArt.KFZ) + //$NON-NLS-1$
+					" , QLkw: " + this.datum.getQ(FahrzeugArt.LKW) + //$NON-NLS-1$
+					" , QPkw: " + this.datum.getQ(FahrzeugArt.PKW); //$NON-NLS-1$
 		}
-		
-		return "Intervallbegin: " +   //$NON-NLS-1$
-				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start)) +
-				", Intervallende: " +  //$NON-NLS-1$
-				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende)) + "\n" + s; //$NON-NLS-1$
+
+		return "Intervallbegin: " + //$NON-NLS-1$
+				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
+				+ ", Intervallende: " + //$NON-NLS-1$
+				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
+				+ "\n" + s; //$NON-NLS-1$
 	}
-	
+
 }

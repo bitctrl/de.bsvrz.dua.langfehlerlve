@@ -30,54 +30,58 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
-
 /**
- * Diese Klasse fuehrt alle Berechnungen durch, die zur Erkennung systematischer Detektorfehler
- * fuer eine Messstelle vorgesehen sind (Afo DUA-BW-C1C2-13 - Vergleich mit Vorgaenger). Diese
- * Daten werden hier auch publiziert
- *  
+ * Diese Klasse fuehrt alle Berechnungen durch, die zur Erkennung systematischer
+ * Detektorfehler fuer eine Messstelle vorgesehen sind (Afo DUA-BW-C1C2-13 -
+ * Vergleich mit Vorgaenger). Diese Daten werden hier auch publiziert
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class AbweichungVorgaenger
-extends AbstraktAbweichung{
-		
-	
+public class AbweichungVorgaenger extends AbstraktAbweichung {
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param messStelle Verbindung zu den Onlinedaten der Messstelle selbst
-	 * @param messStellenGruppe Messstellengruppe an der diese Berechnung erfolgt
-	 * @param messStelleMinus1 Verbindung zu den Onlinedaten des Vorgaengers der 
-	 * Messstelle
-	 * @param messQuerschnitt Verbindung zu den Onlinedaten des Hauptmessquerschnitts
-	 * der Messstelle selbst
- 	 * @param langZeit Indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
-	 * kuemmern soll
-	 * @throws Exception wird weitergereicht
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param messStelle
+	 *            Verbindung zu den Onlinedaten der Messstelle selbst
+	 * @param messStellenGruppe
+	 *            Messstellengruppe an der diese Berechnung erfolgt
+	 * @param messStelleMinus1
+	 *            Verbindung zu den Onlinedaten des Vorgaengers der Messstelle
+	 * @param messQuerschnitt
+	 *            Verbindung zu den Onlinedaten des Hauptmessquerschnitts der
+	 *            Messstelle selbst
+	 * @param langZeit
+	 *            Indiziert, ob sich dieses Objekt um das
+	 *            Langzeit-Vergleichsintervall kuemmern soll
+	 * @throws Exception
+	 *             wird weitergereicht
 	 */
 	protected AbweichungVorgaenger(ClientDavInterface dav,
-								   DELzFhMessStelle messStelle,
-								   DELzFhMessStellenGruppe messStellenGruppe,
-								   DELzFhMessStelle messStelleMinus1,
-								   DELzFhMessQuerschnitt messQuerschnitt,
-								   boolean langZeit)
-	throws Exception{
-		super(dav, messStelle, messStellenGruppe, 
-				new DELzFhMessStelle[]{ messStelleMinus1 }, messQuerschnitt, langZeit);
+			DELzFhMessStelle messStelle,
+			DELzFhMessStellenGruppe messStellenGruppe,
+			DELzFhMessStelle messStelleMinus1,
+			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
+			throws Exception {
+		super(dav, messStelle, messStellenGruppe,
+				new DELzFhMessStelle[] { messStelleMinus1 }, messQuerschnitt,
+				langZeit);
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungVorgaenger();
-		this.vergleichsIntervall = DUAUtensilien.getVergleichsIntervallInText(parameter.getVergleichsIntervall()); 
+		this.vergleichsIntervall = DUAUtensilien
+				.getVergleichsIntervallInText(parameter
+						.getVergleichsIntervall());
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -87,7 +91,6 @@ extends AbstraktAbweichung{
 		return "asp.messQuerschnittZumVorgängerKurzZeit"; //$NON-NLS-1$
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -95,7 +98,6 @@ extends AbstraktAbweichung{
 	protected String getLzAspPid() {
 		return "asp.messQuerschnittZumVorgängerLangZeit"; //$NON-NLS-1$
 	}
-	
 
 	/**
 	 * {@inheritDoc}

@@ -23,37 +23,39 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.langfehlerlve;
 
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
 
-
 /**
- * 
- * Ermoeglicht die statische instanzen der Klasse MessStelle neustarten
+ * Ermoeglicht die statische instanzen der Klasse MessStelle neustarten.
  * 
  * @author BitCtrl Systems GmbH, Bachraty
- *
+ * 
+ * @version $Id$
  */
 public class MessStelleTest extends MessStelle {
-	
+
 	/**
-	 * Standardkontruktor
+	 * Standardkontruktor.
 	 * 
-	 * @param msObjekt ein Systemobjekt vom Typ <code>typ.messStelle</code>
-	 * @throws DUAInitialisierungsException wenn die Messstelle nicht 
-	 * initialisiert werden konnte
+	 * @param msObjekt
+	 *            ein Systemobjekt vom Typ <code>typ.messStelle</code>
+	 * @throws DUAInitialisierungsException
+	 *             wenn die Messstelle nicht initialisiert werden konnte
 	 */
-	protected MessStelleTest(final SystemObject msObjekt) throws DUAInitialisierungsException {
+	protected MessStelleTest(final SystemObject msObjekt)
+			throws DUAInitialisierungsException {
 		super(msObjekt);
 	}
-	
+
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Setzt den initial-Status der Klasse.
 	 */
-	public static void Reset() {
+	public static void reset() {
 		sDav = null;
 		sysObjMsObjMap.clear();
 	}

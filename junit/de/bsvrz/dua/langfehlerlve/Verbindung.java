@@ -30,28 +30,35 @@ import java.io.File;
 
 /**
  * Haelt alle Startparameter, die zur Durchfuehrung des Tests notwendig sind
- * (Datenverteiler-Verbindung, Basisverzeichnis fuer Quelldaten)   
- *  
+ * (Datenverteiler-Verbindung, Basisverzeichnis fuer Quelldaten).
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class Verbindung {
+public final class Verbindung {
+	
+	/**
+	 * Standardkonstruktor.
+	 */
+	private Verbindung() {
+		
+	}
 
 	/**
-	 * Verbindungsdaten
+	 * Verbindungsdaten.
 	 */
 	public static final String[] CON_DATA = new String[] {
-			"-datenverteiler=localhost:8083",   //$NON-NLS-1$
-			"-benutzer=Tester",  //$NON-NLS-1$
-			"-authentifizierung=passwd",  //$NON-NLS-1$
-			"-KonfigurationsBereichsPid=kb.deLzFhTest",  //$NON-NLS-1$
+			"-datenverteiler=localhost:8083", //$NON-NLS-1$
+			"-benutzer=Tester", //$NON-NLS-1$
+			"-authentifizierung=passwd", //$NON-NLS-1$
+			"-KonfigurationsBereichsPid=kb.deLzFhTest", //$NON-NLS-1$
 			"-debugLevelStdErrText=INFO", //$NON-NLS-1$
 			"-debugLevelFileText=INFO" }; //$NON-NLS-1$
-	
 
 	/**
-	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden
+	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden.
 	 */
-	public static final String TEST_DATEN_VERZ = ".." + File.separator + "testDaten" + File.separator; //$NON-NLS-1$ //$NON-NLS-2$
-	
+	public static final String TEST_DATEN_VERZEICHNIS = ".." + File.separator + "testDaten" + File.separator; //$NON-NLS-1$ //$NON-NLS-2$
+
 }

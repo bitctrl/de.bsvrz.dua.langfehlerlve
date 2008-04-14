@@ -27,40 +27,45 @@
 package de.bsvrz.dua.langfehlerlve.parameter;
 
 /**
- * Schnittstelle zu den Informationen der Attributgruppe
- * (<code>atg.parameterMessStellenGruppe</code>) fuer sowohl LZ-Vergleich- wie
- * KZ-Vergleichswerte 
- *  
+ * Schnittstelle zu den Informationen der Attributgruppe (<code>atg.parameterMessStellenGruppe</code>)
+ * fuer sowohl LZ-Vergleich- wie KZ-Vergleichswerte.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IMsgDatenartParameter {
 
 	/**
-	 * Erfragt Vergleichsintervall für die Langzeitfehlererkennung von Verkehrsdaten in ms 
+	 * Erfragt Vergleichsintervall für die Langzeitfehlererkennung von
+	 * Verkehrsdaten in ms.
 	 * 
-	 * @return Vergleichsintervall für die Langzeitfehlererkennung von Verkehrsdaten in ms
+	 * @return Vergleichsintervall für die Langzeitfehlererkennung von
+	 *         Verkehrsdaten in ms
 	 */
-	public long getVergleichsIntervall();
-	
+	long getVergleichsIntervall();
 
 	/**
-	 * Erfragt die maximal zulässige Toleranz für die Abweichung von Messwerten beim Vergleich mit dem
-	 * Vorgänger beim Kurzzeitintervall für die Langzeitfehlererkennung von Verkehrsdaten
+	 * Erfragt die maximal zulässige Toleranz für die Abweichung von Messwerten
+	 * beim Vergleich mit dem Vorgänger beim Kurzzeitintervall für die
+	 * Langzeitfehlererkennung von Verkehrsdaten.
 	 * 
-	 * @return maximal zulässige Toleranz für die Abweichung von Messwerten beim Vergleich mit dem
-	 * Vorgänger beim Kurzzeitintervall für die Langzeitfehlererkennung von Verkehrsdaten
+	 * @return maximal zulässige Toleranz für die Abweichung von Messwerten beim
+	 *         Vergleich mit dem Vorgänger beim Kurzzeitintervall für die
+	 *         Langzeitfehlererkennung von Verkehrsdaten
 	 */
-	public int getMaxAbweichungVorgaenger();
-	
-	
+	int getMaxAbweichungVorgaenger();
+
 	/**
-	 * Erfragt die maximal zulässige Toleranz für die Abweichung von Messwerten beim Vergleich mit den
-	 * Werten der MessStellenGruppe beim Kurzzeitintervall für die Langzeitfehlererkennung von Verkehrsdaten
+	 * Erfragt die maximal zulässige Toleranz für die Abweichung von Messwerten
+	 * beim Vergleich mit den Werten der MessStellenGruppe beim
+	 * Kurzzeitintervall für die Langzeitfehlererkennung von Verkehrsdaten.
 	 * 
-	 * @return maximal zulässige Toleranz für die Abweichung von Messwerten beim Vergleich mit den
-	 * Werten der MessStellenGruppe beim Kurzzeitintervall für die Langzeitfehlererkennung von Verkehrsdaten
+	 * @return maximal zulässige Toleranz für die Abweichung von Messwerten beim
+	 *         Vergleich mit den Werten der MessStellenGruppe beim
+	 *         Kurzzeitintervall für die Langzeitfehlererkennung von
+	 *         Verkehrsdaten
 	 */
-	public int getMaxAbweichungMessStellenGruppe();
-	
+	int getMaxAbweichungMessStellenGruppe();
+
 }

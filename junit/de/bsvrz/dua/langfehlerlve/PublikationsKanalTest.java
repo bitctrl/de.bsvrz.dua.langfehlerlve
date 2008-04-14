@@ -29,29 +29,29 @@ package de.bsvrz.dua.langfehlerlve;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
 
-
 /**
- * 
- * Ermoeglicht die Singleton Klasse PublikationsKanal neustarten
+ * Ermoeglicht die Singleton Klasse PublikationsKanal neustarten.
  * 
  * @author BitCtrl Systems GmbH, Bachraty
- *
+ * 
+ * @version $Id$
  */
 public class PublikationsKanalTest extends PublikationsKanal {
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindung
+	 * @param dav
+	 *            Datenverteiler-Verbindung
 	 */
-	public PublikationsKanalTest(ClientDavInterface dav){
+	public PublikationsKanalTest(ClientDavInterface dav) {
 		super(dav);
 	}
-	
+
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Setzt den initial-Status der Klasse.
 	 */
-	static public void Reset() {
-		DAV = null;
+	public static void reset() {
+		sDav = null;
 	}
 }

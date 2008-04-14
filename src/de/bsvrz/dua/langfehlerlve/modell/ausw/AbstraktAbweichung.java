@@ -57,213 +57,220 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
- * Diese Klasse fuehrt alle Berechnungen durch, die zur Erkennung systematischer Detektorfehler
- * fuer eine Messstelle vorgesehen sind (Afo DUA-BW-C1C2-11 bis Afo DUA-BW-C1C2-17: Vergleich mit
- * allen anderen Messstellen bzw. der Vorgaengermessstelle und ggf. Ausgabe einer Betriebsmeldung).
- * Diese Daten werden hier auch publiziert
- *  
+ * Diese Klasse fuehrt alle Berechnungen durch, die zur Erkennung systematischer
+ * Detektorfehler fuer eine Messstelle vorgesehen sind (Afo DUA-BW-C1C2-11 bis
+ * Afo DUA-BW-C1C2-17: Vergleich mit allen anderen Messstellen bzw. der
+ * Vorgaengermessstelle und ggf. Ausgabe einer Betriebsmeldung). Diese Daten
+ * werden hier auch publiziert
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public abstract class AbstraktAbweichung
-extends AbstraktDELzFhObjekt
-implements ClientSenderInterface,
-		   IDELzFhDatenListener{
-	
+public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
+		ClientSenderInterface, IDELzFhDatenListener {
+
 	/**
-	 * <code>atg.abweichungVerkehrsStärke</code>
+	 * <code>atg.abweichungVerkehrsStärke</code>.
 	 */
 	private static final String ATG_PID = "atg.abweichungVerkehrsStärke"; //$NON-NLS-1$
 
 	/**
-	 * Untere Grenze des Attributtyps <code>att.prozentPlusMinus<code>
+	 * Untere Grenze des Attributtyps <code>att.prozentPlusMinus</code>.
 	 */
 	private static final long PROZENT_MIN = -100000;
 
 	/**
-	 * Obere Grenze des Attributtyps <code>att.prozentPlusMinus<code>
+	 * Obere Grenze des Attributtyps <code>att.prozentPlusMinus</code>.
 	 */
 	private static final long PROZENT_MAX = 100000;
 
 	/**
-	 * Zustand des <code>nicht ermittelbar/fehlerhaft</code> des Attributtyps 
-	 * <code>att.prozentPlusMinus<code>
+	 * Zustand des <code>nicht ermittelbar/fehlerhaft</code> des Attributtyps
+	 * <code>att.prozentPlusMinus</code>.
 	 */
 	private static final long NICHT_ERMITTELBAR_BZW_FEHLERHAFT = -100003;
 
 	/**
-	 * Zeitausgabeformat fuer Betriebsmeldungen
+	 * Zeitausgabeformat fuer Betriebsmeldungen.
 	 */
-	private static final SimpleDateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm"); //$NON-NLS-1$
+	private static final SimpleDateFormat FORMAT = new SimpleDateFormat(
+			"dd.MM.yyyy HH:mm"); //$NON-NLS-1$
 
 	/**
-	 * Publikationskanal
+	 * Publikationskanal.
 	 */
 	private PublikationsKanal kanal = null;
 
 	/**
-	 * Verbindung zu den Onlinedaten der Messstelle selbst
+	 * Verbindung zu den Onlinedaten der Messstelle selbst.
 	 */
 	private DELzFhMessStelle messStelle = null;
 
 	/**
-	 * Verbindung zu den Onlinedaten des Hauptmessquerschnitts
-	 * der Messstelle selbst
+	 * Verbindung zu den Onlinedaten des Hauptmessquerschnitts der Messstelle
+	 * selbst.
 	 */
 	private DELzFhMessQuerschnitt messQuerschnitt = null;
 
 	/**
-	 * alle restlichen Messstellen, zu denen diese Messstelle ins
-	 * Verhaeltnis gesetzt werden soll
+	 * alle restlichen Messstellen, zu denen diese Messstelle ins Verhaeltnis
+	 * gesetzt werden soll.
 	 */
 	private Set<SystemObject> restMessStellen = new HashSet<SystemObject>();
 
 	/**
-	 * puffert alle aktuellen hier benoetigten Onlinedaten zur Berechnung
-	 * der (Zwischen-)Bilanzen
+	 * puffert alle aktuellen hier benoetigten Onlinedaten zur Berechnung der
+	 * (Zwischen-)Bilanzen.
 	 */
-	protected Map<SystemObject, Intervall> puffer = Collections.synchronizedMap(new HashMap<SystemObject, Intervall>()); 
+	protected Map<SystemObject, Intervall> puffer = Collections
+			.synchronizedMap(new HashMap<SystemObject, Intervall>());
 
 	/**
-	 * die maximal zulässige Toleranz für die Abweichung von Messwerten
-	 * beim Vergleich mit dem Vorgänger beim Kurzzeitintervall für die
-	 * Langzeitfehlererkennung von Verkehrsdaten 
+	 * die maximal zulässige Toleranz für die Abweichung von Messwerten beim
+	 * Vergleich mit dem Vorgänger beim Kurzzeitintervall für die
+	 * Langzeitfehlererkennung von Verkehrsdaten.
 	 */
 	protected int abweichungMax = -1;
 
 	/**
-	 * Die Laenge des Vergleichsintervalls als Text
+	 * Die Laenge des Vergleichsintervalls als Text.
 	 */
 	protected String vergleichsIntervall = Constants.EMPTY_STRING;
 
-	
 	/**
 	 * Erfragt die PID des Aspektes, unter dem hier die Daten des Kurzzeit-
-	 * Vergleichsintervalls veroeffentlicht werden
+	 * Vergleichsintervalls veroeffentlicht werden.
 	 * 
 	 * @return die PID des Aspektes, unter dem hier die Daten des Kurzzeit-
-	 * Vergleichsintervalls veroeffentlicht werden
+	 *         Vergleichsintervalls veroeffentlicht werden
 	 */
 	protected abstract String getKzAspPid();
-	
-	
+
 	/**
 	 * Erfragt die PID des Aspektes, unter dem hier die Daten des Langzeit-
-	 * Vergleichsintervalls veroeffentlicht werden
+	 * Vergleichsintervalls veroeffentlicht werden.
 	 * 
 	 * @return die PID des Aspektes, unter dem hier die Daten des Langzeit-
-	 * Vergleichsintervalls veroeffentlicht werden
+	 *         Vergleichsintervalls veroeffentlicht werden
 	 */
 	protected abstract String getLzAspPid();
-	
-	
+
 	/**
-	 * Erfragt eine Identifikation der Vergleichsmethode
+	 * Erfragt eine Identifikation der Vergleichsmethode.
 	 * 
 	 * @return eine Identifikation der Vergleichsmethode
 	 */
 	protected abstract String getVergleichsIdentifikation();
-	
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Verbindung zum Datenverteiler
-	 * @param messStelle Verbindung zu den Onlinedaten der Messstelle selbst
-	 * @param messStellenGruppe Messstellengruppe an der diese Berechnung erfolgt
-	 * @param restMessStellen alle restlichen Messstellen, zu denen diese Messstelle ins
-	 * Verhaeltnis gesetzt werden soll
-	 * @param messQuerschnitt Verbindung zu den Onlinedaten des Hauptmessquerschnitts
-	 * der Messstelle selbst
-	 * @param langZeit Indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
-	 * kuemmern soll
-	 * @throws Exception wird weitergereicht
+	 * @param dav
+	 *            Verbindung zum Datenverteiler
+	 * @param messStelle
+	 *            Verbindung zu den Onlinedaten der Messstelle selbst
+	 * @param messStellenGruppe
+	 *            Messstellengruppe an der diese Berechnung erfolgt
+	 * @param restMessStellen
+	 *            alle restlichen Messstellen, zu denen diese Messstelle ins
+	 *            Verhaeltnis gesetzt werden soll
+	 * @param messQuerschnitt
+	 *            Verbindung zu den Onlinedaten des Hauptmessquerschnitts der
+	 *            Messstelle selbst
+	 * @param langZeit
+	 *            Indiziert, ob sich dieses Objekt um das
+	 *            Langzeit-Vergleichsintervall kuemmern soll
+	 * @throws Exception
+	 *             wird weitergereicht
 	 */
 	protected AbstraktAbweichung(ClientDavInterface dav,
 			DELzFhMessStelle messStelle,
 			DELzFhMessStellenGruppe messStellenGruppe,
 			DELzFhMessStelle[] restMessStellen,
-			DELzFhMessQuerschnitt messQuerschnitt,
-			boolean langZeit)
-	throws Exception{
+			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
+			throws Exception {
 		super.init(dav, messStellenGruppe, langZeit);
 
 		this.kanal = new PublikationsKanal(dav);
 
 		this.messStelle = messStelle;
 		this.messQuerschnitt = messQuerschnitt;
-		for(DELzFhMessStelle rms:restMessStellen){
+		for (DELzFhMessStelle rms : restMessStellen) {
 			this.restMessStellen.add(rms.getMessStelle().getSystemObject());
 		}
 		this.initPuffer();
 
-		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(), 
-				langZeit?
-						new DataDescription(dav.getDataModel().getAttributeGroup(ATG_PID),
-											dav.getDataModel().getAspect(this.getLzAspPid())):
-						new DataDescription(dav.getDataModel().getAttributeGroup(ATG_PID),
-											dav.getDataModel().getAspect(this.getKzAspPid())),
-						SenderRole.source());
+		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
+				langZeit ? new DataDescription(dav.getDataModel()
+						.getAttributeGroup(ATG_PID), dav.getDataModel()
+						.getAspect(this.getLzAspPid())) : new DataDescription(
+						dav.getDataModel().getAttributeGroup(ATG_PID), dav
+								.getDataModel().getAspect(this.getKzAspPid())),
+				SenderRole.source());
 
 		messQuerschnitt.addListener(this);
-		for(DELzFhMessStelle rms:restMessStellen){
+		for (DELzFhMessStelle rms : restMessStellen) {
 			rms.addListener(this);
-		}		
+		}
 	}
 
-
 	/**
-	 * Versucht die Berechnung der Bilanzverkehrsstaerke
+	 * Versucht die Berechnung der Bilanzverkehrsstaerke.
 	 * 
-	 * @param objekt das Systemobjekt, zu dem das gerade empfangene Datum gehoert
-	 * @param intervallDatum ein gerade empfangenes Intervalldatum != null
+	 * @param objekt
+	 *            das Systemobjekt, zu dem das gerade empfangene Datum gehoert
+	 * @param intervallDatum
+	 *            ein gerade empfangenes Intervalldatum != null
 	 */
-	private final void versucheBerechnung(SystemObject objekt, Intervall intervallDatum){
+	private void versucheBerechnung(SystemObject objekt,
+			Intervall intervallDatum) {
 
-		if(intervallDatum.getDatum().isKeineDaten()){
-			ResultData resultat = new ResultData(messStelle.getMessStelle().getSystemObject(),
-					langZeit?
-							new DataDescription(DAV.getDataModel().getAttributeGroup(ATG_PID),
-									DAV.getDataModel().getAspect(this.getLzAspPid())):
-							new DataDescription(DAV.getDataModel().getAttributeGroup(ATG_PID),
-									DAV.getDataModel().getAspect(this.getKzAspPid())), 
-							intervallDatum.getStart(), null);
+		if (intervallDatum.getDatum().isKeineDaten()) {
+			ResultData resultat = new ResultData(messStelle.getMessStelle()
+					.getSystemObject(), langZeit ? new DataDescription(dDav
+					.getDataModel().getAttributeGroup(ATG_PID), dDav
+					.getDataModel().getAspect(this.getLzAspPid()))
+					: new DataDescription(dDav.getDataModel().getAttributeGroup(
+							ATG_PID), dDav.getDataModel().getAspect(
+							this.getKzAspPid())), intervallDatum.getStart(),
+					null);
 			this.kanal.publiziere(resultat);
 			this.initPuffer();
-		}else{
-			synchronized (this.puffer) {				
+		} else {
+			synchronized (this.puffer) {
 				long pufferZeit = -1;
-				for(SystemObject obj:this.puffer.keySet()){
-					if(this.puffer.get(obj) != null){
+				for (SystemObject obj : this.puffer.keySet()) {
+					if (this.puffer.get(obj) != null) {
 						pufferZeit = this.puffer.get(obj).getStart();
 						break;
 					}
 				}
-				if(pufferZeit == -1){
+				if (pufferZeit == -1) {
 					this.puffer.put(objekt, intervallDatum);
-				}else{
-					if(pufferZeit == intervallDatum.getStart()){
+				} else {
+					if (pufferZeit == intervallDatum.getStart()) {
 						this.puffer.put(objekt, intervallDatum);
-					}else{	
+					} else {
 						this.initPuffer();
-						if(pufferZeit > intervallDatum.getStart()){
-							LOGGER.warning("Veralteten Datensatz fuer " +  //$NON-NLS-1$
+						if (pufferZeit > intervallDatum.getStart()) {
+							LOGGER.warning("Veralteten Datensatz fuer " + //$NON-NLS-1$
 									objekt + " empfangen:\n" + intervallDatum); //$NON-NLS-1$
-						}else{
+						} else {
 							this.puffer.put(objekt, intervallDatum);
 						}
 					}
 				}
 
 				boolean datenVollstaendig = true;
-				for(SystemObject obj:this.puffer.keySet()){
-					if(this.puffer.get(obj) == null){
+				for (SystemObject obj : this.puffer.keySet()) {
+					if (this.puffer.get(obj) == null) {
 						datenVollstaendig = false;
 						break;
 					}
 				}
 
-				if(datenVollstaendig){
+				if (datenVollstaendig) {
 					this.erzeugeErgebnis();
 					this.initPuffer();
 				}
@@ -271,101 +278,117 @@ implements ClientSenderInterface,
 		}
 	}
 
-	
 	/**
-	 * Initialisiert (loescht) den Online-Puffer dieser Klasse
+	 * Initialisiert (loescht) den Online-Puffer dieser Klasse.
 	 */
-	private final synchronized void initPuffer(){
+	private synchronized void initPuffer() {
 		this.puffer.put(this.messQuerschnitt.getObjekt(), null);
-		for(SystemObject rms:this.restMessStellen){
+		for (SystemObject rms : this.restMessStellen) {
 			this.puffer.put(rms, null);
 		}
 	}
 
-
 	/**
-	 * Berechnet und publiziert die Abweichung im Vergleichsintervall analog
-	 * Afo DUA-BW-C1C2-11 fuer alle zur Zeit im lokalen Puffer stehenden Daten
+	 * Berechnet und publiziert die Abweichung im Vergleichsintervall analog Afo
+	 * DUA-BW-C1C2-11 fuer alle zur Zeit im lokalen Puffer stehenden Daten.
 	 */
-	private final void erzeugeErgebnis(){
+	private void erzeugeErgebnis() {
 		IDELzFhDatum abweichung = null;
 		long datenZeit = -1;
 		long intervallEnde = -1;
 
 		synchronized (this.puffer) {
-			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt()).getStart();
-			intervallEnde = this.puffer.get(this.messQuerschnitt.getObjekt()).getEnde();
+			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt())
+					.getStart();
+			intervallEnde = this.puffer.get(this.messQuerschnitt.getObjekt())
+					.getEnde();
 
 			Collection<IDELzFhDatum> restDaten = new HashSet<IDELzFhDatum>();
-			for(SystemObject rms:this.restMessStellen){
+			for (SystemObject rms : this.restMessStellen) {
 				restDaten.add(this.puffer.get(rms).getDatum());
 			}
 
-			abweichung = Rechenwerk.multipliziere(
-					Rechenwerk.dividiere(
-							this.puffer.get(this.messQuerschnitt.getObjekt()).getDatum(),
-							Rechenwerk.durchschnitt(restDaten)),
-							100.0);			
+			abweichung = Rechenwerk.multipliziere(Rechenwerk.dividiere(
+					this.puffer.get(this.messQuerschnitt.getObjekt())
+							.getDatum(), Rechenwerk.durchschnitt(restDaten)),
+					100.0);
 		}
 
-		DataDescription datenBeschreibung = langZeit?
-				new DataDescription(DAV.getDataModel().getAttributeGroup(ATG_PID),
-						DAV.getDataModel().getAspect(this.getLzAspPid())):
-				new DataDescription(DAV.getDataModel().getAttributeGroup(ATG_PID),
-						DAV.getDataModel().getAspect(this.getKzAspPid()));
-		Data nutzDatum = DAV.createData(datenBeschreibung.getAttributeGroup());
+		DataDescription datenBeschreibung = langZeit ? new DataDescription(dDav
+				.getDataModel().getAttributeGroup(ATG_PID), dDav.getDataModel()
+				.getAspect(this.getLzAspPid())) : new DataDescription(dDav
+				.getDataModel().getAttributeGroup(ATG_PID), dDav.getDataModel()
+				.getAspect(this.getKzAspPid()));
+		Data nutzDatum = dDav.createData(datenBeschreibung.getAttributeGroup());
 
-		for(FahrzeugArt fahrzeugArt:FahrzeugArt.getInstanzen()){
+		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 
-			if(abweichung.isAuswertbar(fahrzeugArt)){
-				long abweichungMinus100 = Math.round(abweichung.getQ(fahrzeugArt) - 100.0);
+			if (abweichung.isAuswertbar(fahrzeugArt)) {
+				long abweichungMinus100 = Math.round(abweichung
+						.getQ(fahrzeugArt) - 100.0);
 
-				if(abweichungMinus100 >= PROZENT_MIN && abweichungMinus100 <= PROZENT_MAX){ 
-					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(abweichungMinus100);
-				}else{
-					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				if (abweichungMinus100 >= PROZENT_MIN
+						&& abweichungMinus100 <= PROZENT_MAX) {
+					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
+							.set(abweichungMinus100);
+				} else {
+					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
+							.set(NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 
 				synchronized (this) {
-					if(this.abweichungMax >= 0){
-						if(Math.abs(abweichungMinus100) > this.abweichungMax){
-							MessageSender.getInstance().sendMessage(
-									MessageType.APPLICATION_DOMAIN,
-									DELangZeitFehlerErkennung.getName(),
-									MessageGrade.ERROR,
-									this.messStelle.getMessStelle().getPruefling().getSystemObject(),
-									new MessageCauser(DAV.getLocalUser(),
-											Constants.EMPTY_STRING,
-											DELangZeitFehlerErkennung.getName()),
-											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " +  //$NON-NLS-1$ //$NON-NLS-2$
-											abweichungMinus100 + "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
-											this.getVergleichsIdentifikation() + ") " + //$NON-NLS-1$ 
-											FORMAT.format(new Date(datenZeit)) + " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
-											" ("+ this.vergleichsIntervall + ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
+					if (this.abweichungMax >= 0) {
+						if (Math.abs(abweichungMinus100) > this.abweichungMax) {
+							MessageSender
+									.getInstance()
+									.sendMessage(
+											MessageType.APPLICATION_DOMAIN,
+											DELangZeitFehlerErkennung.getName(),
+											MessageGrade.ERROR,
+											this.messStelle.getMessStelle()
+													.getPruefling()
+													.getSystemObject(),
+											new MessageCauser(dDav
+													.getLocalUser(),
+													Constants.EMPTY_STRING,
+													DELangZeitFehlerErkennung
+															.getName()),
+											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
+													abweichungMinus100
+													+ "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
+													this
+															.getVergleichsIdentifikation()
+													+ ") " + //$NON-NLS-1$ 
+													FORMAT.format(new Date(
+															datenZeit))
+													+ " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
+													" ("
+													+ this.vergleichsIntervall
+													+ ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
 						}
-					}		
+					}
 				}
-			}else{
-				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			} else {
+				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(
+						NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 
 		}
 
-		ResultData publikationsDatum = new ResultData(this.messStelle.getMessStelle().getSystemObject(), 
-				datenBeschreibung, datenZeit, nutzDatum);
+		ResultData publikationsDatum = new ResultData(this.messStelle
+				.getMessStelle().getSystemObject(), datenBeschreibung,
+				datenZeit, nutzDatum);
 
-		this.kanal.publiziere(publikationsDatum);		
+		this.kanal.publiziere(publikationsDatum);
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
-//		Quellenanmeldung
+		// Quellenanmeldung
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -375,12 +398,10 @@ implements ClientSenderInterface,
 		return false;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereDatum(SystemObject objekt,
-			Intervall intervallDatum) {		
+	public void aktualisiereDatum(SystemObject objekt, Intervall intervallDatum) {
 		this.versucheBerechnung(objekt, intervallDatum);
 	}
 

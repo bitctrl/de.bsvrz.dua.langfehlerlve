@@ -30,26 +30,28 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
 
 /**
- * Ermoegleicht die Singletoninstanz der Klasse BmClient neuzustarten
+ * Ermoegleicht die Singletoninstanz der Klasse BmClient neuzustarten.
  * 
  * @author BitCtrl Systems GmbH, Bachraty
- *
+ * 
+ * @version $Id$
  */
 public class BmClientTest extends BmClient {
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param dav Datenverteiler-Verbindung
+	 * @param dav
+	 *            Datenverteiler-Verbindung
 	 */
 	protected BmClientTest(ClientDavInterface dav) {
 		super(dav);
 	}
-	
+
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Setzt den initial-Status der Klasse.
 	 */
-	public static void Reset() {
+	public static void reset() {
 		instanz = null;
 	}
 }

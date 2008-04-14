@@ -31,41 +31,40 @@ import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 /**
  * Schnittstelle zu den MQ-, MS- bzw. sonstigen Daten die fuer die SWE 4.DELzFh
  * DE Langzeit-Fehlererkennung benoetigt werden
- *  
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public interface IDELzFhDatum{
+public interface IDELzFhDatum {
 
 	/**
-	 * Erfragt, ob dieses Datum auf <code>keine Daten</code> steht
+	 * Erfragt, ob dieses Datum auf <code>keine Daten</code> steht.
 	 * 
 	 * @return ob dieses Datum auf <code>keine Daten</code> steht
 	 */
-	public boolean isKeineDaten();
-	
-	
+	boolean isKeineDaten();
+
 	/**
-	 * Indiziert, dass der ueber diese Schnittstelle erfragbare Wert fuer
-	 * die uebergebene Fahrzeugart nicht auf einem der folgenden Zustaende
-	 * steht:<br>
-	 * - <code>nicht ermittelbar</code>,<br>
-	 * - <code>fehlerhaft</code>,<br>
-	 * - <code>nicht ermittelbar oder fehlerhaft</code>
+	 * Indiziert, dass der ueber diese Schnittstelle erfragbare Wert fuer die
+	 * uebergebene Fahrzeugart nicht auf einem der folgenden Zustaende steht:<br> -
+	 * <code>nicht ermittelbar</code>,<br> - <code>fehlerhaft</code>,<br> -
+	 * <code>nicht ermittelbar oder fehlerhaft</code>.
 	 * 
-	 * @param fahrzeugArt eine Fahrzeugart
-	 * @return ob der ueber diese Schnittstelle erfragbare Wert fuer
-	 * die uebergebene Fahrzeugart auswertbar ist
+	 * @param fahrzeugArt
+	 *            eine Fahrzeugart
+	 * @return ob der ueber diese Schnittstelle erfragbare Wert fuer die
+	 *         uebergebene Fahrzeugart auswertbar ist
 	 */
-	public boolean isAuswertbar(FahrzeugArt fahrzeugArt);
-	
-	
+	boolean isAuswertbar(FahrzeugArt fahrzeugArt);
+
 	/**
-	 * Erfragt einen Q-Wert fuer eine bestimmte Fahrzeugart
+	 * Erfragt einen Q-Wert fuer eine bestimmte Fahrzeugart.
 	 * 
-	 * @param fahrzeugArt eine Fahrzeugart
+	 * @param fahrzeugArt
+	 *            eine Fahrzeugart
 	 * @return der Wert fuer die uebergebene Fahrzeugart
 	 */
-	public double getQ(FahrzeugArt fahrzeugArt);
-	
+	double getQ(FahrzeugArt fahrzeugArt);
+
 }

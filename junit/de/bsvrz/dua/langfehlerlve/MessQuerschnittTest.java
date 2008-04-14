@@ -23,34 +23,35 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.langfehlerlve;
 
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 
-
 /**
- * 
- * Ermoeglicht die statische instanzen der Klasse MessQuerschnitt neustarten
+ * Ermoeglicht die statische instanzen der Klasse MessQuerschnitt neustarten.
  * 
  * @author BitCtrl Systems GmbH, Bachraty
- *
+ * 
+ * @version $Id$
  */
 public class MessQuerschnittTest extends MessQuerschnitt {
 
 	/**
-	 * Standardkontruktor
+	 * Standardkontruktor.
 	 * 
-	 * @param mqObjekt ein Systemobjekt vom Typ <code>typ.messQuerschnitt</code>
+	 * @param mqObjekt
+	 *            ein Systemobjekt vom Typ <code>typ.messQuerschnitt</code>
 	 */
 	protected MessQuerschnittTest(final SystemObject mqObjekt) {
 		super(mqObjekt);
 	}
-	
+
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Setzt den initial-Status der Klasse.
 	 */
-	public static void Reset() {
+	public static void reset() {
 		sDav = null;
 		sysObjMqObjMap.clear();
 	}

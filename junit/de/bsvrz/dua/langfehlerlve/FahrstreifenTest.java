@@ -24,7 +24,6 @@
  * mailto: info@bitctrl.de
  */
 
-
 package de.bsvrz.dua.langfehlerlve;
 
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -32,29 +31,31 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 
 /**
- * 
- * Ermoeglicht die statische instanzen der Klasse Fahrstreifen neustarten
+ * Ermoeglicht die statische instanzen der Klasse Fahrstreifen neustarten.
  * 
  * @author BitCtrl Systems GmbH, Bachraty
- *
+ * 
+ * @version $Id$
  */
-public class FahrstreifenTest extends FahrStreifen {
+public final class FahrstreifenTest extends FahrStreifen {
 
 	/**
-	 * Standardkontruktor
+	 * Standardkontruktor.
 	 * 
-	 * @param fsObjekt ein Systemobjekt vom Typ <code>typ.fahrStreifen</code>
-	 * @throws DUAInitialisierungsException wenn der Fahrstreifen nicht 
-	 * initialisiert werden konnte
+	 * @param fsObjekt
+	 *            ein Systemobjekt vom Typ <code>typ.fahrStreifen</code>
+	 * @throws DUAInitialisierungsException
+	 *             wenn der Fahrstreifen nicht initialisiert werden konnte
 	 */
-	private FahrstreifenTest(final SystemObject fsObjekt) throws DUAInitialisierungsException {
+	private FahrstreifenTest(final SystemObject fsObjekt)
+			throws DUAInitialisierungsException {
 		super(fsObjekt);
 	}
-	
+
 	/**
-	 * Setzt den initial-Status der Klasse
+	 * Setzt den initial-Status der Klasse.
 	 */
-	public static void Reset() {
+	public static void reset() {
 		sDav = null;
 		sysObjFsObjMap.clear();
 	}
