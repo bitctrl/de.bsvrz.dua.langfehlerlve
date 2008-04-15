@@ -26,7 +26,6 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,11 +72,6 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * <code>att.verkehrsStärkeStundeBilanz</code>.
 	 */
 	private static final long NICHT_ERMITTELBAR_BZW_FEHLERHAFT = -100000003;
-
-	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * statische Verbindung zum Datenverteiler.
@@ -133,8 +127,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * puffert alle aktuellen hier benoetigten Onlinedaten zur Berechnung der
 	 * (Zwischen-)Bilanzen.
 	 */
-	private Map<SystemObject, Intervall> puffer = Collections
-			.synchronizedMap(new HashMap<SystemObject, Intervall>());
+	private Map<SystemObject, Intervall> puffer = new HashMap<SystemObject, Intervall>();
 
 	/**
 	 * Standardkonstruktor.
@@ -192,13 +185,15 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	/**
 	 * Initialisiert (loescht) den Online-Puffer dieser Klasse.
 	 */
-	private synchronized void initPuffer() {
-		this.puffer
-				.put(this.messStelle.getMessStelle().getSystemObject(), null);
-		this.puffer.put(
-				this.messStelleMinus1.getMessStelle().getSystemObject(), null);
-		this.puffer.put(this.messQuerschnittPlus1.getObjekt(), null);
-		this.puffer.put(this.messQuerschnitt.getObjekt(), null);
+	private void initPuffer() {
+		synchronized (this.puffer) {
+			this.puffer
+			.put(this.messStelle.getMessStelle().getSystemObject(), null);
+			this.puffer.put(
+					this.messStelleMinus1.getMessStelle().getSystemObject(), null);
+			this.puffer.put(this.messQuerschnittPlus1.getObjekt(), null);
+			this.puffer.put(this.messQuerschnitt.getObjekt(), null);
+		}
 	}
 
 	/**
@@ -238,7 +233,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 						} else {
 							this.initPuffer();
 							if (pufferZeit > intervallDatum.getStart()) {
-								LOGGER.warning("Veralteten Datensatz fuer " + //$NON-NLS-1$
+								Debug.getLogger().warning("Veralteten Datensatz fuer " + //$NON-NLS-1$
 										objekt
 										+ " empfangen:\n" + intervallDatum); //$NON-NLS-1$
 							} else {

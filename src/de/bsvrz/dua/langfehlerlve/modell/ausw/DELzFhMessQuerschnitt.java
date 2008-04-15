@@ -96,8 +96,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	/**
 	 * Menge von Beobachtern der Online-Daten dieses Objektes.
 	 */
-	private Set<IDELzFhDatenListener> listenerMenge = Collections
-			.synchronizedSet(new HashSet<IDELzFhDatenListener>());
+	private Set<IDELzFhDatenListener> listenerMenge = new HashSet<IDELzFhDatenListener>();
 
 	/**
 	 * wenn dieser Wert auf <code>!= null</code> steht, bedeutet das, dass das

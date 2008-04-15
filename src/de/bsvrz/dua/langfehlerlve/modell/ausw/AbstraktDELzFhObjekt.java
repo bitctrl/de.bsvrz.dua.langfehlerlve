@@ -30,7 +30,6 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dua.langfehlerlve.parameter.AtgParameterMessStellenGruppe;
 import de.bsvrz.dua.langfehlerlve.parameter.IAtgParameterMessStellenGruppeListener;
 import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
-import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Grundgeruest einer Klasse, die immer die aktuellen Parameter einer
@@ -43,11 +42,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public abstract class AbstraktDELzFhObjekt implements
 		IAtgParameterMessStellenGruppeListener {
-
-	/**
-	 * Debug-Logger.
-	 */
-	protected static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * statische Datenverteiler-Verbindung.

@@ -66,11 +66,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class DELangZeitFehlerErkennung implements StandardApplication {
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * die Argumente der Kommandozeile.
 	 */
 	private ArrayList<String> komArgumente = new ArrayList<String>();
@@ -104,7 +99,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		for (SystemObject msgObjekt : msgObjekte) {
 			config += msgObjekt + "\n"; //$NON-NLS-1$
 		}
-		LOGGER.config(config);
+		Debug.getLogger().config(config);
 
 		for (SystemObject msgObjekt : msgObjekte) {
 			new DELzFhMessStellenGruppe(dav, msgObjekt,
@@ -162,7 +157,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 					kbListe.add(area);
 				}
 			} catch (UnsupportedOperationException ex) {
-				LOGGER.warning("Konfigurationsbereich " + kb + //$NON-NLS-1$
+				Debug.getLogger().warning("Konfigurationsbereich " + kb + //$NON-NLS-1$
 						" konnte nicht identifiziert werden.", ex); //$NON-NLS-1$
 			}
 		}
@@ -181,7 +176,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 					public void uncaughtException(@SuppressWarnings("unused")
 					Thread t, Throwable e) {
-						LOGGER.error("Applikation wird wegen" + //$NON-NLS-1$
+						Debug.getLogger().error("Applikation wird wegen" + //$NON-NLS-1$
 								" unerwartetem Fehler beendet", e); //$NON-NLS-1$
 						e.printStackTrace();
 						Runtime.getRuntime().exit(0);

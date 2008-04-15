@@ -62,11 +62,6 @@ public class DELzFhMessStellenGruppe {
 	public static final boolean KURZZEIT_AUSWERTUNG = false;
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * das mit diesem Objekt assoziierte Systemobjekt.
 	 */
 	private SystemObject objekt = null;
@@ -158,7 +153,7 @@ public class DELzFhMessStellenGruppe {
 								messStelleMinus1, messQuerschnittPlus1,
 								messQuerschnitt, langZeit);
 					} else {
-						LOGGER
+						Debug.getLogger()
 								.warning("Ermittlung der Bilanzwerte konnte nicht angestossen werden\nfuer Messstelle: " + //$NON-NLS-1$
 										msFeld[i].getSystemObject()
 										+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$
@@ -193,7 +188,7 @@ public class DELzFhMessStellenGruppe {
 											.toArray(new DELzFhMessStelle[0]),
 									messQuerschnitt, langZeit);
 						} else {
-							LOGGER
+							Debug.getLogger()
 									.warning("Ermittlung der Abweichung zu den Nachbarn konnte nicht angestossen werden\nfuer Messstelle: " + //$NON-NLS-1$
 											msFeld[i].getSystemObject()
 											+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$
@@ -218,7 +213,7 @@ public class DELzFhMessStellenGruppe {
 							new AbweichungVorgaenger(dav, messStelle, this,
 									messStelleMinus1, messQuerschnitt, langZeit);
 						} else {
-							LOGGER
+							Debug.getLogger()
 									.warning("Ermittlung der Abweichung zum Vorgaenger konnte nicht angestossen werden\nfuer Messstelle: " + //$NON-NLS-1$
 											msFeld[i].getSystemObject()
 											+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$

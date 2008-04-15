@@ -26,7 +26,6 @@
 
 package de.bsvrz.dua.langfehlerlve.parameter;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -56,14 +55,12 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	/**
 	 * statische Instanzen dieser Klasse.
 	 */
-	protected static Map<SystemObject, AtgParameterMessStellenGruppe> instanzen = Collections
-			.synchronizedMap(new HashMap<SystemObject, AtgParameterMessStellenGruppe>());
+	protected static Map<SystemObject, AtgParameterMessStellenGruppe> instanzen = new HashMap<SystemObject, AtgParameterMessStellenGruppe>();
 
 	/**
 	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<IAtgParameterMessStellenGruppeListener> listenerMenge = Collections
-			.synchronizedSet(new HashSet<IAtgParameterMessStellenGruppeListener>());
+	private Set<IAtgParameterMessStellenGruppeListener> listenerMenge = new HashSet<IAtgParameterMessStellenGruppeListener>();
 
 	/**
 	 * aktuelle Parameter fuer die KZD-Ueberwachung.
@@ -125,11 +122,12 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	 * @param listener
 	 *            eine neuer Listener
 	 */
-	public final synchronized void addListener(
-			final IAtgParameterMessStellenGruppeListener listener) {
-		if (listenerMenge.add(listener) && this.kzParameter != null) {
-			listener.aktualisiereMsgParameter(this.kzParameter,
-					this.lzParameter);
+	public final void addListener(final IAtgParameterMessStellenGruppeListener listener) {
+		synchronized (this) {
+			if (listenerMenge.add(listener) && this.kzParameter != null) {
+				listener.aktualisiereMsgParameter(this.kzParameter,
+						this.lzParameter);
+			}			
 		}
 	}
 
@@ -198,7 +196,7 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 						for (IAtgParameterMessStellenGruppeListener listener : this.listenerMenge) {
 							listener.aktualisiereMsgParameter(kzParameter,
 									lzParameter);
-						}
+						}							
 					}
 				}
 			}

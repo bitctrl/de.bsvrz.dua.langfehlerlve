@@ -26,7 +26,6 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -86,14 +85,12 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	/**
 	 * Aktuelle Daten aller mit der Messstelle assoziierten Messquerschnitte.
 	 */
-	private Map<SystemObject, Intervall> mqPuffer = Collections
-			.synchronizedMap(new HashMap<SystemObject, Intervall>());
+	private Map<SystemObject, Intervall> mqPuffer = new HashMap<SystemObject, Intervall>();
 
 	/**
 	 * Menge von Beobachtern der Online-Daten dieses Objektes.
 	 */
-	private Set<IDELzFhDatenListener> listenerMenge = Collections
-			.synchronizedSet(new HashSet<IDELzFhDatenListener>());
+	private Set<IDELzFhDatenListener> listenerMenge = new HashSet<IDELzFhDatenListener>();
 
 	/**
 	 * wenn dieser Wert auf <code>!= null</code> steht, bedeutet das, dass das
@@ -199,14 +196,16 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 * Initialisiert bzw. loescht den MQ-Puffer
 	 */
 	private void initMQPuffer() {
-		this.mqPuffer.put(this.messStelle.getPruefling().getSystemObject(),
-				null);
+		synchronized (this.mqPuffer) {
+			this.mqPuffer.put(this.messStelle.getPruefling().getSystemObject(),
+					null);
 
-		for (MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
-			this.mqPuffer.put(abfahrt.getSystemObject(), null);
-		}
-		for (MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
-			this.mqPuffer.put(zufahrt.getSystemObject(), null);
+			for (MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
+				this.mqPuffer.put(abfahrt.getSystemObject(), null);
+			}
+			for (MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
+				this.mqPuffer.put(zufahrt.getSystemObject(), null);
+			}			
 		}
 	}
 
@@ -255,38 +254,40 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 */
 	private synchronized void versucheMessStellenBerechnung(
 			SystemObject mqObjekt, Intervall neuesDatum) {
-		if (this.mqPuffer.size() > 0) {
-			if (this.mqPuffer.size() > 1) {
-				int schonEingetroffeneIntervalle = 0;
+		synchronized (this.mqPuffer) {
+			if (this.mqPuffer.size() > 0) {
+				if (this.mqPuffer.size() > 1) {
+					int schonEingetroffeneIntervalle = 0;
 
-				for (SystemObject mq : this.mqPuffer.keySet()) {
-					Intervall aktuellesIntervall = this.mqPuffer.get(mq);
-					if (aktuellesIntervall != null) {
-						if (neuesDatum.getStart() > aktuellesIntervall
-								.getStart()) {
-							veroeffentlicheAktuellenMsWert();
-							this.mqPuffer.put(mqObjekt, neuesDatum);
-							return;
-						} else {
-							if (neuesDatum.getStart() == aktuellesIntervall
+					for (SystemObject mq : this.mqPuffer.keySet()) {
+						Intervall aktuellesIntervall = this.mqPuffer.get(mq);
+						if (aktuellesIntervall != null) {
+							if (neuesDatum.getStart() > aktuellesIntervall
 									.getStart()) {
-								schonEingetroffeneIntervalle++;
+								veroeffentlicheAktuellenMsWert();
+								this.mqPuffer.put(mqObjekt, neuesDatum);
+								return;
 							} else {
-								throw new RuntimeException(
-										"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
+								if (neuesDatum.getStart() == aktuellesIntervall
+										.getStart()) {
+									schonEingetroffeneIntervalle++;
+								} else {
+									throw new RuntimeException(
+											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
+								}
 							}
 						}
 					}
-				}
-				this.mqPuffer.put(mqObjekt, neuesDatum);
+					this.mqPuffer.put(mqObjekt, neuesDatum);
 
-				if (this.mqPuffer.size() - 1 == schonEingetroffeneIntervalle) {
+					if (this.mqPuffer.size() - 1 == schonEingetroffeneIntervalle) {
+						veroeffentlicheAktuellenMsWert();
+					}
+				} else {
+					this.mqPuffer.put(mqObjekt, neuesDatum);
 					veroeffentlicheAktuellenMsWert();
 				}
-			} else {
-				this.mqPuffer.put(mqObjekt, neuesDatum);
-				veroeffentlicheAktuellenMsWert();
-			}
+			}			
 		}
 	}
 
@@ -390,9 +391,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 			}
 			this.msKanal.publiziere(msIntervallVSResultat);
 		} else {
-			synchronized (this.mqPuffer) {
-				this.versucheMessStellenBerechnung(mqObjekt, intervallDatum);
-			}
+			this.versucheMessStellenBerechnung(mqObjekt, intervallDatum);
 		}
 
 		if (this.messStelle.getPruefling().getSystemObject().equals(mqObjekt)) {
@@ -425,9 +424,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 */
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
-		synchronized (this) {
-			this.initMQPuffer();
-		}
+		this.initMQPuffer();
 	}
 
 }

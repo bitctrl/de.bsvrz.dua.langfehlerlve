@@ -51,6 +51,7 @@ import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
+import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
@@ -254,7 +255,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 					} else {
 						this.initPuffer();
 						if (pufferZeit > intervallDatum.getStart()) {
-							LOGGER.warning("Veralteten Datensatz fuer " + //$NON-NLS-1$
+							Debug.getLogger().warning("Veralteten Datensatz fuer " + //$NON-NLS-1$
 									objekt + " empfangen:\n" + intervallDatum); //$NON-NLS-1$
 						} else {
 							this.puffer.put(objekt, intervallDatum);
