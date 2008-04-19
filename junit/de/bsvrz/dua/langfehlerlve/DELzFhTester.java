@@ -493,12 +493,12 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 		dav1.subscribeSender(this, mengeMq, ddVdkz, SenderRole.source());
 		dav1.subscribeSender(this, mg, ddParam, SenderRole.sender());
 
-		ddIvsDaten1 = new DataDescription(dav1.getDataModel().getAttributeGroup(
-				"atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+		ddIvsDaten1 = new DataDescription(dav1.getDataModel()
+				.getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
 				dav1.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
 
-		ddIvsDaten2 = new DataDescription(dav1.getDataModel().getAttributeGroup(
-				"atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+		ddIvsDaten2 = new DataDescription(dav1.getDataModel()
+				.getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
 				dav1.getDataModel().getAspect("asp.messStelleKurzZeit")); //$NON-NLS-1$
 
 		ddBvsDaten = new DataDescription(dav1.getDataModel().getAttributeGroup(
@@ -529,7 +529,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 		try {
 			Thread.sleep(5000L);
 		} catch (InterruptedException e) {
-			
+
 		}
 
 	}
@@ -761,7 +761,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 		for (j = 0; j < betriebsmeldung.length; j++) {
 			if (betriebsmeldung[j] != 0) {
 				break;
-			}				
+			}
 		}
 		if (i >= ausgabe.length && j >= betriebsmeldung.length) {
 			System.out.println(String.format(

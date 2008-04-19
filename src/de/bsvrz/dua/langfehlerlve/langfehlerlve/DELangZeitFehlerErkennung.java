@@ -83,13 +83,13 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	 * {@inheritDoc}
 	 */
 	public void initialize(ClientDavInterface dav) throws Exception {
-		DuaVerkehrsNetz.initialisiere(dav);
-
 		Collection<ConfigurationArea> kbFilter = this
 				.getKonfigurationsBereicheAlsObjekte(dav, DUAUtensilien
 						.getArgument(
 								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 								this.komArgumente));
+		
+		DuaVerkehrsNetz.initialisiere(dav, kbFilter.toArray(new ConfigurationArea[0]));
 
 		Collection<SystemObject> msgObjekte = DUAUtensilien.getBasisInstanzen(
 				dav.getDataModel().getType(

@@ -45,17 +45,28 @@ public final class Verbindung {
 		
 	}
 
-	/**
+	 /**
 	 * Verbindungsdaten.
 	 */
-	public static final String[] CON_DATA = new String[] {
-			"-datenverteiler=localhost:8083", //$NON-NLS-1$
-			"-benutzer=Tester", //$NON-NLS-1$
-			"-authentifizierung=passwd", //$NON-NLS-1$
-			"-KonfigurationsBereichsPid=kb.deLzFhTest", //$NON-NLS-1$
-			"-debugLevelStdErrText=INFO", //$NON-NLS-1$
-			"-debugLevelFileText=INFO" }; //$NON-NLS-1$
+	 public static final String[] CON_DATA = new String[] {
+	 "-datenverteiler=localhost:8083", //$NON-NLS-1$
+	 "-benutzer=Tester", //$NON-NLS-1$
+	 "-authentifizierung=passwd", //$NON-NLS-1$
+	 "-KonfigurationsBereichsPid=kb.deLzFhTest", //$NON-NLS-1$
+	 "-debugLevelStdErrText=ERROR", //$NON-NLS-1$
+	 "-debugLevelFileText=ERROR" }; //$NON-NLS-1$
 
+//	/**
+//	 * Verbindungsdaten.
+//	 */
+//	public static final String[] CON_DATA = new String[] {
+//			"-datenverteiler=10.44.44.10:8083", //$NON-NLS-1$
+//			"-benutzer=Tester", //$NON-NLS-1$
+//			"-authentifizierung=c:\\passwd", //$NON-NLS-1$
+//			"-KonfigurationsBereichsPid=kb.deLzFhTest", //$NON-NLS-1$
+//			"-debugLevelStdErrText=INFO", //$NON-NLS-1$
+//			"-debugLevelFileText=ERROR" }; //$NON-NLS-1$
+	
 	/**
 	 * Verzeichnis, in dem sich die CSV-Dateien mit den Testdaten befinden.
 	 */
