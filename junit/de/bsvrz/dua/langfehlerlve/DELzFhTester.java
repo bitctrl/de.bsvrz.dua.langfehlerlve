@@ -335,9 +335,9 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 		DELzFhTester.datenQuelle = datenQuelle1;
 
 		DELzFhTester tester = new DELzFhTester();
-		String[] connArgs = new String[Verbindung.CON_DATA.length];
-		for (int i = 0; i < Verbindung.CON_DATA.length; i++) {
-			connArgs[i] = Verbindung.CON_DATA[i];
+		String[] connArgs = new String[Verbindung.CON_DATA_NORMAL.length];
+		for (int i = 0; i < Verbindung.CON_DATA_NORMAL.length; i++) {
+			connArgs[i] = Verbindung.CON_DATA_NORMAL[i];
 		}
 		StandardApplicationRunner.run(tester, connArgs);
 
