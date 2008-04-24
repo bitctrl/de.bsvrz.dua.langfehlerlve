@@ -26,12 +26,22 @@
 
 package de.bsvrz.dua.langfehlerlve.prspez;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.Verbindung;
+import de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung;
+import de.bsvrz.sys.funclib.application.StandardApplication;
+import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 
 /**
  * Testet den Modul DE Langzeit-Fehlererkennung nach PruefSpez.
@@ -48,7 +58,64 @@ public class DELzFhTesterPrProz implements ClientSenderInterface {
 	public static final String DATEN_QUELLE1 = Verbindung.TEST_DATEN_VERZEICHNIS
 			+ "Kurzzeitdat_2.0.csv"; //$NON-NLS-1$
 
-	
+	/**
+	 * Alle hier betrachteten Systemobjekte.
+	 */
+	private static final String[] OBJEKTE = new String[] { "Q1", "QZ11",
+			"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
+			"QA4" };
+
+	/**
+	 * Datenverteiler-Verbindung.
+	 */
+	protected static ClientDavInterface dav = null;
+
+	/**
+	 * Fuehrt Datenverteilerverbindung durch.
+	 * 
+	 * @throws Exception
+	 *             wird weitergereicht
+	 */
+	@Before
+	public void setUp() throws Exception {
+		StandardApplicationRunner.run(new StandardApplication() {
+
+			public void initialize(ClientDavInterface connection)
+					throws Exception {
+				dav = connection;
+			}
+
+			public void parseArguments(ArgumentList argumentList)
+					throws Exception {
+				argumentList.fetchUnusedArguments();
+			}
+
+		}, Verbindung.CON_DATA_PR_SPEZ.clone());
+
+		DataDescription ddMq = new DataDescription(dav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
+				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+
+		for (String objPidEnd : OBJEKTE) {
+			System.out
+					.println("Anmeldung: "
+							+ "ms.sys.ja." + objPidEnd.toLowerCase()
+							+ ", "
+							+ "ms.sys.nein." + objPidEnd.toLowerCase());
+			dav.subscribeSender(this, dav.getDataModel().getObject(
+					"ms.sys.ja." + objPidEnd.toLowerCase()), ddMq, SenderRole
+					.source());
+			dav.subscribeSender(this, dav.getDataModel().getObject(
+					"ms.sys.nein." + objPidEnd.toLowerCase()), ddMq,
+					SenderRole.source());
+		}
+		
+		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(), 
+				Verbindung.CON_DATA_PR_SPEZ.clone());
+		
+		Thread.sleep(5000L);
+	}
+
 	/**
 	 * Testet nach PruefSpez.
 	 * 
@@ -59,24 +126,28 @@ public class DELzFhTesterPrProz implements ClientSenderInterface {
 	public void test() throws Exception {
 		TestDatenImporterPrSpez daten = new TestDatenImporterPrSpez();
 		daten.init(DATEN_QUELLE1);
-		
-		System.out.println("\nKnotenpunkte:");
+
+		DataDescription ddMq = new DataDescription(dav.getDataModel()
+				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
+				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+
 		for (int i = 0; i < daten.getKnotenpunkteTab().getAnzahlZeilen(); i++) {
-			System.out.println("Q1=" + daten.getKnotenpunkteTab().get(i, "Q1")
-					+ ", QZ11=" + daten.getKnotenpunkteTab().get(i, "QZ11")
-					+ ", Q4=" + daten.getKnotenpunkteTab().get(i, "Q4")
-					+ ", QZ4=" + daten.getKnotenpunkteTab().get(i, "QZ4")
-					+ ", QA4=" + daten.getKnotenpunkteTab().get(i, "QA4"));
+			for (String objPidEnd : OBJEKTE) {
+				Data dataJa = TestDatenImporterPrSpez.getDatensatz(dav, daten
+						.getKnotenpunkteTab().get(i, objPidEnd));
+				Data dataNein = TestDatenImporterPrSpez.getDatensatz(dav, daten
+						.getFreieStreckeTab().get(i, objPidEnd));
+				ResultData resultatJa = new ResultData(dav.getDataModel()
+						.getObject("ms.sys.ja." + objPidEnd.toLowerCase()),
+						ddMq, System.currentTimeMillis(), dataJa);
+				ResultData resultatNein = new ResultData(dav.getDataModel()
+						.getObject("ms.sys.nein." + objPidEnd.toLowerCase()),
+						ddMq, System.currentTimeMillis(), dataNein);
+				dav.sendData(resultatJa);
+				dav.sendData(resultatNein);
+				Thread.sleep(5000L);
+			}
 		}
-
-		System.out.println("\nfreie Strecke:");
-		for (int i = 0; i < daten.getFreieStreckeTab().getAnzahlZeilen(); i++) {
-			System.out.println("Q1=" + daten.getFreieStreckeTab().get(i, "Q1")
-					+ ", QZ11=" + daten.getFreieStreckeTab().get(i, "QZ11")
-					+ ", QZ4=" + daten.getFreieStreckeTab().get(i, "QZ4")
-					+ ", QA4=" + daten.getFreieStreckeTab().get(i, "QA4"));
-		}
-
 	}
 
 	/**

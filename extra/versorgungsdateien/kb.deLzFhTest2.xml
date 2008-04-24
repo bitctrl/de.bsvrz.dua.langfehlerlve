@@ -7,44 +7,44 @@
 <konfigurationsObjekt typ="typ.messStellenGruppe" pid="gruppe.sys.ja" name="">
 	<datensatz pid="atg.messStellenGruppe">
 		<datenfeld name="MessStellen">
-			<datum name="0" wert="ms1.sys.ja"/>
-			<datum name="1" wert="ms2.sys.ja"/>
-			<datum name="2" wert="ms3.sys.ja"/>
-			<datum name="3" wert="ms4.sys.ja"/>
+			<datum name="0" wert="ms.sys.ja.1"/>
+			<datum name="1" wert="ms.sys.ja.2"/>
+			<datum name="2" wert="ms.sys.ja.3"/>
+			<datum name="3" wert="ms.sys.ja.4"/>
 		</datenfeld>
 		<datum name="SystematischeDetektorfehler" wert="Ja"/>
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms1.sys.ja" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.ja.1" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms1.sys.ja.q1"/>
+		<datum name="Prüfling" wert="ms.sys.ja.q1"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
-		<element pid="ms1.sys.ja.qa11"/>
-		<element pid="ms1.sys.ja.qa12"/>
+		<element pid="ms.sys.ja.qa11"/>
+		<element pid="ms.sys.ja.qa12"/>
 	</objektMenge>
 	<objektMenge name="Zufahrten">
-		<element pid="ms1.sys.ja.qz11"/>
-		<element pid="ms1.sys.ja.qz12"/>
+		<element pid="ms.sys.ja.qz11"/>
+		<element pid="ms.sys.ja.qz12"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms2.sys.ja" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.ja.2" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms2.sys.ja.q2"/>
+		<datum name="Prüfling" wert="ms.sys.ja.q2"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
-		<element pid="ms2.sys.ja.qa2"/>
+		<element pid="ms.sys.ja.qa2"/>
 	</objektMenge>
 	<objektMenge name="Zufahrten">
-		<element pid="ms2.sys.ja.qz2"/>
+		<element pid="ms.sys.ja.qz2"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms3.sys.ja" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.ja.3" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms3.sys.ja.q3"/>
+		<datum name="Prüfling" wert="ms.sys.ja.q3"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
 	</objektMenge>
@@ -52,142 +52,142 @@
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms4.sys.ja" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.ja.4" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms4.sys.ja.q4"/>
+		<datum name="Prüfling" wert="ms.sys.ja.q4"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
-		<element pid="ms4.sys.ja.qa4"/>
+		<element pid="ms.sys.ja.qa4"/>
 	</objektMenge>
 	<objektMenge name="Zufahrten">
-		<element pid="ms4.sys.ja.qz4"/>
+		<element pid="ms.sys.ja.qz4"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.ja.q1" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.q1" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.ja.q1.fs"/>
+		<element pid="ms.sys.ja.q1.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.ja.qz11" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qz11" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.ja.qz11.fs"/>
+		<element pid="ms.sys.ja.qz11.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.ja.qz12" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qz12" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.ja.qz12.fs"/>
+		<element pid="ms.sys.ja.qz12.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.ja.qa11" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qa11" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.ja.qa11.fs"/>
+		<element pid="ms.sys.ja.qa11.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.ja.qa12" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qa12" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.ja.qa12.fs"/>
+		<element pid="ms.sys.ja.qa12.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms2.sys.ja.q2" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.q2" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms2.sys.ja.q2.fs"/>
+		<element pid="ms.sys.ja.q2.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms2.sys.ja.qz2" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qz2" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms2.sys.ja.qz2.fs"/>
+		<element pid="ms.sys.ja.qz2.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms2.sys.ja.qa2" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qa2" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms2.sys.ja.qa2.fs"/>
+		<element pid="ms.sys.ja.qa2.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms3.sys.ja.q3" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.q3" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms3.sys.ja.q3.fs"/>
+		<element pid="ms.sys.ja.q3.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms4.sys.ja.q4" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.q4" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms4.sys.ja.q4.fs"/>
+		<element pid="ms.sys.ja.q4.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms4.sys.ja.qz4" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qz4" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms4.sys.ja.qz4.fs"/>
+		<element pid="ms.sys.ja.qz4.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms4.sys.ja.qa4" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.ja.qa4" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms4.sys.ja.qa4.fs"/>
+		<element pid="ms.sys.ja.qa4.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.ja.q1.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.q1.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -196,7 +196,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.ja.qz11.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qz11.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -205,7 +205,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.ja.qz12.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qz12.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -214,7 +214,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.ja.qa11.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qa11.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -223,7 +223,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.ja.qa12.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qa12.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -233,7 +233,7 @@
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms2.sys.ja.q2.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.q2.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -242,7 +242,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms2.sys.ja.qz2.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qz2.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -251,7 +251,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms2.sys.ja.qa2.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qa2.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -260,7 +260,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms3.sys.ja.q3.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.q3.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -269,7 +269,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms4.sys.ja.q4.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.q4.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -278,7 +278,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms4.sys.ja.qz4.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qz4.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -287,7 +287,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms4.sys.ja.qa4.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.ja.qa4.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -301,44 +301,44 @@
 <konfigurationsObjekt typ="typ.messStellenGruppe" pid="gruppe.sys.nein" name="">
 	<datensatz pid="atg.messStellenGruppe">
 		<datenfeld name="MessStellen">
-			<datum name="0" wert="ms1.sys.nein"/>
-			<datum name="1" wert="ms2.sys.nein"/>
-			<datum name="2" wert="ms3.sys.nein"/>
-			<datum name="3" wert="ms4.sys.nein"/>
+			<datum name="0" wert="ms.sys.nein.1"/>
+			<datum name="1" wert="ms.sys.nein.2"/>
+			<datum name="2" wert="ms.sys.nein.3"/>
+			<datum name="3" wert="ms.sys.nein.4"/>
 		</datenfeld>
 		<datum name="SystematischeDetektorfehler" wert="Ja"/>
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms1.sys.nein" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.nein.1" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms1.sys.nein.q1"/>
+		<datum name="Prüfling" wert="ms.sys.nein.q1"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
-		<element pid="ms1.sys.nein.qa11"/>
-		<element pid="ms1.sys.nein.qa12"/>
+		<element pid="ms.sys.nein.qa11"/>
+		<element pid="ms.sys.nein.qa12"/>
 	</objektMenge>
 	<objektMenge name="Zufahrten">
-		<element pid="ms1.sys.nein.qz11"/>
-		<element pid="ms1.sys.nein.qz12"/>
+		<element pid="ms.sys.nein.qz11"/>
+		<element pid="ms.sys.nein.qz12"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms2.sys.nein" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.nein.2" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms2.sys.nein.q2"/>
+		<datum name="Prüfling" wert="ms.sys.nein.q2"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
-		<element pid="ms2.sys.nein.qa2"/>
+		<element pid="ms.sys.nein.qa2"/>
 	</objektMenge>
 	<objektMenge name="Zufahrten">
-		<element pid="ms2.sys.nein.qz2"/>
+		<element pid="ms.sys.nein.qz2"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms3.sys.nein" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.nein.3" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms3.sys.nein.q3"/>
+		<datum name="Prüfling" wert="ms.sys.nein.q3"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
 	</objektMenge>
@@ -346,142 +346,142 @@
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messStelle" pid="ms4.sys.nein" name="">
+<konfigurationsObjekt typ="typ.messStelle" pid="ms.sys.nein.4" name="">
 	<datensatz pid="atg.messStelle">
-		<datum name="Prüfling" wert="ms4.sys.nein.q4"/>
+		<datum name="Prüfling" wert="ms.sys.nein.q4"/>
 	</datensatz>
 	<objektMenge name="Abfahrten">
-		<element pid="ms4.sys.nein.qa4"/>
+		<element pid="ms.sys.nein.qa4"/>
 	</objektMenge>
 	<objektMenge name="Zufahrten">
-		<element pid="ms4.sys.nein.qz4"/>
+		<element pid="ms.sys.nein.qz4"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.nein.q1" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.q1" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.nein.q1.fs"/>
+		<element pid="ms.sys.nein.q1.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.nein.qz11" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qz11" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.nein.qz11.fs"/>
+		<element pid="ms.sys.nein.qz11.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.nein.qz12" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qz12" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.nein.qz12.fs"/>
+		<element pid="ms.sys.nein.qz12.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.nein.qa11" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qa11" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.nein.qa11.fs"/>
+		<element pid="ms.sys.nein.qa11.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms1.sys.nein.qa12" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qa12" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms1.sys.nein.qa12.fs"/>
+		<element pid="ms.sys.nein.qa12.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms2.sys.nein.q2" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.q2" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms2.sys.nein.q2.fs"/>
+		<element pid="ms.sys.nein.q2.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms2.sys.nein.qz2" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qz2" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms2.sys.nein.qz2.fs"/>
+		<element pid="ms.sys.nein.qz2.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms2.sys.nein.qa2" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qa2" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms2.sys.nein.qa2.fs"/>
+		<element pid="ms.sys.nein.qa2.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms3.sys.nein.q3" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.q3" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms3.sys.nein.q3.fs"/>
+		<element pid="ms.sys.nein.q3.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms4.sys.nein.q4" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.q4" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="HauptFahrbahn"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms4.sys.nein.q4.fs"/>
+		<element pid="ms.sys.nein.q4.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms4.sys.nein.qz4" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qz4" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Einfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms4.sys.nein.qz4.fs"/>
+		<element pid="ms.sys.nein.qz4.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms4.sys.nein.qa4" name="">
+<konfigurationsObjekt typ="typ.messQuerschnitt" pid="ms.sys.nein.qa4" name="">
 	<datensatz pid="atg.messQuerschnittAllgemein">
 		<datum name="Typ" wert="Ausfahrt"/>
 		<datum name="ErsatzMessQuerschnitt" wert="null"/>
 	</datensatz>
 	<objektMenge name="FahrStreifen">
-		<element pid="ms4.sys.nein.qa4.fs"/>
+		<element pid="ms.sys.nein.qa4.fs"/>
 	</objektMenge>
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.nein.q1.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.q1.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -490,7 +490,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.nein.qz11.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qz11.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -499,7 +499,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.nein.qz12.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qz12.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -508,7 +508,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.nein.qa11.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qa11.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -517,7 +517,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms1.sys.nein.qa12.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qa12.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -527,7 +527,7 @@
 </konfigurationsObjekt>
 
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms2.sys.nein.q2.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.q2.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -536,7 +536,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms2.sys.nein.qz2.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qz2.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -545,7 +545,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms2.sys.nein.qa2.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qa2.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -554,7 +554,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms3.sys.nein.q3.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.q3.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -563,7 +563,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms4.sys.nein.q4.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.q4.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -572,7 +572,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms4.sys.nein.qz4.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qz4.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>
@@ -581,7 +581,7 @@
 	</datensatz>
 </konfigurationsObjekt>
 
-<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms4.sys.nein.qa4.fs" name="">
+<konfigurationsObjekt typ="typ.fahrStreifen" pid="ms.sys.nein.qa4.fs" name="">
 	<datensatz pid="atg.fahrStreifen">
 		<datum name="Typ" wert="HauptFahrStreifen"/>
 		<datum name="Lage" wert="HFS"/>

@@ -31,7 +31,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
 import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
@@ -42,7 +45,26 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  * @version $Id$
  */
 final class TestDatenImporterPrSpez {
-	
+
+	/**
+	 * Alle Attribute der Attributgruppe
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
+	 */
+	private static final Attribut[] ATTRIBUTE = new Attribut[] {
+			new Attribut("QKfz", true), new Attribut("QPkw", true),
+			new Attribut("QLkw", true), new Attribut("VKfz", false),
+			new Attribut("VPkw", false), new Attribut("VLkw", false),
+			new Attribut("VgKfz", false), new Attribut("B", false),
+			new Attribut("BMax", false),
+			new Attribut("SKfz", false),
+			new Attribut("ALkw", false),
+			new Attribut("KKfz", false),
+			new Attribut("KLkw", false),
+			new Attribut("KPkw", false),			
+			new Attribut("VDelta", false),
+			new Attribut("KB", false),
+			new Attribut("QB", false), };
+
 	/**
 	 * Daten fuer Knotenpunkte.
 	 */
@@ -52,7 +74,6 @@ final class TestDatenImporterPrSpez {
 	 * Daten fuer freie Strecke.
 	 */
 	private MSGDaten freieStreckeTab = null;
-
 
 	/**
 	 * Liest die Tabelle ein.
@@ -97,8 +118,37 @@ final class TestDatenImporterPrSpez {
 	MSGDaten getFreieStreckeTab() {
 		return freieStreckeTab;
 	}
-	
-	
+
+	/**
+	 * Uebersetzt in DAV-Daten der Attributgruppe
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
+	 * 
+	 * @param dav
+	 *            Datenverteiler-Verbindung
+	 * @param wert
+	 *            ein Wert
+	 * @return DAV-Datum der Attributgruppe
+	 *         <code>atg.verkehrsDatenKurzZeitMq</code>
+	 */
+	static Data getDatensatz(ClientDavInterface dav, long wert) {
+		Data data = dav.createData(dav.getDataModel().getAttributeGroup(
+				DUAKonstanten.ATG_KURZZEIT_MQ));
+
+		for (Attribut attr : ATTRIBUTE) {
+			MesswertUnskaliert mw = new MesswertUnskaliert(attr.getName());
+
+			if (attr.istQAttribut) {
+				mw.setWertUnskaliert(wert);
+			} else {
+				mw.setWertUnskaliert(1);
+			}
+
+			mw.kopiereInhaltNach(data);
+		}
+
+		return data;
+	}
+
 	/**
 	 * Speichert alle Daten einer Messstellengruppe.
 	 * 
@@ -107,18 +157,17 @@ final class TestDatenImporterPrSpez {
 	 * @version $Id$
 	 */
 	final class MSGDaten {
-		
+
 		/**
 		 * Mappt die Namen auf die Spalten in denen sie stehen.
 		 */
 		private Map<String, Integer> spaltenMap = null;
-		
+
 		/**
 		 * Mappt die Zeilennummer auf den Zeileninhalt.
 		 */
 		private List<Integer[]> zeilenMap = null;
-		
-		
+
 		/**
 		 * Standardkonstruktor.
 		 * 
@@ -131,7 +180,7 @@ final class TestDatenImporterPrSpez {
 				this.spaltenMap.put(qNamen[i], i);
 			}
 		}
-		
+
 		/**
 		 * Fuegt diesem Element eine Zeile hinzu.
 		 * 
@@ -160,7 +209,7 @@ final class TestDatenImporterPrSpez {
 		int getAnzahlZeilen() {
 			return this.zeilenMap.size();
 		}
-		
+
 		/**
 		 * Erfragt den Wert eines Querschnittes in einer bestimmten Zeile.
 		 * 
@@ -173,5 +222,56 @@ final class TestDatenImporterPrSpez {
 		}
 
 	}
-	
+
+	/**
+	 * Information zu einem Attribut innerhalb der Attributgruppe
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>. 
+	 * 
+	 * @author BitCtrl Systems GmbH, Thierfelder
+	 * 
+	 * @version $Id$
+	 */
+	private static final class Attribut {
+
+		/**
+		 * Der Name des Attributs.
+		 */
+		private String name;
+
+		/**
+		 * Ob es sich um ein Q...-Attribut handelt.
+		 */
+		private boolean istQAttribut = false;
+
+		/**
+		 * Standardkonstruktor.
+		 * 
+		 * @param name
+		 *            der Name des Attributs
+		 * @param istQAttribut
+		 *            ob es sich um ein Q...-Attribut handelt
+		 */
+		Attribut(String name, boolean istQAttribut) {
+			this.name = name;
+			this.istQAttribut = istQAttribut;
+		}
+
+		/**
+		 * Erfragt den Namen des Attributs.
+		 * 
+		 * @return der Name des Attributs
+		 */
+		public String getName() {
+			return name;
+		}
+
+		/**
+		 * Erfragt, ob es sich um ein Q...-Attribut handelt.
+		 * 
+		 * @return ob es sich um ein Q...-Attribut handelt
+		 */
+		public boolean isQAttribut() {
+			return istQAttribut;
+		}
+	}
 }
