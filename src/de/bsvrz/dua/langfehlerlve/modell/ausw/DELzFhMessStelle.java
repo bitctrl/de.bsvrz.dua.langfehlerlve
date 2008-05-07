@@ -217,7 +217,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 *            eine neuer Listener
 	 */
 	public final void addListener(final IDELzFhDatenListener listener) {
-		synchronized (this) {
+		synchronized (this.listenerMenge) {
 			if (this.listenerMenge.add(listener)
 					&& this.fertigesIntervall != null) {
 				listener.aktualisiereDatum(this.messStelle.getSystemObject(),

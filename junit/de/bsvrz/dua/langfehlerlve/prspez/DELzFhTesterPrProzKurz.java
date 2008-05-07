@@ -26,6 +26,11 @@
 
 package de.bsvrz.dua.langfehlerlve.prspez;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +55,7 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
  * 
  * @version $Id$
  */
-public class DELzFhTesterPrProz implements ClientSenderInterface {
+public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 
 	/**
 	 * Pfad zu Testdaten.
@@ -64,6 +69,11 @@ public class DELzFhTesterPrProz implements ClientSenderInterface {
 	private static final String[] OBJEKTE = new String[] { "Q1", "QZ11",
 			"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
 			"QA4" };
+	
+	/**
+	 * Alle hier betrachteten Messstellen.
+	 */
+	private static final String[] MS_OBJEKTE = new String[] { "Q1", "Q2", "Q3", "Q4" };
 
 	/**
 	 * Datenverteiler-Verbindung.
@@ -97,22 +107,20 @@ public class DELzFhTesterPrProz implements ClientSenderInterface {
 				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		for (String objPidEnd : OBJEKTE) {
-			System.out
-					.println("Anmeldung: "
-							+ "ms.sys.ja." + objPidEnd.toLowerCase()
-							+ ", "
-							+ "ms.sys.nein." + objPidEnd.toLowerCase());
+			System.out.println("Anmeldung: " + "ms.sys.ja."
+					+ objPidEnd.toLowerCase() + ", " + "ms.sys.nein."
+					+ objPidEnd.toLowerCase());
 			dav.subscribeSender(this, dav.getDataModel().getObject(
 					"ms.sys.ja." + objPidEnd.toLowerCase()), ddMq, SenderRole
 					.source());
 			dav.subscribeSender(this, dav.getDataModel().getObject(
-					"ms.sys.nein." + objPidEnd.toLowerCase()), ddMq,
-					SenderRole.source());
+					"ms.sys.nein." + objPidEnd.toLowerCase()), ddMq, SenderRole
+					.source());
 		}
-		
-		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(), 
+
+		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(),
 				Verbindung.CON_DATA_PR_SPEZ.clone());
-		
+
 		Thread.sleep(5000L);
 	}
 
@@ -124,30 +132,69 @@ public class DELzFhTesterPrProz implements ClientSenderInterface {
 	 */
 	@Test
 	public void test() throws Exception {
-		TestDatenImporterPrSpez daten = new TestDatenImporterPrSpez();
+		TestDatenImporterPrSpezKurz daten = new TestDatenImporterPrSpezKurz();
 		daten.init(DATEN_QUELLE1);
+		
+		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
+//		for(String mq:)
+//		/**
+//		 * MQ-Intervall
+//		 */
+//		AtgIntervallUeberwacherMqKurz dummy = null;
+//		dummy = new AtgIntervallUeberwacherMqKurz()
+
+		long jetzt = System.currentTimeMillis();
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTimeInMillis(jetzt);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		int aktuelleMinute = cal.get(Calendar.MINUTE);
+		int naechsterStart = (((int) (aktuelleMinute / 5)) + 1) * 5;
+		cal.set(Calendar.MINUTE, naechsterStart);
+
+		System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(cal
+				.getTimeInMillis())));
 
 		DataDescription ddMq = new DataDescription(dav.getDataModel()
 				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
 				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
-		for (int i = 0; i < daten.getKnotenpunkteTab().getAnzahlZeilen(); i++) {
+		for (int i = 0; i < daten.getKnotenpunkteTab().getAnzahlZeilen() + 1; i++) {
 			for (String objPidEnd : OBJEKTE) {
-				Data dataJa = TestDatenImporterPrSpez.getDatensatz(dav, daten
-						.getKnotenpunkteTab().get(i, objPidEnd));
-				Data dataNein = TestDatenImporterPrSpez.getDatensatz(dav, daten
-						.getFreieStreckeTab().get(i, objPidEnd));
+				Data dataJa = TestDatenImporterPrSpezKurz.getDatensatz(dav,
+						daten.getKnotenpunkteTab().get(i % 5, objPidEnd));
+				Data dataNein = TestDatenImporterPrSpezKurz.getDatensatz(dav,
+						daten.getFreieStreckeTab().get(i % 5, objPidEnd));
 				ResultData resultatJa = new ResultData(dav.getDataModel()
 						.getObject("ms.sys.ja." + objPidEnd.toLowerCase()),
-						ddMq, System.currentTimeMillis(), dataJa);
+						ddMq, cal.getTimeInMillis(), dataJa);
 				ResultData resultatNein = new ResultData(dav.getDataModel()
 						.getObject("ms.sys.nein." + objPidEnd.toLowerCase()),
-						ddMq, System.currentTimeMillis(), dataNein);
+						ddMq, cal.getTimeInMillis(), dataNein);
 				dav.sendData(resultatJa);
 				dav.sendData(resultatNein);
-				Thread.sleep(5000L);
+			}
+
+			cal.add(Calendar.MINUTE, 1);
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException ex) {
+				//
 			}
 		}
+		
+		/**
+		 * Warte bis alle Daten verarbeitet sind
+		 */
+		try {
+			Thread.sleep(5000L);
+		} catch (InterruptedException ex) {
+			//
+		}
+		
+		for (AbstraktAtgUeberwacher uw : ueberwacher) {
+			uw.ueberpruefe();
+		}		
 	}
 
 	/**

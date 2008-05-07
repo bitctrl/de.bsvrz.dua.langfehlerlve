@@ -256,6 +256,8 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 						.getEndeLetztesIntervallVor(aktuelleDatenZeit);
 				final long intervallAnfang = intervallEnde
 						- this.intervallLaenge;
+				
+				System.out.println("Intervallende: " + intervallEnde + " Intervallanfang: " + intervallAnfang + ", i: " + this.intervallLaenge); 
 
 				if (intervallAnfang <= zweitLetztesDatum.getZeitStempel()
 						&& zweitLetztesDatum.getZeitStempel() < intervallEnde
@@ -283,11 +285,15 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 */
 	private void berechneFertigesIntervall(final long start,
 			final long ende) {
+		
+		System.out.println("Start: " + start + ", Ende: " + ende);
+		
 		Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
 		for (MQDatum mQDatum : this.puffer) {
 			if (start <= mQDatum.getZeitStempel()
 					&& mQDatum.getZeitStempel() < ende) {
 				datenImIntervall.add(mQDatum);
+				System.out.println(mQDatum.toString());
 			}
 		}
 
@@ -337,6 +343,8 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 *            der Jetzt-Zeitpunkt
 	 */
 	private synchronized void setJetzt(final long jetzt) {
+		System.out.println(jetzt);
+		
 		if (this.puffer.size() > 1) {
 			int i = 0;
 			MQDatum zweitLetztesDatum = null;
@@ -355,6 +363,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			for (MQDatum pufferElement : this.puffer) {
 				if (pufferElement.getZeitStempel() < aeltesterErlaubterZeitStempel) {
 					zuLoeschendeElemente.add(pufferElement);
+					System.out.println("Loesche: " + pufferElement);
 				}
 			}
 

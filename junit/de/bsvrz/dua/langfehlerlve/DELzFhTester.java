@@ -442,7 +442,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 		}
 
 		SystemObject ms1, ms2, ms3, ms4;
-		SystemObject ms1_mq, ms1_mq_zu1, ms1_mq_zu2, ms1_mq_ab1, ms1_mq_ab2, ms2_mq, ms2_mq_zu1, ms2_mq_ab1, ms3_mq, ms4_mq;
+		SystemObject ms1Mq, ms1MqZu1, ms1MqZu2, ms1MqAb1, ms1MqAb2, ms2Mq, ms2MqZu1, ms2MqAb1, ms3Mq, ms4Mq;
 
 		mg = dav1.getDataModel().getObject("gr1"); //$NON-NLS-1$
 
@@ -451,31 +451,31 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 		ms3 = dav1.getDataModel().getObject("gr1.ms3"); //$NON-NLS-1$
 		ms4 = dav1.getDataModel().getObject("gr1.ms4"); //$NON-NLS-1$
 
-		ms1_mq = dav1.getDataModel().getObject("gr1.ms1.mq"); //$NON-NLS-1$
-		ms1_mq_zu1 = dav1.getDataModel().getObject("gr1.ms1.zu1"); //$NON-NLS-1$
-		ms1_mq_zu2 = dav1.getDataModel().getObject("gr1.ms1.zu2"); //$NON-NLS-1$
-		ms1_mq_ab1 = dav1.getDataModel().getObject("gr1.ms1.ab1"); //$NON-NLS-1$
-		ms1_mq_ab2 = dav1.getDataModel().getObject("gr1.ms1.ab2"); //$NON-NLS-1$
-		ms2_mq = dav1.getDataModel().getObject("gr1.ms2.mq"); //$NON-NLS-1$
-		ms2_mq_zu1 = dav1.getDataModel().getObject("gr1.ms2.zu1"); //$NON-NLS-1$
-		ms2_mq_ab1 = dav1.getDataModel().getObject("gr1.ms2.ab1"); //$NON-NLS-1$
-		ms3_mq = dav1.getDataModel().getObject("gr1.ms3.mq"); //$NON-NLS-1$
-		ms4_mq = dav1.getDataModel().getObject("gr1.ms4.mq"); //$NON-NLS-1$
+		ms1Mq = dav1.getDataModel().getObject("gr1.ms1.mq"); //$NON-NLS-1$
+		ms1MqZu1 = dav1.getDataModel().getObject("gr1.ms1.zu1"); //$NON-NLS-1$
+		ms1MqZu2 = dav1.getDataModel().getObject("gr1.ms1.zu2"); //$NON-NLS-1$
+		ms1MqAb1 = dav1.getDataModel().getObject("gr1.ms1.ab1"); //$NON-NLS-1$
+		ms1MqAb2 = dav1.getDataModel().getObject("gr1.ms1.ab2"); //$NON-NLS-1$
+		ms2Mq = dav1.getDataModel().getObject("gr1.ms2.mq"); //$NON-NLS-1$
+		ms2MqZu1 = dav1.getDataModel().getObject("gr1.ms2.zu1"); //$NON-NLS-1$
+		ms2MqAb1 = dav1.getDataModel().getObject("gr1.ms2.ab1"); //$NON-NLS-1$
+		ms3Mq = dav1.getDataModel().getObject("gr1.ms3.mq"); //$NON-NLS-1$
+		ms4Mq = dav1.getDataModel().getObject("gr1.ms4.mq"); //$NON-NLS-1$
 
 		// fuer 2 Messsquerschnitte und 2 Attributsgruppen werden
 		// Betriebsmeldungen erzeugt
 		betriebsmeldung = new long[4];
 
-		mengeMq.add(ms1_mq);
-		mengeMq.add(ms1_mq_ab1);
-		mengeMq.add(ms1_mq_ab2);
-		mengeMq.add(ms1_mq_zu1);
-		mengeMq.add(ms1_mq_zu2);
-		mengeMq.add(ms2_mq);
-		mengeMq.add(ms2_mq_ab1);
-		mengeMq.add(ms2_mq_zu1);
-		mengeMq.add(ms3_mq);
-		mengeMq.add(ms4_mq);
+		mengeMq.add(ms1Mq);
+		mengeMq.add(ms1MqAb1);
+		mengeMq.add(ms1MqAb2);
+		mengeMq.add(ms1MqZu1);
+		mengeMq.add(ms1MqZu2);
+		mengeMq.add(ms2Mq);
+		mengeMq.add(ms2MqAb1);
+		mengeMq.add(ms2MqZu1);
+		mengeMq.add(ms3Mq);
+		mengeMq.add(ms4Mq);
 
 		mengeMs.add(ms1);
 		mengeMs.add(ms2);
@@ -529,7 +529,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 		try {
 			Thread.sleep(5000L);
 		} catch (InterruptedException e) {
-
+			//
 		}
 
 	}
@@ -679,7 +679,7 @@ public class DELzFhTester extends DELangZeitFehlerErkennung implements
 								.getAspect()
 								.getPid()
 								.equals(
-										"asp.messQuerschnittZumVorgängerKurzZeit")) {//$NON-NLS-1$
+										"asp.messQuerschnittZumVorgängerKurzZeit")) {
 
 					long x = data.getItem(fahrzeugTyp).asUnscaledValue()
 							.longValue();

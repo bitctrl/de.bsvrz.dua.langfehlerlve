@@ -122,6 +122,9 @@ public final class Rechenwerk {
 				if (element.isAuswertbar(fahrzeugArt)) {
 					zaehler++;
 					summe += element.getQ(fahrzeugArt);
+				} else {
+					zaehler = -1.0;
+					break;
 				}
 			}
 

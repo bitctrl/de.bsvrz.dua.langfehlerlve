@@ -44,7 +44,12 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  * 
  * @version $Id$
  */
-final class TestDatenImporterPrSpez {
+class TestDatenImporterPrSpezKurz {
+
+	/**
+	 * Debug?
+	 */
+	private static final boolean DEBUG = true;
 
 	/**
 	 * Alle Attribute der Attributgruppe
@@ -55,25 +60,21 @@ final class TestDatenImporterPrSpez {
 			new Attribut("QLkw", true), new Attribut("VKfz", false),
 			new Attribut("VPkw", false), new Attribut("VLkw", false),
 			new Attribut("VgKfz", false), new Attribut("B", false),
-			new Attribut("BMax", false),
-			new Attribut("SKfz", false),
-			new Attribut("ALkw", false),
-			new Attribut("KKfz", false),
-			new Attribut("KLkw", false),
-			new Attribut("KPkw", false),			
-			new Attribut("VDelta", false),
-			new Attribut("KB", false),
+			new Attribut("BMax", false), new Attribut("SKfz", false),
+			new Attribut("ALkw", false), new Attribut("KKfz", false),
+			new Attribut("KLkw", false), new Attribut("KPkw", false),
+			new Attribut("VDelta", false), new Attribut("KB", false),
 			new Attribut("QB", false), };
 
 	/**
 	 * Daten fuer Knotenpunkte.
 	 */
-	private MSGDaten knotenpunkteTab = null;
+	protected MSGDaten knotenpunkteTab = null;
 
 	/**
 	 * Daten fuer freie Strecke.
 	 */
-	private MSGDaten freieStreckeTab = null;
+	protected MSGDaten freieStreckeTab = null;
 
 	/**
 	 * Liest die Tabelle ein.
@@ -88,8 +89,18 @@ final class TestDatenImporterPrSpez {
 		importer.getNaechsteZeile();
 		knotenpunkteTab = new MSGDaten(importer.getNaechsteZeile());
 		for (int i = 0; i < 5; i++) {
-			knotenpunkteTab.add(importer.getNaechsteZeile());
+			knotenpunkteTab.addEingabe(importer.getNaechsteZeile());
 		}
+		for (int i = 0; i < 4; i++) {
+			importer.getNaechsteZeile();
+		}
+		knotenpunkteTab.addAusgabe("Q1", importer.getNaechsteZeile());
+		importer.getNaechsteZeile();
+		knotenpunkteTab.addAusgabe("Q2", importer.getNaechsteZeile());
+		importer.getNaechsteZeile();
+		knotenpunkteTab.addAusgabe("Q3", importer.getNaechsteZeile());
+		importer.getNaechsteZeile();
+		knotenpunkteTab.addAusgabe("Q4", importer.getNaechsteZeile());
 
 		importer.reset();
 		for (int i = 0; i < 24; i++) {
@@ -97,8 +108,18 @@ final class TestDatenImporterPrSpez {
 		}
 		freieStreckeTab = new MSGDaten(importer.getNaechsteZeile());
 		for (int i = 0; i < 5; i++) {
-			freieStreckeTab.add(importer.getNaechsteZeile());
+			freieStreckeTab.addEingabe(importer.getNaechsteZeile());
 		}
+		for (int i = 0; i < 4; i++) {
+			importer.getNaechsteZeile();
+		}
+		freieStreckeTab.addAusgabe("Q1", importer.getNaechsteZeile());
+		importer.getNaechsteZeile();
+		freieStreckeTab.addAusgabe("Q2", importer.getNaechsteZeile());
+		importer.getNaechsteZeile();
+		freieStreckeTab.addAusgabe("Q3", importer.getNaechsteZeile());
+		importer.getNaechsteZeile();
+		freieStreckeTab.addAusgabe("Q4", importer.getNaechsteZeile());
 	}
 
 	/**
@@ -169,12 +190,36 @@ final class TestDatenImporterPrSpez {
 		private List<Integer[]> zeilenMap = null;
 
 		/**
+		 * Intervallverkehrsstaerke fuer MQ.
+		 */
+		private Map<String, Integer> intervallMq = null;
+
+		/**
+		 * Intervallverkehrsstaerke fuer Messstellen.
+		 */
+		private Map<String, Integer> intervallMs = null;
+
+		/**
+		 * Bilanzverkehrsstaerke fuer Messstellen.
+		 */
+		private Map<String, Integer> bilanzMs = null;
+
+		/**
+		 * Abweichungsverkehrsstaerke.
+		 */
+		private Map<String, Integer> abweichung = null;
+
+		/**
 		 * Standardkonstruktor.
 		 * 
 		 * @param qNamen die Namen der einzelnen Spalten
 		 */
-		private MSGDaten(final String[] qNamen) {
+		protected MSGDaten(final String[] qNamen) {
 			this.spaltenMap = new HashMap<String, Integer>();
+			this.intervallMq = new HashMap<String, Integer>();
+			this.intervallMs = new HashMap<String, Integer>();
+			this.bilanzMs = new HashMap<String, Integer>();
+			this.abweichung = new HashMap<String, Integer>();
 			this.zeilenMap = new ArrayList<Integer[]>();
 			for (int i = 0; i < qNamen.length; i++) {
 				this.spaltenMap.put(qNamen[i], i);
@@ -182,12 +227,12 @@ final class TestDatenImporterPrSpez {
 		}
 
 		/**
-		 * Fuegt diesem Element eine Zeile hinzu.
+		 * Fuegt diesem Element eine Zeile hinzu (Eingabedatum).
 		 * 
 		 * @param zeile
 		 *            eine neue Zeile.
 		 */
-		private void add(final String[] zeile) {
+		protected void addEingabe(final String[] zeile) {
 			Integer[] intZeile = new Integer[zeile.length];
 
 			for (int i = 0; i < zeile.length; i++) {
@@ -196,9 +241,74 @@ final class TestDatenImporterPrSpez {
 				} else {
 					intZeile[i] = Integer.parseInt(zeile[i]);
 				}
+				if (DEBUG) {
+					System.out.print(intZeile[i] + ", ");
+				}
+			}
+			if (DEBUG) {
+				System.out.println();
 			}
 
 			this.zeilenMap.add(intZeile);
+		}
+
+		/**
+		 * Fuegt diesem Element eine Zeile hinzu (Erwartetes Ergebnis).
+		 * 
+		 * @param mqId
+		 *            die ID des MQ bzw. der Messstelle
+		 * @param zeile
+		 *            eine neue Zeile.
+		 */
+		protected void addAusgabe(final String mqId, final String[] zeile) {
+
+			if (DEBUG) {
+				System.out.print(mqId + ": ");
+			}
+
+			if (zeile[0].matches("[-]?[0-9]+([,][0-9]+)?")) {
+				this.intervallMq.put(mqId, (int) Math.round(Double
+						.parseDouble(zeile[0].replaceAll("[,]", "."))));
+			} else {
+				this.intervallMq.put(mqId,
+						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}
+			if (DEBUG) {
+				System.out.print("IMQ=" + this.intervallMq.get(mqId));
+			}
+
+			if (zeile[2].matches("[-]?[0-9]+([,][0-9]+)?")) {
+				this.intervallMs.put(mqId, (int) Math.round(Double
+						.parseDouble(zeile[2].replaceAll("[,]", "."))));
+			} else {
+				this.intervallMs.put(mqId,
+						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}
+			if (DEBUG) {
+				System.out.print(", IMS=" + this.intervallMs.get(mqId));
+			}
+
+			if (zeile[5].matches("[-]?[0-9]+([,][0-9]+)?")) {
+				this.bilanzMs.put(mqId, (int) Math.round(Double
+						.parseDouble(zeile[5].replaceAll("[,]", "."))));
+			} else {
+				this.bilanzMs.put(mqId,
+						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}
+			if (DEBUG) {
+				System.out.print(", BIL=" + this.bilanzMs.get(mqId));
+			}
+
+			if (zeile[8].matches("[-]?[0-9]+([,][0-9]+)?")) {
+				this.abweichung.put(mqId, (int) Math.round(Double
+						.parseDouble(zeile[8].replaceAll("[,]", "."))));
+			} else {
+				this.abweichung.put(mqId,
+						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}
+			if (DEBUG) {
+				System.out.println(", ABW=" + this.abweichung.get(mqId));
+			}
 		}
 
 		/**
