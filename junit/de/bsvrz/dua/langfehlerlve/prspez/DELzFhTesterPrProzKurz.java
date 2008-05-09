@@ -60,20 +60,21 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 	/**
 	 * Pfad zu Testdaten.
 	 */
-	public static final String DATEN_QUELLE1 = Verbindung.TEST_DATEN_VERZEICHNIS
-			+ "Kurzzeitdat_2.0.csv"; //$NON-NLS-1$
+	private static final String DATEN_QUELLE1 = Verbindung.TEST_DATEN_VERZEICHNIS
+			+ "Kurzzeitdat_3.0.csv"; //$NON-NLS-1$
 
 	/**
 	 * Alle hier betrachteten Systemobjekte.
 	 */
-	private static final String[] OBJEKTE = new String[] { "Q1", "QZ11",
+	static final String[] OBJEKTE = new String[] { "Q1", "QZ11",
 			"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
 			"QA4" };
-	
+
 	/**
 	 * Alle hier betrachteten Messstellen.
 	 */
-	private static final String[] MS_OBJEKTE = new String[] { "Q1", "Q2", "Q3", "Q4" };
+	static final String[] MS_OBJEKTE = new String[] { "Q1", "Q2", "Q3",
+			"Q4" };
 
 	/**
 	 * Datenverteiler-Verbindung.
@@ -121,6 +122,11 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(),
 				Verbindung.CON_DATA_PR_SPEZ.clone());
 
+		Util.parametriere(dav, dav.getDataModel().getObject("gruppe.sys.ja"),
+				5, 4, 114, 114, 90, 90);
+		Util.parametriere(dav, dav.getDataModel().getObject("gruppe.sys.nein"),
+				5, 4, 103, 103, 111, 111);
+
 		Thread.sleep(5000L);
 	}
 
@@ -134,14 +140,52 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 	public void test() throws Exception {
 		TestDatenImporterPrSpezKurz daten = new TestDatenImporterPrSpezKurz();
 		daten.init(DATEN_QUELLE1);
-		
+
 		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
-//		for(String mq:)
-//		/**
-//		 * MQ-Intervall
-//		 */
-//		AtgIntervallUeberwacherMqKurz dummy = null;
-//		dummy = new AtgIntervallUeberwacherMqKurz()
+		for (String ms : MS_OBJEKTE) {
+			SystemObject objJa = dav.getDataModel()
+					.getObject("ms.sys.ja." + ms.substring(1));
+			SystemObject objNein = dav.getDataModel().getObject(
+					"ms.sys.nein." + ms.substring(1));
+
+			/**
+			 * MQ-Intervall
+			 */
+			AbstraktAtgUeberwacher dummy = null;
+			dummy = new AtgIntervallUeberwacherMqKurz();
+			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
+					.getAusgabeIntervallMq(ms));
+			ueberwacher.add(dummy);
+			dummy = new AtgIntervallUeberwacherMsKurz();
+			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
+					.getAusgabeIntervallMs(ms));
+			ueberwacher.add(dummy);
+			dummy = new AtgBilanzUeberwacherKurz();
+			dummy.init(dav, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(
+					ms));
+			ueberwacher.add(dummy);
+			dummy = new AtgAbweichungUeberwacherKurz();
+			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
+					.getAusgabeAbweichungMs(ms));
+			ueberwacher.add(dummy);
+
+			dummy = new AtgIntervallUeberwacherMqKurz();
+			dummy.init(dav, objNein, daten.getFreieStreckeTab()
+					.getAusgabeIntervallMq(ms));
+			ueberwacher.add(dummy);
+			dummy = new AtgIntervallUeberwacherMsKurz();
+			dummy.init(dav, objNein, daten.getFreieStreckeTab()
+					.getAusgabeIntervallMs(ms));
+			ueberwacher.add(dummy);
+			dummy = new AtgBilanzUeberwacherKurz();
+			dummy.init(dav, objNein, daten.getFreieStreckeTab()
+					.getAusgabeBilanz(ms));
+			ueberwacher.add(dummy);
+			dummy = new AtgAbweichungUeberwacherKurzAlle();
+			dummy.init(dav, objNein, daten.getFreieStreckeTab()
+					.getAusgabeAbweichungMs(ms));
+			ueberwacher.add(dummy);
+		}
 
 		long jetzt = System.currentTimeMillis();
 		GregorianCalendar cal = new GregorianCalendar();
@@ -182,19 +226,19 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 				//
 			}
 		}
-		
+
 		/**
 		 * Warte bis alle Daten verarbeitet sind
 		 */
 		try {
-			Thread.sleep(5000L);
+			Thread.sleep(2000L);
 		} catch (InterruptedException ex) {
 			//
 		}
-		
+
 		for (AbstraktAtgUeberwacher uw : ueberwacher) {
 			uw.ueberpruefe();
-		}		
+		}
 	}
 
 	/**

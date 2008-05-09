@@ -27,6 +27,7 @@
 package de.bsvrz.dua.langfehlerlve.prspez;
 
 
+
 /**
  * Ueberprueft den ersten echten (Nutz-)Wert von
  * <code>atg.abweichungVerkehrsStärke</code>,
@@ -53,5 +54,5 @@ class AtgAbweichungUeberwacherKurz extends AbstraktAtgUeberwacher {
 	String getAtgPid() {
 		return "atg.abweichungVerkehrsStärke";
 	}
-
+	
 }

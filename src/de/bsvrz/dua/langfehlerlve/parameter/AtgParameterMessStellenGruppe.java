@@ -150,29 +150,14 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 						final long vergleichsIntervallKZ = resultat
 								.getData()
 								.getUnscaledValue("VergleichsIntervallKurzZeit").longValue() * Constants.MILLIS_PER_MINUTE; //$NON-NLS-1$					
-//						this.kzParameter = new IMsgDatenartParameter() {
-//
-//							public int getMaxAbweichungMessStellenGruppe() {
-//								return maxAbweichungMessStellenGruppeKZ;
-//							}
-//
-//							public int getMaxAbweichungVorgaenger() {
-//								return maxAbweichungVorgaengerKZ;
-//							}
-//
-//							public long getVergleichsIntervall() {
-//								return vergleichsIntervallKZ;
-//							}
-//
-//						};
 						this.kzParameter = new IMsgDatenartParameter() {
 
 							public int getMaxAbweichungMessStellenGruppe() {
-								return 114;
+								return maxAbweichungMessStellenGruppeKZ;
 							}
 
 							public int getMaxAbweichungVorgaenger() {
-								return 114;
+								return maxAbweichungVorgaengerKZ;
 							}
 
 							public long getVergleichsIntervall() {

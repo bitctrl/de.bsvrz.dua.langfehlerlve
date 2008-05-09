@@ -27,6 +27,8 @@
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
@@ -71,6 +73,24 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 			throws Exception {
 		super(dav, messStelle, messStellenGruppe, restMessStellen,
 				messQuerschnitt, langZeit);
+
+		for (DELzFhMessStelle rms : restMessStellen) {
+			this.restMessStellen.add(rms.getMessStelle().getPruefling().getSystemObject());
+		}
+		this.initPuffer();
+
+		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
+				langZeit ? new DataDescription(dav.getDataModel()
+						.getAttributeGroup(ATG_PID), dav.getDataModel()
+						.getAspect(this.getLzAspPid())) : new DataDescription(
+						dav.getDataModel().getAttributeGroup(ATG_PID), dav
+								.getDataModel().getAspect(this.getKzAspPid())),
+				SenderRole.source());
+
+		messQuerschnitt.addListener(this);
+		for (DELzFhMessStelle rms : restMessStellen) {
+			this.messStellenGruppe.getMq(rms.getMessStelle().getPruefling().getSystemObject()).addListener(this);
+		}
 	}
 
 	/**

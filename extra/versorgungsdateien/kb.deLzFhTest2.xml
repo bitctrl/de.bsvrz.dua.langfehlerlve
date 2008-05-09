@@ -12,7 +12,7 @@
 			<datum name="2" wert="ms.sys.ja.3"/>
 			<datum name="3" wert="ms.sys.ja.4"/>
 		</datenfeld>
-		<datum name="SystematischeDetektorfehler" wert="Ja"/>
+		<datum name="SystematischeDetektorfehler" wert="Nein"/>
 	</datensatz>
 </konfigurationsObjekt>
 

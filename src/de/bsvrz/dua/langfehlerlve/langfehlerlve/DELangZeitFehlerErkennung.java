@@ -76,7 +76,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	 * @return der Name dieser Applikation
 	 */
 	public static final String getName() {
-		return "DE Langzeit-Fehlererkennung"; //$NON-NLS-1$
+		return "DE Langzeit-Fehlererkennung";
 	}
 
 	/**
@@ -88,16 +88,17 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 						.getArgument(
 								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 								this.komArgumente));
-		
-		DuaVerkehrsNetz.initialisiere(dav, kbFilter.toArray(new ConfigurationArea[0]));
+
+		DuaVerkehrsNetz.initialisiere(dav, kbFilter
+				.toArray(new ConfigurationArea[0]));
 
 		Collection<SystemObject> msgObjekte = DUAUtensilien.getBasisInstanzen(
 				dav.getDataModel().getType(
 						DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav, kbFilter);
 
-		String config = "Betrachtete Messstellengruppen:\n"; //$NON-NLS-1$
+		String config = "Betrachtete Messstellengruppen:\n";
 		for (SystemObject msgObjekt : msgObjekte) {
-			config += msgObjekt + "\n"; //$NON-NLS-1$
+			config += msgObjekt + "\n";
 		}
 		Debug.getLogger().config(config);
 
@@ -113,19 +114,20 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	 * {@inheritDoc}
 	 */
 	public void parseArguments(ArgumentList argumente) throws Exception {
-		
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.
-				UncaughtExceptionHandler() {
-			public void uncaughtException(@SuppressWarnings("unused")
+
+		Thread
+				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+					public void uncaughtException(@SuppressWarnings("unused")
 					Thread t, Throwable e) {
-				Debug.getLogger().error("Applikation wird wegen" +  //$NON-NLS-1$
-						" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
-				e.printStackTrace();
-				Runtime.getRuntime().exit(-1);
-			}
-		});
-		
-		Debug.init("DELzFh DE Langzeit-Fehlererkennung", argumente); //$NON-NLS-1$
+						Debug.getLogger().error(
+								"Applikation wird wegen"
+										+ " unerwartetem Fehler beendet", e);
+						e.printStackTrace();
+						Runtime.getRuntime().exit(-1);
+					}
+				});
+
+		Debug.init("DELzFh DE Langzeit-Fehlererkennung", argumente);
 
 		for (String s : argumente.getArgumentStrings()) {
 			if (s != null) {
@@ -152,7 +154,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		List<String> resultListe = new ArrayList<String>();
 
 		if (kbString != null) {
-			String[] s = kbString.split(","); //$NON-NLS-1$
+			String[] s = kbString.split(",");
 			for (String dummy : s) {
 				if (dummy != null && dummy.length() > 0) {
 					resultListe.add(dummy);
@@ -169,8 +171,9 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 					kbListe.add(area);
 				}
 			} catch (UnsupportedOperationException ex) {
-				Debug.getLogger().warning("Konfigurationsbereich " + kb + //$NON-NLS-1$
-						" konnte nicht identifiziert werden.", ex); //$NON-NLS-1$
+				Debug.getLogger().warning(
+						"Konfigurationsbereich " + kb
+								+ " konnte nicht identifiziert werden.", ex);
 			}
 		}
 

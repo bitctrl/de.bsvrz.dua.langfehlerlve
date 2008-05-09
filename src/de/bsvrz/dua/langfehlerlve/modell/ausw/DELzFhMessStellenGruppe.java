@@ -194,8 +194,8 @@ public class DELzFhMessStellenGruppe {
 											+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$
 						}
 					}
-				}
-
+				} 
+			} else {
 				/**
 				 * Ermittlung der Abweichungen zum Vorgaenger anstossen
 				 */
@@ -219,7 +219,7 @@ public class DELzFhMessStellenGruppe {
 											+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$
 						}
 					}
-				}
+				}				
 			}
 		} else {
 			throw new DUAInitialisierungsException(

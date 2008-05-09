@@ -227,6 +227,46 @@ class TestDatenImporterPrSpezKurz {
 		}
 
 		/**
+		 * Erfragt einen Bilanzwert einer Messstelle.
+		 * 
+		 * @param ms eine Messstelle.
+		 * @return ein Bilanzwert einer Messstelle.
+		 */
+		protected int getAusgabeBilanz(final String ms) {
+			return this.bilanzMs.get(ms);
+		}
+		
+		/**
+		 * Erfragt einen Intervallwert eines MQ an einer Messstelle.
+		 * 
+		 * @param ms eine Messstelle.
+		 * @return ein Intervallwert einer MQ an einer Messstelle.
+		 */
+		protected int getAusgabeIntervallMq(final String ms) {
+			return this.intervallMq.get(ms);
+		}
+		
+		/**
+		 * Erfragt einen Intervallwert eines MQ an einer Messstelle.
+		 * 
+		 * @param ms eine Messstelle.
+		 * @return ein Intervallwert einer MQ an einer Messstelle.
+		 */
+		protected int getAusgabeIntervallMs(final String ms) {
+			return this.intervallMs.get(ms);
+		}
+		
+		/**
+		 * Erfragt einen Abweichungswert einer Messstelle.
+		 * 
+		 * @param ms eine Messstelle.
+		 * @return ein Abweichungswert einer Messstelle.
+		 */
+		protected int getAusgabeAbweichungMs(final String ms) {
+			return this.abweichung.get(ms);
+		}
+		
+		/**
 		 * Fuegt diesem Element eine Zeile hinzu (Eingabedatum).
 		 * 
 		 * @param zeile

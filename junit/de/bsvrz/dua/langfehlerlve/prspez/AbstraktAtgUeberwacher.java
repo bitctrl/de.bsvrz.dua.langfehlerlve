@@ -30,7 +30,6 @@ import org.junit.Assert;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
-import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
@@ -57,7 +56,7 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	/**
 	 * Erstes empfangenes Nutzdatum.
 	 */
-	Data data = null;
+	ResultData data = null;
 	
 	/**
 	 * Erfragt die PID der zu ueberpruefenden Atg.
@@ -99,12 +98,16 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	void ueberpruefe() {
 		if (data != null) {
 			for (FahrzeugArt art : FahrzeugArt.getInstanzen()) {
-				Assert.assertEquals("Fehler in " + art.toString(), data
-						.getUnscaledValue(art.getAttributName()).intValue(),
-						wert);
+				Assert.assertEquals("\n---\n" + this.getClass().getSimpleName()
+						+ ":\nFehler in " + data.getObject() + "\n"
+						+ art.toString() + "\n", wert, data.getData()
+						.getUnscaledValue(art.getAttributName()).isState() ? -3
+						: data.getData().getScaledValue(art.getAttributName())
+								.longValue());
 			}
 		} else {
-			Assert.assertTrue("Kein Datum empfangen!", wert < 0);
+			Assert.assertTrue("\n---\n" + this.getClass().getSimpleName()
+					+ ":\nKein Datum empfangen!\n", wert < 0);
 		}
 	}
 
@@ -116,7 +119,7 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 			if (this.data == null) {
 				for (ResultData r : results) {
 					if (r != null && r.getData() != null) {
-						this.data = r.getData();
+						this.data = r;
 						break;
 					}
 				}
