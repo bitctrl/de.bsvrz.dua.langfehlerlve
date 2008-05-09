@@ -26,32 +26,24 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
 
 /**
- * Ermoeglicht die Singleton Klasse PublikationsKanal neustarten.
+ * Ueberprueft den ersten echten (Nutz-)Wert von
+ * <code>atg.bilanzVerkehrsStärke</code>,
+ * <code>asp.messQuerschnittKurzZeit</code>.
  * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class PublikationsKanalTest extends PublikationsKanal {
+class AtgBilanzUeberwacherLang extends AtgBilanzUeberwacherKurz {
 
 	/**
-	 * Standardkonstruktor.
-	 * 
-	 * @param dav
-	 *            Datenverteiler-Verbindung
+	 * {@inheritDoc}
 	 */
-	public PublikationsKanalTest(ClientDavInterface dav) {
-		super(dav);
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittLangZeit";
 	}
 
-	/**
-	 * Setzt den initial-Status der Klasse.
-	 */
-	public static void reset() {
-		sDav = null;
-	}
 }

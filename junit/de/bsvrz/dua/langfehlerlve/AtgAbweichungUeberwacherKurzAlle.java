@@ -26,38 +26,24 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.langfehlerlve.parameter.AtgParameterMessStellenGruppe;
 
 /**
- * Test.
+ * Ueberprueft den ersten echten (Nutz-)Wert von
+ * <code>atg.abweichungVerkehrsStärke</code>,
+ * <code>asp.messQuerschnittDerMessStellenGruppeKurzZeit</code>.
  * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class AtgParameterMessStellenGruppeTest extends
-		AtgParameterMessStellenGruppe {
+class AtgAbweichungUeberwacherKurzAlle extends AtgAbweichungUeberwacherKurz {
 
 	/**
-	 * Standardkonstruktor.
-	 * 
-	 * @param dav
-	 *            Verbindung zum Datenverteiler
-	 * @param objekt
-	 *            ein Objekt vom Typ <code>typ.messStellenGruppe</code>
+	 * {@inheritDoc}
 	 */
-	protected AtgParameterMessStellenGruppeTest(ClientDavInterface dav,
-			SystemObject objekt) {
-		super(dav, objekt);
-	}
-
-	/**
-	 * Setzt den initial-Status der Klasse.
-	 */
-	public static void reset() {
-		instanzen.clear();
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittDerMessStellenGruppeKurzZeit";
 	}
 
 }

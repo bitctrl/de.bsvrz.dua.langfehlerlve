@@ -26,40 +26,31 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittVirtuell;
 
 /**
- * Ermoeglicht die statische instanzen der Klasse MessQuerschnittVirtuell
- * neustarten.
+ * Ueberprueft den ersten echten (Nutz-)Wert von 
+ * <code>atg.bilanzVerkehrsStärke</code>, <code>asp.messQuerschnittKurzZeit</code>.
  * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class MessQuerschnittVirtuellTest extends MessQuerschnittVirtuell {
+class AtgBilanzUeberwacherKurz extends AbstraktAtgUeberwacher {
 
 	/**
-	 * Standardkontruktor.
-	 * 
-	 * @param mqvObjekt
-	 *            ein Systemobjekt vom Typ
-	 *            <code>typ.messQuerschnittVirtuell</code>
-	 * @throws DUAInitialisierungsException
-	 *             wenn der virtuelle Messquerschnitt nicht initialisiert werden
-	 *             konnte
+	 * {@inheritDoc}
 	 */
-	protected MessQuerschnittVirtuellTest(final SystemObject mqvObjekt)
-			throws DUAInitialisierungsException {
-		super(mqvObjekt);
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittKurzZeit";
 	}
 
 	/**
-	 * Setzt den initial-Status der Klasse.
+	 * {@inheritDoc}
 	 */
-	public static void reset() {
-		sDav = null;
-		sysObjMqvObjMap.clear();
+	@Override
+	String getAtgPid() {
+		return "atg.bilanzVerkehrsStärke";
 	}
+
 }

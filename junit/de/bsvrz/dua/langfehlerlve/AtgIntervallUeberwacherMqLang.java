@@ -26,37 +26,23 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.FahrStreifen;
 
 /**
- * Ermoeglicht die statische instanzen der Klasse Fahrstreifen neustarten.
+ * Ueberprueft den ersten echten (Nutz-)Wert von 
+ * <code>atg.intervallVerkehrsStärke</code>, <code>asp.messQuerschnittLangZeit</code>.
  * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public final class FahrstreifenTest extends FahrStreifen {
+class AtgIntervallUeberwacherMqLang extends AtgIntervallUeberwacherMqKurz {
 
 	/**
-	 * Standardkontruktor.
-	 * 
-	 * @param fsObjekt
-	 *            ein Systemobjekt vom Typ <code>typ.fahrStreifen</code>
-	 * @throws DUAInitialisierungsException
-	 *             wenn der Fahrstreifen nicht initialisiert werden konnte
+	 * {@inheritDoc}
 	 */
-	private FahrstreifenTest(final SystemObject fsObjekt)
-			throws DUAInitialisierungsException {
-		super(fsObjekt);
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittLangZeit";
 	}
 
-	/**
-	 * Setzt den initial-Status der Klasse.
-	 */
-	public static void reset() {
-		sDav = null;
-		sysObjFsObjMap.clear();
-	}
 }

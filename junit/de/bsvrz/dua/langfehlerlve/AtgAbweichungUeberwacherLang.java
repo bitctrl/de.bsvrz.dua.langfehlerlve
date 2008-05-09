@@ -26,22 +26,24 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 
 /**
- * Ermoeglicht die statische instanzen der Klasse Fahrstreifen neustarten.
+ * Ueberprueft den ersten echten (Nutz-)Wert von
+ * <code>atg.abweichungVerkehrsStärke</code>,
+ * <code>asp.messQuerschnittZumVorgängerLangZeit</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class DUAVerkehrsNetzTest extends DuaVerkehrsNetz {
+class AtgAbweichungUeberwacherLang extends AtgAbweichungUeberwacherKurz {
 
 	/**
-	 * Setzt den initial-Status der Klasse.
+	 * {@inheritDoc}
 	 */
-	public static void reset() {
-		initialisiert = false;
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittZumVorgängerLangZeit";
 	}
 
 }

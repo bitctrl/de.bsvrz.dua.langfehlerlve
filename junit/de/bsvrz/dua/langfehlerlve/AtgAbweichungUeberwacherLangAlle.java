@@ -26,37 +26,24 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
 
 /**
- * Ermoeglicht die statische instanzen der Klasse MessStelle neustarten.
+ * Ueberprueft den ersten echten (Nutz-)Wert von
+ * <code>atg.abweichungVerkehrsStärke</code>,
+ * <code>asp.messQuerschnittDerMessStellenGruppeLangZeit</code>.
  * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class MessStelleTest extends MessStelle {
+class AtgAbweichungUeberwacherLangAlle extends AtgAbweichungUeberwacherKurz {
 
 	/**
-	 * Standardkontruktor.
-	 * 
-	 * @param msObjekt
-	 *            ein Systemobjekt vom Typ <code>typ.messStelle</code>
-	 * @throws DUAInitialisierungsException
-	 *             wenn die Messstelle nicht initialisiert werden konnte
+	 * {@inheritDoc}
 	 */
-	protected MessStelleTest(final SystemObject msObjekt)
-			throws DUAInitialisierungsException {
-		super(msObjekt);
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittDerMessStellenGruppeLangZeit";
 	}
 
-	/**
-	 * Setzt den initial-Status der Klasse.
-	 */
-	public static void reset() {
-		sDav = null;
-		sysObjMsObjMap.clear();
-	}
 }

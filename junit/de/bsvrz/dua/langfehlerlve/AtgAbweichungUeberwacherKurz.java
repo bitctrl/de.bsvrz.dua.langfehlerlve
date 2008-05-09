@@ -26,32 +26,33 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
+
 
 /**
- * Ermoegleicht die Singletoninstanz der Klasse BmClient neuzustarten.
+ * Ueberprueft den ersten echten (Nutz-)Wert von
+ * <code>atg.abweichungVerkehrsStärke</code>,
+ * <code>asp.messQuerschnittZumVorgängerKurzZeit</code>.
  * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class BmClientTest extends BmClient {
+class AtgAbweichungUeberwacherKurz extends AbstraktAtgUeberwacher {
 
 	/**
-	 * Standardkonstruktor.
-	 * 
-	 * @param dav
-	 *            Datenverteiler-Verbindung
+	 * {@inheritDoc}
 	 */
-	protected BmClientTest(ClientDavInterface dav) {
-		super(dav);
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittZumVorgängerKurzZeit";
 	}
 
 	/**
-	 * Setzt den initial-Status der Klasse.
+	 * {@inheritDoc}
 	 */
-	public static void reset() {
-		instanz = null;
+	@Override
+	String getAtgPid() {
+		return "atg.abweichungVerkehrsStärke";
 	}
+	
 }

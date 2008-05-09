@@ -26,33 +26,32 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnitt;
 
 /**
- * Ermoeglicht die statische instanzen der Klasse MessQuerschnitt neustarten.
+ * Ueberprueft den ersten echten (Nutz-)Wert von
+ * <code>atg.intervallVerkehrsStärke</code>,
+ * <code>asp.messQuerschnittKurzZeit</code>.
  * 
- * @author BitCtrl Systems GmbH, Bachraty
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class MessQuerschnittTest extends MessQuerschnitt {
+class AtgIntervallUeberwacherMqKurz extends AbstraktAtgUeberwacher {
 
 	/**
-	 * Standardkontruktor.
-	 * 
-	 * @param mqObjekt
-	 *            ein Systemobjekt vom Typ <code>typ.messQuerschnitt</code>
+	 * {@inheritDoc}
 	 */
-	protected MessQuerschnittTest(final SystemObject mqObjekt) {
-		super(mqObjekt);
+	@Override
+	String getAspPid() {
+		return "asp.messQuerschnittKurzZeit";
 	}
 
 	/**
-	 * Setzt den initial-Status der Klasse.
+	 * {@inheritDoc}
 	 */
-	public static void reset() {
-		sDav = null;
-		sysObjMqObjMap.clear();
+	@Override
+	String getAtgPid() {
+		return "atg.intervallVerkehrsStärke";
 	}
+
 }
