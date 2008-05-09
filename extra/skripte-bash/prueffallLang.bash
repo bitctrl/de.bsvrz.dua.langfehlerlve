@@ -24,12 +24,12 @@ appname=langfehlerlve
 echo ========================================================
 echo # Pruefungen SE4 - DUA, SWE 4.DELzFh
 echo #
-echo # Automatischer JUnit-Test
+echo # Test nach Prüfspezifikation für Langzeitvergleichsintervall
 echo ========================================================
 echo.
 
-tests[$index]="DELzFhTester"
-testTexts[$index]="Automatischer JUnit-Test"
+tests[$index]="DELzFhTesterPrProzLang"
+testTexts[$index]="Test nach Prüfspezifikation für Langzeitvergleichsintervall"
 index=$(($index+1))
 
 ########################
