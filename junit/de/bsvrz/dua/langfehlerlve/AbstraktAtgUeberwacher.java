@@ -51,7 +51,7 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	 * Der Wert mit dem der erste echte Nutzwert gegengeprueft werden
 	 * soll.
 	 */
-	int wert = DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT;
+	long wert = DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT;
 	
 	/**
 	 * Erstes empfangenes Nutzdatum.
