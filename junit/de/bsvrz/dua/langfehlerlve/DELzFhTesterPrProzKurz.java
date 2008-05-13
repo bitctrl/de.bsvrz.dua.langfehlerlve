@@ -1,5 +1,5 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DeFa DE Fehleranalyse fehlende Messdaten
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -24,236 +24,766 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.dua.langfehlerlve;
+package de.bsvrz.dua.fehlertls.fehlertls;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.junit.Before;
+import junit.framework.Assert;
+
 import org.junit.Test;
 
+import com.bitctrl.Constants;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.ClientSenderInterface;
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dav.daf.main.DataDescription;
-import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung;
-import de.bsvrz.sys.funclib.application.StandardApplication;
-import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
+import de.bsvrz.dua.fehlertls.AtgTlsFehlerAnalyse;
+import de.bsvrz.dua.fehlertls.DAVTest;
+import de.bsvrz.dua.fehlertls.DeStatus;
+import de.bsvrz.dua.fehlertls.IAtgTlsFehlerAnalyseListener;
+import de.bsvrz.dua.fehlertls.TestKEx;
+import de.bsvrz.dua.fehlertls.enums.TlsFehlerAnalyse;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
+import de.bsvrz.sys.funclib.bitctrl.dua.bm.BmClient;
+import de.bsvrz.sys.funclib.bitctrl.dua.bm.IBmListener;
 
 /**
- * Testet den Modul DE Langzeit-Fehlererkennung nach PruefSpez.
+ * Stellt eine Datenverteiler-Verbindung zur Verfügung.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  * @version $Id$
  */
-public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
+public class DeFaApplikationTest implements IBmListener {
 
 	/**
-	 * Pfad zu Testdaten.
+	 * Zeigt an, ob der Test an ist, oder ob nur die Ausgaben mitgeloggt werden
+	 * sollen.
 	 */
-	private static final String DATEN_QUELLE1 = Verbindung.TEST_DATEN_VERZEICHNIS
-			+ "Kurzzeitdat_3.0.csv"; //$NON-NLS-1$
+	public static final boolean ASSERTION_AN = true;
 
 	/**
-	 * Alle hier betrachteten Systemobjekte.
+	 * Zeigt an, ob der der Text der DE-Fehleranalyse an allen DE ausgegeben
+	 * werden soll.
 	 */
-	static final String[] OBJEKTE = new String[] { "Q1", "QZ11",
-			"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
-			"QA4" };
+	public static final boolean SHOW_DE = true;
 
 	/**
-	 * Alle hier betrachteten Messstellen.
+	 * Zeigt an, ob die Betriebsmeldungen an allen DE ausgegeben werden soll.
 	 */
-	static final String[] MS_OBJEKTE = new String[] { "Q1", "Q2", "Q3",
-			"Q4" };
+	public static final boolean SHOW_BM = true;
 
 	/**
-	 * Datenverteiler-Verbindung.
+	 * Zeigt an, ob die Nummer des Zeitpunktes mitgeloggt werden soll.
 	 */
-	protected static ClientDavInterface dav = null;
+	public static final boolean SHOW_ZEITPUNKT = true;
 
 	/**
-	 * Fuehrt Datenverteilerverbindung durch.
+	 * Testet analog Beschreibung in "LiesMich.txt".
 	 * 
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	@Before
-	public void setUp() throws Exception {
-		StandardApplicationRunner.run(new StandardApplication() {
-
-			public void initialize(ClientDavInterface connection)
-					throws Exception {
-				dav = connection;
-			}
-
-			public void parseArguments(ArgumentList argumentList)
-					throws Exception {
-				argumentList.fetchUnusedArguments();
-			}
-
-		}, Verbindung.CON_DATA_PR_SPEZ.clone());
-
-		DataDescription ddMq = new DataDescription(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
-
-		for (String objPidEnd : OBJEKTE) {
-			System.out.println("Anmeldung: " + "ms.sys.ja."
-					+ objPidEnd.toLowerCase() + ", " + "ms.sys.nein."
-					+ objPidEnd.toLowerCase());
-			dav.subscribeSender(this, dav.getDataModel().getObject(
-					"ms.sys.ja." + objPidEnd.toLowerCase()), ddMq, SenderRole
-					.source());
-			dav.subscribeSender(this, dav.getDataModel().getObject(
-					"ms.sys.nein." + objPidEnd.toLowerCase()), ddMq, SenderRole
-					.source());
-		}
-
-		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(),
-				Verbindung.CON_DATA_PR_SPEZ.clone());
-
-		Util.parametriere(dav, dav.getDataModel().getObject("gruppe.sys.ja"),
-				5, 4, 114, 114, 90, 90);
-		Util.parametriere(dav, dav.getDataModel().getObject("gruppe.sys.nein"),
-				5, 4, 103, 103, 111, 111);
-
-		Thread.sleep(5000L);
-	}
-
-	/**
-	 * Testet nach PruefSpez.
-	 * 
-	 * @throws Exception
-	 *             wird weitergereicht.
-	 */
 	@Test
 	public void test() throws Exception {
-		TestDatenImporterPrSpezKurz daten = new TestDatenImporterPrSpezKurz();
-		daten.init(DATEN_QUELLE1);
+		DAVTest.setTestParameter("kri1");
+		ClientDavInterface dav = de.bsvrz.sys.funclib.bitctrl.dua.test.DAVTest.getDav();
+		System.out.println(dav);
+		init();
 
-		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
-		for (String ms : MS_OBJEKTE) {
-			SystemObject objJa = dav.getDataModel()
-					.getObject("ms.sys.ja." + ms.substring(1));
-			SystemObject objNein = dav.getDataModel().getObject(
-					"ms.sys.nein." + ms.substring(1));
-
-			/**
-			 * MQ-Intervall
-			 */
-			AbstraktAtgUeberwacher dummy = null;
-			dummy = new AtgIntervallUeberwacherMqKurz();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMq(ms));
-			ueberwacher.add(dummy);
-			dummy = new AtgIntervallUeberwacherMsKurz();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMs(ms));
-			ueberwacher.add(dummy);
-			dummy = new AtgBilanzUeberwacherKurz();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(
-					ms));
-			ueberwacher.add(dummy);
-			dummy = new AtgAbweichungUeberwacherKurz();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeAbweichungMs(ms));
-			ueberwacher.add(dummy);
-
-			dummy = new AtgIntervallUeberwacherMqKurz();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMq(ms));
-			ueberwacher.add(dummy);
-			dummy = new AtgIntervallUeberwacherMsKurz();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMs(ms));
-			ueberwacher.add(dummy);
-			dummy = new AtgBilanzUeberwacherKurz();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeBilanz(ms));
-			ueberwacher.add(dummy);
-			dummy = new AtgAbweichungUeberwacherKurzAlle();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeAbweichungMs(ms));
-			ueberwacher.add(dummy);
-		}
-
-		long jetzt = System.currentTimeMillis();
 		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTimeInMillis(jetzt);
+		cal.setTimeInMillis(System.currentTimeMillis());
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		int aktuelleMinute = cal.get(Calendar.MINUTE);
-		int naechsterStart = (((int) (aktuelleMinute / 5)) + 1) * 5;
-		cal.set(Calendar.MINUTE, naechsterStart);
+		long theoretischerEmpfangsZeitStempel = cal.getTimeInMillis();
+		while (theoretischerEmpfangsZeitStempel <= System.currentTimeMillis()) {
+			theoretischerEmpfangsZeitStempel += 60L * 1000L;
+		}
+		warteBis(theoretischerEmpfangsZeitStempel + 1000L);
 
-		System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(cal
-				.getTimeInMillis())));
+		BmClient.getInstanz(dav).addListener(this);
 
-		DataDescription ddMq = new DataDescription(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+		TestKEx kex = TestKEx.getInstanz(dav);
 
-		for (int i = 0; i < daten.getKnotenpunkteTab().getAnzahlZeilen() + 1; i++) {
-			for (String objPidEnd : OBJEKTE) {
-				Data dataJa = TestDatenImporterPrSpezKurz.getDatensatz(dav,
-						daten.getKnotenpunkteTab().get(i % 5, objPidEnd));
-				Data dataNein = TestDatenImporterPrSpezKurz.getDatensatz(dav,
-						daten.getFreieStreckeTab().get(i % 5, objPidEnd));
-				ResultData resultatJa = new ResultData(dav.getDataModel()
-						.getObject("ms.sys.ja." + objPidEnd.toLowerCase()),
-						ddMq, cal.getTimeInMillis(), dataJa);
-				ResultData resultatNein = new ResultData(dav.getDataModel()
-						.getObject("ms.sys.nein." + objPidEnd.toLowerCase()),
-						ddMq, cal.getTimeInMillis(), dataNein);
-				dav.sendData(resultatJa);
-				dav.sendData(resultatNein);
+		kex.setAnalyseParameter(3000L, 3000L);
+
+		AtgTlsFehlerAnalyse.getInstanz(TestKEx.iB2SM1LVE1DE1).addListener(
+				new IAtgTlsFehlerAnalyseListener() {
+					private TlsFehlerAnalyse[] fehler = new TlsFehlerAnalyse[] {
+							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT,
+							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT,
+							TlsFehlerAnalyse.KRI_DEFEKT,
+							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT,
+							TlsFehlerAnalyse.KRI_DEFEKT,
+							TlsFehlerAnalyse.EAK_AN_SM_DEFEKT };
+					private int i = 0;
+
+					public void aktualisiereTlsFehlerAnalyse(
+							TlsFehlerAnalyse fehlerAnalyse) {
+						if (ASSERTION_AN) {
+							if (i < fehler.length) {
+								Assert.assertEquals(fehler[i++], fehlerAnalyse);
+							}
+						}
+
+					}
+				});
+
+		AtgTlsFehlerAnalyse.getInstanz(TestKEx.iB2SM2LVE1DE1).addListener(
+				new IAtgTlsFehlerAnalyseListener() {
+					private TlsFehlerAnalyse[] fehler = new TlsFehlerAnalyse[] {
+							TlsFehlerAnalyse.UNBEKANNT,
+							TlsFehlerAnalyse.KRI_DEFEKT,
+							TlsFehlerAnalyse.KRI_DEFEKT,
+							TlsFehlerAnalyse.INSELBUS_DEFEKT,
+							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT,
+							TlsFehlerAnalyse.KRI_DEFEKT };
+					private int i = 0;
+
+					public void aktualisiereTlsFehlerAnalyse(
+							TlsFehlerAnalyse fehlerAnalyse) {
+						if (ASSERTION_AN) {
+							if (i < fehler.length) {
+								Assert.assertEquals(fehler[i++], fehlerAnalyse);
+							}
+						}
+
+					}
+				});
+
+		AtgTlsFehlerAnalyse.getInstanz(TestKEx.iB2SM2LVE1DE2).addListener(
+				new IAtgTlsFehlerAnalyseListener() {
+					private TlsFehlerAnalyse[] fehler = new TlsFehlerAnalyse[] {
+							TlsFehlerAnalyse.KRI_DEFEKT,
+							TlsFehlerAnalyse.UNBEKANNT,
+							TlsFehlerAnalyse.KRI_DEFEKT,
+							TlsFehlerAnalyse.INSELBUS_DEFEKT,
+							TlsFehlerAnalyse.SM_MODEM_ODER_SM_DEFEKT };
+					private int i = 0;
+
+					public void aktualisiereTlsFehlerAnalyse(
+							TlsFehlerAnalyse fehlerAnalyse) {
+						if (ASSERTION_AN) {
+							if (i < fehler.length) {
+								Assert.assertEquals(fehler[i++], fehlerAnalyse);
+							}
+						}
+					}
+				});
+
+		/**
+		 * Setzte DE-Fehlerstatus auf != 0 fuer alle DE ausser alle LVE DE an
+		 * SM2.1 und SM2.2
+		 */
+		for (SystemObject de : kex.getAlleLveDes()) {
+			if (de.equals(TestKEx.iB2SM2LVE1DE1)
+					|| de.equals(TestKEx.iB2SM2LVE1DE2)
+					|| de.equals(TestKEx.iB2SM1LVE1DE1)) {
+				kex.setDeFehlerStatus(de, 0, false);
+			} else {
+				kex.setDeFehlerStatus(de, 0, true);
 			}
+			kex.setBetriebsParameter(de, 15L * 1000L);
 
-			cal.add(Calendar.MINUTE, 1);
-			try {
-				Thread.sleep(1000L);
-			} catch (InterruptedException ex) {
-				//
-			}
+			final SystemObject obj = de;
+			AtgTlsFehlerAnalyse.getInstanz(de).addListener(
+					new IAtgTlsFehlerAnalyseListener() {
+
+						public void aktualisiereTlsFehlerAnalyse(
+								TlsFehlerAnalyse fehlerAnalyse) {
+							if (SHOW_DE) {
+								System.out
+										.println("+++ " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + //$NON-NLS-1$ //$NON-NLS-2$
+												obj
+												+ ", " + fehlerAnalyse + " +++"); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						}
+
+					});
 		}
 
 		/**
-		 * Warte bis alle Daten verarbeitet sind
+		 * Alle UFD-DE auf kein zyklischer Abruf setzten
 		 */
+		for (SystemObject de : kex.getAlleUFDDes()) {
+			kex.setBetriebsParameter(de, -1);
+			kex.setDeFehlerStatus(de, 0, false);
+			final SystemObject obj = de;
+			AtgTlsFehlerAnalyse.getInstanz(de).addListener(
+					new IAtgTlsFehlerAnalyseListener() {
+
+						public void aktualisiereTlsFehlerAnalyse(
+								TlsFehlerAnalyse fehlerAnalyse) {
+							if (SHOW_DE) {
+								System.out
+										.println("+++ " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + //$NON-NLS-1$ //$NON-NLS-2$
+												obj
+												+ ", " + fehlerAnalyse + " +++"); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						}
+
+					});
+		}
 		try {
-			Thread.sleep(2000L);
-		} catch (InterruptedException ex) {
+			Thread.sleep(1000L);
+		} catch (InterruptedException e) {
 			//
 		}
 
-		for (AbstraktAtgUeberwacher uw : ueberwacher) {
-			uw.ueberpruefe();
+		cal.setTimeInMillis(System.currentTimeMillis());
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		long datenZeitStempel = cal.getTimeInMillis();
+		theoretischerEmpfangsZeitStempel = cal.getTimeInMillis() + 15L * 1000L;
+		while (theoretischerEmpfangsZeitStempel <= System.currentTimeMillis()) {
+			datenZeitStempel += 15L * 1000L;
+			theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		}
+
+		kex.setDe(TestKEx.iB1SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AUS);
+
+		int zeitpunkt = 1;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+
+		warteBis(theoretischerEmpfangsZeitStempel + 10000L);
+		kex.setDe(TestKEx.iB2SM1UFD1DE1, System.currentTimeMillis(),
+				DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS);
+		kex.setDe(TestKEx.iB2SM1UFD1DE1, System.currentTimeMillis(),
+				DeStatus.ZYKLISCH_AN);
+		kex.setDe(TestKEx.iB2SM1UFD1DE2, System.currentTimeMillis(),
+				DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS);
+		kex.setDe(TestKEx.iB2SM1UFD1DE2, System.currentTimeMillis(),
+				DeStatus.ZYKLISCH_AN);
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, System.currentTimeMillis(),
+				DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS);
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, System.currentTimeMillis(),
+				DeStatus.ZYKLISCH_AN);
+
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+
+		/**
+		 * 1.3
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		/**
+		 * 2.0
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		/**
+		 * 2.1
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+
+		/**
+		 * 2.2
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		/**
+		 * 2.3
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		/**
+		 * 3.0
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM1UFD1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM1UFD1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		/**
+		 * 3.1
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		warteBis(theoretischerEmpfangsZeitStempel + 10000L);
+		kex.setDe(TestKEx.iB2SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.KANAL_PASSIVIERT_DE_FEHLER_AN);
+
+		/**
+		 * 3.2
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM3LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		/**
+		 * 3.3
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB2SM2LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+		kex.setDe(TestKEx.iB2SM2LVE1DE2, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		warteBis(theoretischerEmpfangsZeitStempel + 10000L);
+		kex.setDe(TestKEx.iB1SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.KANAL_AKTIVIERT_DE_FEHLER_AUS);
+
+		/**
+		 * 4.0
+		 */
+		datenZeitStempel += 15L * 1000L;
+		theoretischerEmpfangsZeitStempel += 15L * 1000L;
+		warteBis(theoretischerEmpfangsZeitStempel);
+		if (SHOW_ZEITPUNKT) {
+			System.out.println("***\nZeitpunkt Nr. " + (zeitpunkt / 4) + "."
+					+ (zeitpunkt % 4) + "\n***");
+			zeitpunkt++;
+		}
+		kex.setDe(TestKEx.iB1SM1LVE1DE1, theoretischerEmpfangsZeitStempel,
+				DeStatus.NUTZ_DATEN);
+
+		warteBis(System.currentTimeMillis() + 10L * 1000L);
+	}
+
+	/**
+	 * globaler Meldungszaehler.
+	 */
+	private static int meldungsZeitpunkt = 0;
+
+	/**
+	 * Die Meldungen die der Reihe nach erwartet werden (aufgeteilt und sortiert
+	 * nach Meldungszeitpunkt und den dazu erwarteten Meldungen (innerhalb eines
+	 * Meldungszeitpunktes ist die Reihenfolge der Meldungen egal)).
+	 */
+	private MeldungsZeitpunkt[] meldungen = null;
+
+	/**
+	 * Initialisiert die erwarteten Meldungen.
+	 */
+	private void init() {
+		/**
+		 * Die Meldungen die der Reihe nach erwartet werden (aufgeteilt und sortiert
+		 * nach Meldungszeitpunkt und den dazu erwarteten Meldungen (innerhalb eines
+		 * Meldungszeitpunktes ist die Reihenfolge der Meldungen egal)).
+		 */
+		this.meldungen = new MeldungsZeitpunkt[] {
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.0
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eaklve1.de1", "kri1.ib1.sm1.eaklve1.de1 (kri1.ib1.sm1.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm3.eaklve1.de1", "kri1.ib2.sm3.eaklve1.de1 (kri1.ib2.sm3.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Kanal ist passiviert"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de1", "kri1.ib1.sm1.eakufd1.de1 (kri1.ib1.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib1.sm1.eakufd1.de2", "kri1.ib1.sm1.eakufd1.de2 (kri1.ib1.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de1", "kri1.ib2.sm1.eakufd1.de1 (kri1.ib2.sm1.eakufd1.de1): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eakufd1.de2", "kri1.ib2.sm1.eakufd1.de2 (kri1.ib2.sm1.eakufd1.de2): TLS-Fehlerueberwachung nicht moeglich, da keine zyklische Abgabe von Meldungen eingestellt") }), //$NON-NLS-1$ //$NON-NLS-2$		
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.2
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 0.3
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.0
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1", "Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) oder Steuermodul instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1", "Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.2
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2", "Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 1.3
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										"kri1.ib2.sm2", "Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm2 (kri1.ib2.sm2) oder Steuermodul instand setzen"), //$NON-NLS-1$ //$NON-NLS-2$
+								new ErwarteteMeldung(
+										"kri1.ib2.sm1.eaklve1", "EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 2.0
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eakufd1 (kri1.ib2.sm1.eakufd1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 2.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"Verbindung zum KRI kri1 (kri1) oder KRI selbst defekt. Verbindung zum KRI oder KRI instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.0
+						new ErwarteteMeldung[] {
+								new ErwarteteMeldung(
+										null,
+										"Inselbus kri1.ib2 (kri1.ib2) gestört: Für die DE der Steuermodule kri1.ib2.sm2 (kri1.ib2.sm2), kri1.ib2.sm3 (kri1.ib2.sm3) sind keine Daten verfügbar. Inselbus kri1.ib2 (kri1.ib2) instand setzen"), //$NON-NLS-1$
+								new ErwarteteMeldung(
+										null,
+										"EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) defekt. EAK kri1.ib2.sm1.eaklve1 (kri1.ib2.sm1.eaklve1) am Steuermodul kri1.ib2.sm1 (kri1.ib2.sm1) instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.1
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								"kri1.ib2.sm1.eaklve1.de1", "kri1.ib2.sm1.eaklve1.de1 (kri1.ib2.sm1.eaklve1.de1): Keine TLS-Fehleranalyse moeglich. DE-Fehler(StörEAK): Störung vom E/A-Konzentrator erkannt") }), //$NON-NLS-1$ //$NON-NLS-2$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 3.3
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"Modem am Steuermodul kri1.ib2.sm3 (kri1.ib2.sm3) oder Steuermodul defekt. Modem am Steuermodul kri1.ib2.sm3 (kri1.ib2.sm3) oder Steuermodul instand setzen") }), //$NON-NLS-1$
+				new MeldungsZeitpunkt(// Zeitpunkt Nr. 4.0
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								null,
+								"Modem am Inselbus kri1.ib2 (kri1.ib2) oder Inselbus selbst defekt. Modem oder Inselbus instand setzen") }), //$NON-NLS-1$				
+
+				/**
+				 * Ende
+				 */
+				new MeldungsZeitpunkt(// Zeitpunkt Nr.7
+						new ErwarteteMeldung[] { new ErwarteteMeldung(
+								Constants.EMPTY_STRING, Constants.EMPTY_STRING) }),
+
+		};
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void aktualisiereBetriebsMeldungen(SystemObject obj, long zeit,
+			String text) {
+		if (ASSERTION_AN) {
+			Assert
+					.assertTrue(
+							"Falsche Nachricht (Zeitpunkt Nr. " + //$NON-NLS-1$
+									(meldungsZeitpunkt + 1 == meldungen.length ? "letzter Zeitpunkt" : meldungsZeitpunkt + 1) + "): " //$NON-NLS-1$ //$NON-NLS-2$
+									+ obj.getPid() + ", " + text, //$NON-NLS-1$
+							meldungen[meldungsZeitpunkt]
+									.isMeldungErwartet(new ErwarteteMeldung(obj
+											.getPid(), text)));
+			if (meldungen[meldungsZeitpunkt].isNeuerZeitpunkt()) {
+				meldungsZeitpunkt++;
+			}
+		}
+
+		if (SHOW_BM) {
+			if (text.length() > 70) {
+				System.out
+						.println("*** " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + obj + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								text.substring(0, 60)
+								+ "\n      " + text.substring(60, text.length()) + " ***"); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				System.out
+						.println("*** " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date()) + ":\n" + obj + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								text + " ***"); //$NON-NLS-1$
+			}
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Wartet bis zu einem bestimmten Zeitpunkt.
+	 * 
+	 * @param zeitStempel
+	 *            Zeitpunkt bis zu dem gewartet werden soll
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
-		// 		
+	public final void warteBis(long zeitStempel) {
+		while (System.currentTimeMillis() < zeitStempel) {
+			try {
+				Thread.sleep(50L);
+			} catch (InterruptedException e) {
+				//
+			}
+		}
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Ein Meldungszeitpunkt (zu diesem Zeitpunkt koennen eine Menge von
+	 * Meldungen in unterschiedlicher Reihenfolge erwartet werden).
+	 * 
+	 * @author BitCtrl Systems GmbH, Thierfelder
+	 * 
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
-		return false;
+	private class MeldungsZeitpunkt {
+
+		/**
+		 * alle Meldungen, die zu diesem Zeitpunkt erwartet werden (unsortiert).
+		 */
+		private ErwarteteMeldung[] erwarteteMeldungenZumZeitpunkt = null;
+
+		/**
+		 * Meldungszaehler.
+		 */
+		private int meldungsZaehler = 0;
+
+		/**
+		 * Standardkonstruktor.
+		 * 
+		 * @param meldungen
+		 *            alle zu diesem Zeitpunkt erwarteten Meldungen
+		 */
+		public MeldungsZeitpunkt(ErwarteteMeldung[] meldungen) {
+			this.erwarteteMeldungenZumZeitpunkt = meldungen;
+		}
+
+		/**
+		 * Erfragt, ob alle fuer diesen Zeitpunkt erwarteten Meldungen bereits
+		 * abgearbeitet wurden.
+		 * 
+		 * @return ob alle fuer diesen Zeitpunkt erwarteten Meldungen bereits
+		 *         abgearbeitet wurden
+		 */
+		public boolean isNeuerZeitpunkt() {
+			return this.meldungsZaehler >= this.erwarteteMeldungenZumZeitpunkt.length;
+		}
+
+		/**
+		 * Erfragt, ob diese Meldung hier erwartet wurde.
+		 * 
+		 * @param meldung die empfangene Meldung
+		 * @return ob diese Meldung hier erwartet wurde
+		 */
+		public final boolean isMeldungErwartet(ErwarteteMeldung meldung) {
+			boolean erwartet = false;
+
+			for (int i = 0; i < erwarteteMeldungenZumZeitpunkt.length; i++) {
+				if (this.erwarteteMeldungenZumZeitpunkt[i].equals(meldung)) {
+					erwartet = true;
+					this.meldungsZaehler++;
+					break;
+				}
+			}
+
+			if (!erwartet) {
+				System.out.println("**********\n\nErwartet: " + meldung); //$NON-NLS-1$
+				for (int i = 0; i < erwarteteMeldungenZumZeitpunkt.length; i++) {
+					System.out
+							.println(this.erwarteteMeldungenZumZeitpunkt[i].text);
+					if (this.erwarteteMeldungenZumZeitpunkt[i].equals(meldung)) {
+						erwartet = true;
+						this.meldungsZaehler++;
+						break;
+					}
+				}
+				System.out.println("\n\n**********" + meldung); //$NON-NLS-1$
+			}
+
+			return erwartet;
+		}
+
+	}
+
+	/**
+	 * Meldungstext mit Systemobjekt.
+	 * 
+	 * @author BitCtrl Systems GmbH, Thierfelder
+	 * 
+	 */
+	private class ErwarteteMeldung {
+
+		/**
+		 * erwarteter Meldungstext.
+		 */
+		private String text = null;
+
+		/**
+		 * mit Meldung assoziiertes Systemobjekt.
+		 */
+		private SystemObject referenz = null;
+
+		/**
+		 * Standardkonstruktor.
+		 * 
+		 * @param referenzPid
+		 *            PID des mit der Meldung assoziierten Systemobjekt
+		 * @param text
+		 *            erwarteter Meldungstext
+		 */
+		protected ErwarteteMeldung(String referenzPid, String text) {
+			if (referenzPid != null) {
+				try {
+					this.referenz = DAVTest.getDav().getDataModel().getObject(
+							referenzPid);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+			this.text = text;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			boolean gleich = false;
+
+			if (obj != null && obj instanceof ErwarteteMeldung) {
+				ErwarteteMeldung that = (ErwarteteMeldung) obj;
+				if (this.referenz != null && that.referenz != null) {
+					gleich = this.referenz.equals(that.referenz);
+				} else {
+					gleich = true;
+				}
+				gleich &= this.text.equals(that.text);
+			}
+
+			return gleich;
+		}
+
 	}
 
 }
