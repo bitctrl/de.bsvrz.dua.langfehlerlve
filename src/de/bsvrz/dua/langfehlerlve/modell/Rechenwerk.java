@@ -147,7 +147,7 @@ public final class Rechenwerk {
 	 *         Elemente
 	 */
 	public static IDELzFhDatum addiere(Collection<IDELzFhDatum> elemente) {
-		if (elemente.isEmpty()) {
+		if (elemente == null || elemente.isEmpty()) {
 			return NICHT_AUSWERTBAR;
 		}
 
@@ -193,7 +193,7 @@ public final class Rechenwerk {
 	 */
 	public static IDELzFhDatum addiere(IDELzFhDatum summand1,
 			IDELzFhDatum summand2) {
-		if (summand1.isKeineDaten() || summand2.isKeineDaten()) {
+		if(summand1 == null || summand2 == null || summand1.isKeineDaten() || summand2.isKeineDaten()) {
 			return KEINE_DATEN;
 		}
 
@@ -221,7 +221,7 @@ public final class Rechenwerk {
 	 */
 	public static IDELzFhDatum subtrahiere(IDELzFhDatum minuend,
 			IDELzFhDatum subtrahend) {
-		if (minuend.isKeineDaten() || subtrahend.isKeineDaten()) {
+		if (minuend == null || subtrahend == null || minuend.isKeineDaten() || subtrahend.isKeineDaten()) {
 			return KEINE_DATEN;
 		}
 

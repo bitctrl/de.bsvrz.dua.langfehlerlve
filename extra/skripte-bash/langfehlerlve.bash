@@ -9,7 +9,7 @@ source ../../../skripte-bash/einstellungen.sh
 # SWE-Spezifische Parameter	(überprüfen und anpassen)                          #
 ################################################################################
 
-kb="kb.MQ_Konfig_A5,kb.MQ_Konfig_A6,kb.MQ_Konfig_A656,kb.MQ_Konfig_A7,kb.MQ_Konfig_A8,kb.MQ_Konfig_A81,kb.MQ_Konfig_A831,kb.MQ_Konfig_A864,kb.MQ_Konfig_A96,kb.MQ_Konfig_A98,kb.MQ_Konfig_B10,kb.MQ_Konfig_B27,kb.MQ_Konfig_DZ"
+kb="kb.MQ_Konfig_A5,kb.MQ_Konfig_A6,kb.MQ_Konfig_A656,kb.MQ_Konfig_A7,kb.MQ_Konfig_A8,kb.MQ_Konfig_A81,kb.MQ_Konfig_A831,kb.MQ_Konfig_A864,kb.MQ_Konfig_A96,kb.MQ_Konfig_A98,kb.MQ_Konfig_B10,kb.MQ_Konfig_B27,kb.MQ_Konfig_DZ,kb.MS_Konfig_A5,kb.MS_Konfig_A6,kb.MS_Konfig_A8,kb.MS_Konfig_A21,kb.MS_Konfig_B27"
 
 ################################################################################
 # Folgende Parameter müssen überprüft und evtl. angepasst werden               #

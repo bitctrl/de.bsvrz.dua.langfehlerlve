@@ -89,8 +89,10 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 								this.komArgumente));
 
-		DuaVerkehrsNetz.initialisiere(dav, kbFilter
-				.toArray(new ConfigurationArea[0]));
+//		DuaVerkehrsNetz.initialisiere(dav, kbFilter
+//				.toArray(new ConfigurationArea[0]));
+
+		DuaVerkehrsNetz.initialisiere(dav);
 
 		Collection<SystemObject> msgObjekte = DUAUtensilien.getBasisInstanzen(
 				dav.getDataModel().getType(

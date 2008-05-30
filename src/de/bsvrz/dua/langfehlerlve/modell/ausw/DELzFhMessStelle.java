@@ -173,6 +173,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 				}
 				this.initMQPuffer();
 			} else {
+				System.out.println(this.messStelle.getPruefling());
 				throw new DUAInitialisierungsException(
 						"Messstelle " + msObjekt + //$NON-NLS-1$
 								" besitzt keinen Pruefling (MQ)"); //$NON-NLS-1$				
@@ -379,8 +380,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	public void aktualisiereDatum(SystemObject mqObjekt,
 			Intervall intervallDatum) {
 		if (intervallDatum.getDatum().isKeineDaten()) {
-			ResultData msIntervallVSResultat = new ResultData(this.messStelle
-					.getPruefling().getSystemObject(), this.msDb,
+			ResultData msIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.msDb,
 					intervallDatum.getStart(), null);
 			this.fertigesIntervall = intervallDatum;
 			synchronized (this.listenerMenge) {
