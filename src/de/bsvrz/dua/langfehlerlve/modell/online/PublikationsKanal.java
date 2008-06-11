@@ -80,6 +80,7 @@ public class PublikationsKanal {
 			} else {
 				if (!this.keineDaten) {
 					this.keineDaten = true;
+					
 					sDav.sendData(resultat);
 				}
 			}

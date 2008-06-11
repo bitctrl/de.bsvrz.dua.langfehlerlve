@@ -32,7 +32,7 @@ fi
 ################################################################################
 
 # Applikation starten
-java $jvmArgs -jar ../de.bsvrz.dua.langfehlerlve-runtime.jar \
+$java $jvmArgs -jar ../de.bsvrz.dua.langfehlerlve-runtime.jar \
 	$dav1 \
 	-KonfigurationsBereichsPid=$kb \
 	-debugLevelStdErrText=ERROR \

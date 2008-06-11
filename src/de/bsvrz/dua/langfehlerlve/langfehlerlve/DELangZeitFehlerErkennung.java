@@ -166,16 +166,10 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		Collection<ConfigurationArea> kbListe = new HashSet<ConfigurationArea>();
 
 		for (String kb : resultListe) {
-			try {
-				ConfigurationArea area = dav.getDataModel()
-						.getConfigurationArea(kb);
-				if (area != null) {
-					kbListe.add(area);
-				}
-			} catch (UnsupportedOperationException ex) {
-				Debug.getLogger().warning(
-						"Konfigurationsbereich " + kb
-								+ " konnte nicht identifiziert werden.", ex);
+			ConfigurationArea area = dav.getDataModel()
+			.getConfigurationArea(kb);
+			if (area != null) {
+				kbListe.add(area);
 			}
 		}
 
