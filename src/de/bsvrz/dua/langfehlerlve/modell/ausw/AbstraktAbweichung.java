@@ -356,7 +356,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 							.getInstance()
 							.sendMessage(
 									MessageType.APPLICATION_DOMAIN,
-									DELangZeitFehlerErkennung.getName(),
+									null,
 									MessageGrade.ERROR,
 									this.messStelle.getMessStelle()
 											.getPruefling()
