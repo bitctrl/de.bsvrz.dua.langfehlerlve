@@ -28,8 +28,6 @@ package de.bsvrz.dua.langfehlerlve.langfehlerlve;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
@@ -83,14 +81,11 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	 * {@inheritDoc}
 	 */
 	public void initialize(ClientDavInterface dav) throws Exception {
-		Collection<ConfigurationArea> kbFilter = this
+		Collection<ConfigurationArea> kbFilter = DUAUtensilien
 				.getKonfigurationsBereicheAlsObjekte(dav, DUAUtensilien
 						.getArgument(
 								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 								this.komArgumente));
-
-//		DuaVerkehrsNetz.initialisiere(dav, kbFilter
-//				.toArray(new ConfigurationArea[0]));
 
 		DuaVerkehrsNetz.initialisiere(dav);
 
@@ -98,7 +93,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 				dav.getDataModel().getType(
 						DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav, kbFilter);
 
-		String config = "Betrachtete Messstellengruppen:\n";
+		String config = "Ueberwachte Messstellengruppen:\n";
 		for (SystemObject msgObjekt : msgObjekte) {
 			config += msgObjekt + "\n";
 		}
@@ -129,8 +124,6 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 					}
 				});
 
-		Debug.init("DELzFh DE Langzeit-Fehlererkennung", argumente);
-
 		for (String s : argumente.getArgumentStrings()) {
 			if (s != null) {
 				this.komArgumente.add(s);
@@ -138,42 +131,6 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		}
 
 		argumente.fetchUnusedArguments();
-	}
-
-	/**
-	 * Extrahiert aus einer Zeichenkette alle über Kommata getrennten
-	 * Konfigurationsbereiche und gibt deren Systemobjekte zurück.
-	 * 
-	 * @param dav
-	 *            Verbindung zum Datenverteiler
-	 * @param kbString
-	 *            Zeichenkette mit den Konfigurationsbereichen
-	 * @return (ggf. leere) <code>ConfigurationArea-Collection</code> mit
-	 *         allen extrahierten Konfigurationsbereichen.
-	 */
-	private Collection<ConfigurationArea> getKonfigurationsBereicheAlsObjekte(
-			final ClientDavInterface dav, final String kbString) {
-		List<String> resultListe = new ArrayList<String>();
-
-		if (kbString != null) {
-			String[] s = kbString.split(",");
-			for (String dummy : s) {
-				if (dummy != null && dummy.length() > 0) {
-					resultListe.add(dummy);
-				}
-			}
-		}
-		Collection<ConfigurationArea> kbListe = new HashSet<ConfigurationArea>();
-
-		for (String kb : resultListe) {
-			ConfigurationArea area = dav.getDataModel()
-			.getConfigurationArea(kb);
-			if (area != null) {
-				kbListe.add(area);
-			}
-		}
-
-		return kbListe;
 	}
 
 	/**

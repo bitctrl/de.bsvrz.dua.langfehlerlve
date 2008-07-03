@@ -103,6 +103,9 @@ public class DELzFhMessStellenGruppe {
 							.getSystemObject(),
 							new DELzFhMessQuerschnitt(dav, ms.getPruefling()
 									.getSystemObject(), this, langZeit));
+				} else {
+					throw new DUAInitialisierungsException(
+							"Messstelle " + ms + " hat keinen MQ-Pruefling.");
 				}
 
 				for (MessQuerschnittAllgemein mqAbfahrt : ms.getAbfahrten()) {

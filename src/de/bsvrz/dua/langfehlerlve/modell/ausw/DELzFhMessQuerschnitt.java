@@ -55,6 +55,7 @@ import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IZeitStempel;
+import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Diese Klasse korrespondiert mit einem DAV-Objekt vom Typ
@@ -257,7 +258,9 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 				final long intervallAnfang = intervallEnde
 						- this.intervallLaenge;
 				
-//				System.out.println("Intervallende: " + intervallEnde + " Intervallanfang: " + intervallAnfang + ", i: " + this.intervallLaenge); 
+				Debug.getLogger().fine("Intervallende: " + DUAKonstanten.ZEIT_FORMAT_GENAU
+						.format(new Date(intervallEnde)) + " Intervallanfang: " + DUAKonstanten.ZEIT_FORMAT_GENAU
+						.format(new Date(intervallAnfang)) + ", i: " + this.intervallLaenge); 
 
 				if (intervallAnfang <= zweitLetztesDatum.getZeitStempel()
 						&& zweitLetztesDatum.getZeitStempel() < intervallEnde
@@ -286,14 +289,22 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	private void berechneFertigesIntervall(final long start,
 			final long ende) {
 		
-//		System.out.println("Start: " + start + ", Ende: " + ende);
+		Debug.getLogger().fine(
+				"Start: "
+						+ DUAKonstanten.ZEIT_FORMAT_GENAU
+								.format(new Date(start))
+						+ " ("
+						+ start
+						+ "), Ende: "
+						+ DUAKonstanten.ZEIT_FORMAT_GENAU
+								.format(new Date(ende)) + " (" + ende + ")");
 		
 		Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
 		for (MQDatum mQDatum : this.puffer) {
 			if (start <= mQDatum.getZeitStempel()
 					&& mQDatum.getZeitStempel() < ende) {
 				datenImIntervall.add(mQDatum);
-//				System.out.println(mQDatum.toString());
+				Debug.getLogger().fine(mQDatum.toString());
 			}
 		}
 
@@ -343,7 +354,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 *            der Jetzt-Zeitpunkt
 	 */
 	private synchronized void setJetzt(final long jetzt) {
-//		System.out.println(jetzt);
+		Debug.getLogger().fine("Jetzt: " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(jetzt)) + " (" + jetzt + ")");
 		
 		if (this.puffer.size() > 1) {
 			int i = 0;
@@ -363,7 +374,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			for (MQDatum pufferElement : this.puffer) {
 				if (pufferElement.getZeitStempel() < aeltesterErlaubterZeitStempel) {
 					zuLoeschendeElemente.add(pufferElement);
-//					System.out.println("Loesche: " + pufferElement);
+					Debug.getLogger().fine("Loesche: " + pufferElement);
 				}
 			}
 
