@@ -148,7 +148,7 @@ public class Intervall {
 		String s = Constants.EMPTY_STRING;
 
 		if (this.datum.isKeineDaten()) {
-			s += "keine Daten"; //$NON-NLS-1$
+			s += "keine Daten";
 		} else {
 			s += "QKfz: " + this.datum.getQ(FahrzeugArt.KFZ) + //$NON-NLS-1$
 					" , QLkw: " + this.datum.getQ(FahrzeugArt.LKW) + //$NON-NLS-1$
@@ -159,7 +159,7 @@ public class Intervall {
 				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
 				+ ", Intervallende: " + //$NON-NLS-1$
 				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
-				+ "\n" + s; //$NON-NLS-1$
+				+ " --> " + s; //$NON-NLS-1$
 	}
 
 }
