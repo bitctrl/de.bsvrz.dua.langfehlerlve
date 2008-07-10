@@ -208,7 +208,8 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 */
 	private void initPuffer() {
 		Debug.getLogger().fine(
-				"Initialisiere Puffer fuer Messstelle ("
+				getInfo()
+						+ "Initialisiere Puffer fuer Messstelle ("
 						+ this.messStelle.getMessStelle().getSystemObject()
 								.getPid()
 						+ "), Messquerschnitt ("
@@ -228,6 +229,9 @@ public class MessStellenBilanz implements ClientSenderInterface,
 					this.puffer.put(this.messStelle.getMessStelle()
 							.getSystemObject(), null);
 				}
+			} else {
+				this.puffer.put(this.messStelle.getMessStelle()
+						.getSystemObject(), null);
 			}
 
 			Intervall msMinus1Intervall = this.puffer.get(this.messStelleMinus1
@@ -239,6 +243,9 @@ public class MessStellenBilanz implements ClientSenderInterface,
 					this.puffer.put(this.messStelleMinus1.getMessStelle()
 							.getSystemObject(), null);
 				}
+			} else {
+				this.puffer.put(this.messStelleMinus1.getMessStelle()
+						.getSystemObject(), null);
 			}
 
 			Intervall mqPlus1Intervall = this.puffer
@@ -250,6 +257,8 @@ public class MessStellenBilanz implements ClientSenderInterface,
 					this.puffer
 							.put(this.messQuerschnittPlus1.getObjekt(), null);
 				}
+			} else {
+				this.puffer.put(this.messQuerschnittPlus1.getObjekt(), null);
 			}
 
 			Intervall mqIntervall = this.puffer.get(this.messQuerschnitt
@@ -260,6 +269,8 @@ public class MessStellenBilanz implements ClientSenderInterface,
 								.getDatum().isKeineDaten())) {
 					this.puffer.put(this.messQuerschnitt.getObjekt(), null);
 				}
+			} else {
+				this.puffer.put(this.messQuerschnitt.getObjekt(), null);
 			}
 		}
 	}
@@ -288,16 +299,20 @@ public class MessStellenBilanz implements ClientSenderInterface,
 					Intervall protoTyp = this.getPrototypischesPufferElement();
 
 					if (protoTyp == null) {
-						Debug.getLogger().fine(
-								"Puffer (noch vollstaendig leer) fuer "
-										+ objekt.getPid()
-										+ " wird beschrieben mit:\n"
-										+ intervallDatum);
+						Debug
+								.getLogger()
+								.fine(
+										getInfo()
+												+ "Puffer (noch vollstaendig leer) wird fuer "
+												+ objekt.getPid()
+												+ " beschrieben mit:\n"
+												+ intervallDatum);
 						this.fillPuffer(objekt, intervallDatum);
 					} else {
+						Debug.getLogger().fine(this.getInfo() + "Prototyp: " + protoTyp);
 						if (protoTyp.getStart() == intervallDatum.getStart()) {
 							Debug.getLogger().fine(
-									"Fuege neues Element ein:\n"
+									getInfo() + "Fuege neues Element ein:\n"
 											+ intervallDatum);
 							this.fillPuffer(objekt, intervallDatum);
 						} else {
@@ -305,10 +320,10 @@ public class MessStellenBilanz implements ClientSenderInterface,
 							if (protoTyp.getStart() > intervallDatum.getStart()) {
 								Debug
 										.getLogger()
-										.warning(
+										.warning(getInfo() + 
 												"Veralteten Datensatz fuer " + //$NON-NLS-1$
 														objekt
-														+ " empfangen:\n" + intervallDatum); //$NON-NLS-1$
+														+ " empfangen:\n" + intervallDatum + "\n" + this.toString()); //$NON-NLS-1$
 							} else {
 								MessStellenBilanz.this.puffer.put(objekt,
 										intervallDatum);
@@ -321,8 +336,12 @@ public class MessStellenBilanz implements ClientSenderInterface,
 						this.initPuffer();
 					}
 				} catch (PufferException e) {
-					Debug.getLogger().error(
-							"Intervallanfang kann nicht betimmt werden.", e);
+					Debug
+							.getLogger()
+							.error(
+									getInfo()
+											+ "Intervallanfang kann nicht betimmt werden.",
+									e);
 					this.initPuffer();
 				}
 			}
@@ -346,7 +365,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 			this.puffer.put(objekt, intervallDatum);
 		}
 
-		Debug.getLogger().fine(debug + "\n" + this.toString());
+		Debug.getLogger().fine(getInfo() + debug + "\n" + this.toString());
 	}
 
 	/**
@@ -357,10 +376,13 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	private boolean isAlleDatenVollstaendig() {
 		boolean datenVollstaendig = true;
 
-		for (SystemObject obj : this.puffer.keySet()) {
-			if (this.puffer.get(obj) == null || this.puffer.get(obj).getDatum().isKeineDaten()) {
-				datenVollstaendig = false;
-				break;
+		synchronized (this.puffer) {
+			for (SystemObject obj : this.puffer.keySet()) {
+				if (this.puffer.get(obj) == null
+						|| this.puffer.get(obj).getDatum().isKeineDaten()) {
+					datenVollstaendig = false;
+					break;
+				}
 			}
 		}
 
@@ -388,7 +410,8 @@ public class MessStellenBilanz implements ClientSenderInterface,
 		synchronized (this.puffer) {
 			for (SystemObject obj : this.puffer.keySet()) {
 				Intervall intervall = this.puffer.get(obj);
-				if (intervall != null && intervall.getDatum() != null && !intervall.getDatum().isKeineDaten()) {
+				if (intervall != null && intervall.getDatum() != null
+						&& !intervall.getDatum().isKeineDaten()) {
 					intervalleSortiert.put(intervall, obj);
 				}
 			}
@@ -415,7 +438,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 */
 	private void erzeugeErgebnis() {
 		Debug.getLogger().fine(
-				"Erzeuge VerkehrsStaerkeStundeBilanz fuer "
+				getInfo() + "Erzeuge VerkehrsStaerkeStundeBilanz fuer "
 						+ this.messStelle.getMessStelle().getPid());
 
 		IDELzFhDatum bilanz = null;
@@ -484,8 +507,20 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	public void aktualisiereDatum(SystemObject mqObjekt,
 			Intervall intervallDatum) {
 		Debug.getLogger().fine(
-				"Datum fuer " + mqObjekt + " empfangen:\n" + intervallDatum);
+				getInfo() + "Datum fuer " + mqObjekt + " empfangen:\n"
+						+ intervallDatum);
 		MessStellenBilanz.this.versucheBerechnung(mqObjekt, intervallDatum);
+	}
+
+	/**
+	 * Erfragt eine Debug-Information ueber die Instanz dieser Klasse.
+	 * 
+	 * @return eine Debug-Information ueber die Instanz dieser Klasse.
+	 */
+	private String getInfo() {
+		return "-->"
+				+ this.messStelle.getMessStelle().getSystemObject().getPid()
+				+ "<--\n";
 	}
 
 	/**
@@ -498,7 +533,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 			for (SystemObject obj : this.puffer.keySet()) {
 				Intervall intervall = this.puffer.get(obj);
 				text += "  " + obj.getPid() + ": "
-						+ (intervall == null ? "<<null>>\n" : intervall);
+						+ (intervall == null ? "<<null>>\n" : intervall + "\n");
 			}
 		}
 
