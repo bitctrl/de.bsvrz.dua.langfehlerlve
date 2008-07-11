@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.online;
 
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 
 /**
@@ -39,6 +40,13 @@ import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 public interface IDELzFhDatum {
 
 	/**
+	 * Erfragt das Systemobjekt dieses Datums.
+	 * 
+	 * @return das Systemobjekt dieses Datums.
+	 */
+	SystemObject getObjekt();
+
+	/**
 	 * Erfragt, ob dieses Datum auf <code>keine Daten</code> steht.
 	 * 
 	 * @return ob dieses Datum auf <code>keine Daten</code> steht
@@ -47,8 +55,9 @@ public interface IDELzFhDatum {
 
 	/**
 	 * Indiziert, dass der ueber diese Schnittstelle erfragbare Wert fuer die
-	 * uebergebene Fahrzeugart nicht auf einem der folgenden Zustaende steht:<br> -
-	 * <code>nicht ermittelbar</code>,<br> - <code>fehlerhaft</code>,<br> -
+	 * uebergebene Fahrzeugart <b>nicht</b> auf einem der folgenden Zustaende
+	 * steht:<br> - <code>nicht ermittelbar</code>,<br> -
+	 * <code>fehlerhaft</code>,<br> -
 	 * <code>nicht ermittelbar oder fehlerhaft</code>.
 	 * 
 	 * @param fahrzeugArt

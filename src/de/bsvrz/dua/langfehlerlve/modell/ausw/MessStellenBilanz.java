@@ -78,7 +78,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 
 	/**
 	 * Stellt einen <code>Comperator</code> zur Verfuegung, der mit Hilfe von
-	 * </code>TreeSets</code> die Gleichheit aller Intervalle bestimmten soll
+	 * <code>TreeSets</code> die Gleichheit aller Intervalle bestimmten soll.
 	 */
 	private static final Comparator<Intervall> INTERVALL_SORTIERER = new Comparator<Intervall>() {
 
@@ -309,7 +309,8 @@ public class MessStellenBilanz implements ClientSenderInterface,
 												+ intervallDatum);
 						this.fillPuffer(objekt, intervallDatum);
 					} else {
-						Debug.getLogger().fine(this.getInfo() + "Prototyp: " + protoTyp);
+						Debug.getLogger().fine(
+								this.getInfo() + "Prototyp: " + protoTyp);
 						if (protoTyp.getStart() == intervallDatum.getStart()) {
 							Debug.getLogger().fine(
 									getInfo() + "Fuege neues Element ein:\n"
@@ -320,8 +321,9 @@ public class MessStellenBilanz implements ClientSenderInterface,
 							if (protoTyp.getStart() > intervallDatum.getStart()) {
 								Debug
 										.getLogger()
-										.warning(getInfo() + 
-												"Veralteten Datensatz fuer " + //$NON-NLS-1$
+										.warning(
+												getInfo()
+														+ "Veralteten Datensatz fuer " + //$NON-NLS-1$
 														objekt
 														+ " empfangen:\n" + intervallDatum + "\n" + this.toString()); //$NON-NLS-1$
 							} else {
@@ -355,7 +357,6 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 *            das Systemobjekt, zu dem das zu speichernde Datum gehoert
 	 * @param intervallDatum
 	 *            ein zu speicherndes Intervalldatum != null
-	 * @return erfolgreich?
 	 */
 	public void fillPuffer(SystemObject objekt, Intervall intervallDatum) {
 		String debug = "Fuege Element ein fuer " + objekt.getPid() + ":\n"

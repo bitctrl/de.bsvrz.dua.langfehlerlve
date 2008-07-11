@@ -28,8 +28,11 @@ package de.bsvrz.dua.langfehlerlve.modell;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 
 /**
@@ -67,6 +70,10 @@ public final class Rechenwerk {
 			return false;
 		}
 
+		public SystemObject getObjekt() {
+			return null;
+		}
+
 	};
 
 	/**
@@ -84,6 +91,10 @@ public final class Rechenwerk {
 
 		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
 			return true;
+		}
+
+		public SystemObject getObjekt() {
+			return null;
 		}
 
 	};
@@ -114,7 +125,7 @@ public final class Rechenwerk {
 			return elemente.iterator().next();
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis();
+		RechenErgebnis ergebnis = new RechenErgebnis(elemente.toArray(new IDELzFhDatum[0]));
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			double zaehler = 0.0;
 			double summe = 0.0;
@@ -161,7 +172,7 @@ public final class Rechenwerk {
 			return elemente.iterator().next();
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis();
+		RechenErgebnis ergebnis = new RechenErgebnis(elemente.toArray(new IDELzFhDatum[0]));
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			double summe = 0.0;
 			boolean auswertbar = true;
@@ -193,11 +204,12 @@ public final class Rechenwerk {
 	 */
 	public static IDELzFhDatum addiere(IDELzFhDatum summand1,
 			IDELzFhDatum summand2) {
-		if(summand1 == null || summand2 == null || summand1.isKeineDaten() || summand2.isKeineDaten()) {
+		if (summand1 == null || summand2 == null || summand1.isKeineDaten()
+				|| summand2.isKeineDaten()) {
 			return KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis();
+		RechenErgebnis ergebnis = new RechenErgebnis(summand1, summand2);
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (summand1.isAuswertbar(fahrzeugArt)
 					&& summand2.isAuswertbar(fahrzeugArt)) {
@@ -225,7 +237,7 @@ public final class Rechenwerk {
 			return KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis();
+		RechenErgebnis ergebnis = new RechenErgebnis(minuend, subtrahend);
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (minuend.isAuswertbar(fahrzeugArt)
 					&& subtrahend.isAuswertbar(fahrzeugArt)) {
@@ -253,7 +265,7 @@ public final class Rechenwerk {
 			return KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis();
+		RechenErgebnis ergebnis = new RechenErgebnis(minuend);
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (minuend.isAuswertbar(fahrzeugArt)) {
 				ergebnis.setQ(fahrzeugArt, minuend.getQ(fahrzeugArt)
@@ -280,7 +292,7 @@ public final class Rechenwerk {
 			return KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis();
+		RechenErgebnis ergebnis = new RechenErgebnis(dividend, divisor);
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (dividend.isAuswertbar(fahrzeugArt)
 					&& divisor.isAuswertbar(fahrzeugArt)
@@ -310,7 +322,7 @@ public final class Rechenwerk {
 			return KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis();
+		RechenErgebnis ergebnis = new RechenErgebnis(faktor);
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (faktor.isAuswertbar(fahrzeugArt)) {
 				ergebnis.setQ(fahrzeugArt, faktor.getQ(fahrzeugArt)
@@ -331,6 +343,12 @@ public final class Rechenwerk {
 	private static final class RechenErgebnis implements IDELzFhDatum {
 
 		/**
+		 * das Systemobjekt, zu dem dieses Ergebnis gehoert,
+		 * so sich das eindeutig bestimmen laesst.
+		 */
+		private SystemObject objekt = null;
+		
+		/**
 		 * alle hier gespeicherten Werte.
 		 */
 		private Map<FahrzeugArt, Double> werte = new HashMap<FahrzeugArt, Double>();
@@ -342,8 +360,22 @@ public final class Rechenwerk {
 
 		/**
 		 * Standardkonstruktor.
+		 * 
+		 * @param komponenten die einzelnen Bestandteile, aus denen das
+		 * Ergebnis zusammengesetzt sein wird.
 		 */
-		private RechenErgebnis() {
+		private RechenErgebnis(IDELzFhDatum... komponenten) {
+			if (komponenten != null) {
+				Set<SystemObject> objekte = new HashSet<SystemObject>();
+				for (IDELzFhDatum komponente : komponenten) {
+					if (komponente != null && komponente.getObjekt() != null) {
+						objekte.add(komponente.getObjekt());
+					}
+				}
+				if (objekte.size() == 1) {
+					this.objekt = objekte.iterator().next();
+				}
+			}
 			for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 				this.auswertbar.put(fahrzeugArt, false);
 				this.werte.put(fahrzeugArt, -1.0);
@@ -396,6 +428,16 @@ public final class Rechenwerk {
 		 */
 		public boolean isKeineDaten() {
 			return false;
+		}
+
+		/**
+		 * Erfragt das Systemobjekt, zu dem dieses Ergebnis gehoert,
+		 * so sich das eindeutig bestimmen laesst.
+		 * 
+		 * @return das Systemobjekt, zu dem dieses Ergebnis gehoert
+		 */
+		public SystemObject getObjekt() {
+			return this.objekt;
 		}
 
 	}

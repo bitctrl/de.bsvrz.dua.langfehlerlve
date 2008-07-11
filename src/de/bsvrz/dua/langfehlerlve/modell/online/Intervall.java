@@ -28,9 +28,6 @@ package de.bsvrz.dua.langfehlerlve.modell.online;
 
 import java.util.Date;
 
-import com.bitctrl.Constants;
-
-import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
@@ -145,15 +142,7 @@ public class Intervall {
 	 */
 	@Override
 	public String toString() {
-		String s = Constants.EMPTY_STRING;
-
-		if (this.datum.isKeineDaten()) {
-			s += "keine Daten";
-		} else {
-			s += "QKfz: " + this.datum.getQ(FahrzeugArt.KFZ) + //$NON-NLS-1$
-					" , QLkw: " + this.datum.getQ(FahrzeugArt.LKW) + //$NON-NLS-1$
-					" , QPkw: " + this.datum.getQ(FahrzeugArt.PKW); //$NON-NLS-1$
-		}
+		String s = "Datum:\n" + this.datum + "\n";
 
 		return "Intervallbegin: " + //$NON-NLS-1$
 				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
