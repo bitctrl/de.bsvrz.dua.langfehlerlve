@@ -24,17 +24,17 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 Versionsgeschichte
 ==================
 
-1.0.0
+1.2.0
 
-  - Erste Auslieferung
+  - Bash-Startskript hinzu
   
 1.1.0
 
   - Verfeinerung der Testumgebung
+  
+1.0.0
 
-1.1.1
-
-  - Bash-Startskript hinzu
+  - Erste Auslieferung
 
 Bemerkungen
 ===========
