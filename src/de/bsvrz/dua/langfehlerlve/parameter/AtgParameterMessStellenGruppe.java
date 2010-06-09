@@ -112,8 +112,8 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 		dav.subscribeReceiver(this, objekt, new DataDescription(
 				dav.getDataModel().getAttributeGroup(
 						"atg.parameterMessStellenGruppe"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL),
-				(short) 0), ReceiveOptions.normal(), ReceiverRole.receiver());
+				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**

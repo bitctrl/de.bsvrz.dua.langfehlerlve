@@ -23,6 +23,10 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 Versionsgeschichte
 ==================
+1.2.2
+
+  - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
+         DataDescription(atg, asp)
 
 1.2.0
 
