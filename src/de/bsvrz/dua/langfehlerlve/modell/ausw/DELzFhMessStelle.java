@@ -272,10 +272,10 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 								if (neuesDatum.getStart() == aktuellesIntervall
 										.getStart()) {
 									schonEingetroffeneIntervalle++;
-								} else {
-									throw new RuntimeException(
-											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
-								}
+//								} else {
+//									throw new RuntimeException(
+//											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
+//								}
 							}
 						}
 					}

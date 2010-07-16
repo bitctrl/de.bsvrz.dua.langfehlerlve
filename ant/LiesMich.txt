@@ -23,6 +23,11 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 Versionsgeschichte
 ==================
+
+1.2.3
+
+  - Laufzeitexception bei veraltetem Zeitstempel entfernt.
+         
 1.2.2
 
   - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
