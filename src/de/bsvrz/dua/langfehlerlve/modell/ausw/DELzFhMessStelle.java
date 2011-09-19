@@ -275,7 +275,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 //								} else {
 //									throw new RuntimeException(
 //											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
-//								}
+								}
 							}
 						}
 					}
