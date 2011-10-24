@@ -40,6 +40,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
 
 /**
  * Die SWE DE Langzeit-Fehlererkennung dient zur Erkennung von systematischen
@@ -86,6 +87,8 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 						.getArgument(
 								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 								this.komArgumente));
+		
+		MessageSender.getInstance().setApplicationLabel("DE-Langzeitfehlererkennung");
 
 		DuaVerkehrsNetz.initialisiere(dav);
 
