@@ -24,6 +24,11 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 Versionsgeschichte
 ==================
 
+1.2.4
+
+  - Senden von reinen Betriebsmeldungen in DUA um die Umsetzung von Objekt-PID/ID nach
+    Betriebsmeldungs-ID erweitert.  
+
 1.2.3
 
   - Laufzeitexception bei veraltetem Zeitstempel entfernt.

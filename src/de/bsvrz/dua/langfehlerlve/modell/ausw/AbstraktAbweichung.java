@@ -50,10 +50,14 @@ import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
+import de.bsvrz.sys.funclib.bitctrl.daf.BetriebsmeldungDaten;
+import de.bsvrz.sys.funclib.bitctrl.daf.BetriebsmeldungIdKonverter;
+import de.bsvrz.sys.funclib.bitctrl.daf.DefaultBetriebsMeldungsIdKonverter;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
+import de.bsvrz.sys.funclib.operatingMessage.MessageState;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 
 /**
@@ -69,6 +73,8 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  */
 public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 		ClientSenderInterface, IDELzFhDatenListener {
+
+	private static final BetriebsmeldungIdKonverter KONVERTER = new DefaultBetriebsMeldungsIdKonverter();
 
 	/**
 	 * <code>atg.abweichungVerkehrsStärke</code>.
@@ -216,8 +222,8 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 					.getDataModel().getAspect(this.getLzAspPid()))
 					: new DataDescription(dDav.getDataModel()
 							.getAttributeGroup(ATG_PID), dDav.getDataModel()
-							.getAspect(this.getKzAspPid())), intervallDatum
-					.getStart(), null);
+							.getAspect(this.getKzAspPid())),
+					intervallDatum.getStart(), null);
 			this.kanal.publiziere(resultat);
 			this.initPuffer();
 		} else {
@@ -324,60 +330,66 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 				synchronized (this) {
 					if (this.abweichungMax >= 0) {
 						if (Math.abs(abweichungMinus100) > this.abweichungMax) {
-//							MessageSender
-//									.getInstance()
-//									.sendMessage(
-//											MessageType.APPLICATION_DOMAIN,
-//											DELangZeitFehlerErkennung.getName(),
-//											MessageGrade.ERROR,
-//											this.messStelle.getMessStelle()
-//													.getPruefling()
-//													.getSystemObject(),
-//											new MessageCauser(dDav
-//													.getLocalUser(),
-//													Constants.EMPTY_STRING,
-//													DELangZeitFehlerErkennung
-//															.getName()),
-//											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
-//													this.abweichungMax
-//													+ "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
-//													this
-//															.getVergleichsIdentifikation()
-//													+ ") " + //$NON-NLS-1$ 
-//													FORMAT.format(new Date(
-//															datenZeit))
-//													+ " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
-//													" ("
-//													+ this.vergleichsIntervall
-//													+ ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
-							
-							
+							// MessageSender
+							// .getInstance()
+							// .sendMessage(
+							// MessageType.APPLICATION_DOMAIN,
+							// DELangZeitFehlerErkennung.getName(),
+							// MessageGrade.ERROR,
+							// this.messStelle.getMessStelle()
+							// .getPruefling()
+							// .getSystemObject(),
+							// new MessageCauser(dDav
+							// .getLocalUser(),
+							// Constants.EMPTY_STRING,
+							// DELangZeitFehlerErkennung
+							// .getName()),
+							//											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
+							// this.abweichungMax
+							//													+ "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
+							// this
+							// .getVergleichsIdentifikation()
+							//													+ ") " + //$NON-NLS-1$ 
+							// FORMAT.format(new Date(
+							// datenZeit))
+							//													+ " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
+							// " ("
+							// + this.vergleichsIntervall
+							//													+ ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
+
 							MessageSender
-							.getInstance()
-							.sendMessage(
-									MessageType.APPLICATION_DOMAIN,
-									null,
-									MessageGrade.ERROR,
-									this.messStelle.getMessStelle()
-											.getPruefling()
-											.getSystemObject(),
-									new MessageCauser(dDav
-											.getLocalUser(),
-											Constants.EMPTY_STRING,
-											DELangZeitFehlerErkennung
-													.getName()),
-									"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
-											this.abweichungMax
-											+ "% (=" + abweichungMinus100 + "%) vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
-											this
-													.getVergleichsIdentifikation()
-											+ ") " + //$NON-NLS-1$ 
-											FORMAT.format(new Date(
-													datenZeit))
-											+ " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
-											" ("
-											+ this.vergleichsIntervall
-											+ ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
+									.getInstance()
+									.sendMessage(
+											KONVERTER.konvertiere(
+													new BetriebsmeldungDaten(
+															this.messStelle
+																	.getMessStelle()
+																	.getPruefling()
+																	.getSystemObject()),
+													null, new Object[0]),
+											MessageType.APPLICATION_DOMAIN,
+											null,
+											MessageGrade.ERROR,
+											this.messStelle.getMessStelle()
+													.getPruefling()
+													.getSystemObject(),
+											MessageState.MESSAGE,
+											new MessageCauser(dDav
+													.getLocalUser(),
+													Constants.EMPTY_STRING,
+													DELangZeitFehlerErkennung
+															.getName()),
+											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
+													this.abweichungMax
+													+ "% (=" + abweichungMinus100 + "%) vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
+													this.getVergleichsIdentifikation()
+													+ ") " + //$NON-NLS-1$ 
+													FORMAT.format(new Date(
+															datenZeit))
+													+ " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
+													" ("
+													+ this.vergleichsIntervall
+													+ ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
 
 						}
 					}
