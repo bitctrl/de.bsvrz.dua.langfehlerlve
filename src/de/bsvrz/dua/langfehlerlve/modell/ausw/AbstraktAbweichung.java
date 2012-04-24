@@ -379,7 +379,15 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 													Constants.EMPTY_STRING,
 													DELangZeitFehlerErkennung
 															.getName()),
-											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
+											"Der Wert "
+													+ fahrzeugArt
+															.getAttributName()
+													+ " am MQ "
+													+ this.messStelle
+															.getMessStelle()
+															.getPruefling()
+															.getSystemObject()
+													+ " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
 													this.abweichungMax
 													+ "% (=" + abweichungMinus100 + "%) vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
 													this.getVergleichsIdentifikation()
