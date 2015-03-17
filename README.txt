@@ -2,7 +2,7 @@
 *  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung  *
 ***********************************************************************************************
 
-Version: @Version@
+Version: 1.4.0
 
 
 Übersicht
@@ -23,6 +23,8 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 Versionsgeschichte
 ==================
+1.4.0
+- Umstellung auf Maven-Build
 
 1.3.2
 
