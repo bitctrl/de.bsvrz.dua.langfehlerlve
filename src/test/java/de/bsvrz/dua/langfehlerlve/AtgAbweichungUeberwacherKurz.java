@@ -26,16 +26,15 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-
-
 /**
  * Ueberprueft den ersten echten (Nutz-)Wert von
  * <code>atg.abweichungVerkehrsStärke</code>,
  * <code>asp.messQuerschnittZumVorgängerKurzZeit</code>.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
+ *
+ * @version $Id: AtgAbweichungUeberwacherKurz.java 53825 2015-03-18 09:36:42Z
+ *          peuker $
  */
 class AtgAbweichungUeberwacherKurz extends AbstraktAtgUeberwacher {
 
@@ -54,5 +53,5 @@ class AtgAbweichungUeberwacherKurz extends AbstraktAtgUeberwacher {
 	String getAtgPid() {
 		return "atg.abweichungVerkehrsStärke";
 	}
-	
+
 }

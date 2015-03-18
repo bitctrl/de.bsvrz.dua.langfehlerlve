@@ -44,11 +44,13 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Korrespondiert mit einem Objekt vom Typ <code>typ.messStellenGruppe</code>
- * und kapselt dessen aktuelle Parameter (<code>atg.parameterMessStellenGruppe</code>).
- * 
+ * und kapselt dessen aktuelle Parameter (
+ * <code>atg.parameterMessStellenGruppe</code>).
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
+ *
+ * @version $Id: AtgParameterMessStellenGruppe.java 53825 2015-03-18 09:36:42Z
+ *          peuker $
  */
 public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 
@@ -60,7 +62,7 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	/**
 	 * Menge aller Beobachterobjekte.
 	 */
-	private Set<IAtgParameterMessStellenGruppeListener> listenerMenge = new HashSet<IAtgParameterMessStellenGruppeListener>();
+	private final Set<IAtgParameterMessStellenGruppeListener> listenerMenge = new HashSet<IAtgParameterMessStellenGruppeListener>();
 
 	/**
 	 * aktuelle Parameter fuer die KZD-Ueberwachung.
@@ -74,7 +76,7 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt eine statische Instanz dieser Klasse.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
@@ -82,17 +84,17 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
 	public static final AtgParameterMessStellenGruppe getInstanz(
-			ClientDavInterface dav, SystemObject objekt) {
+			final ClientDavInterface dav, final SystemObject objekt) {
 		AtgParameterMessStellenGruppe instanz = null;
 
-		synchronized (instanzen) {
-			instanz = instanzen.get(objekt);
+		synchronized (AtgParameterMessStellenGruppe.instanzen) {
+			instanz = AtgParameterMessStellenGruppe.instanzen.get(objekt);
 		}
 
 		if (instanz == null) {
 			instanz = new AtgParameterMessStellenGruppe(dav, objekt);
-			synchronized (instanzen) {
-				instanzen.put(objekt, instanz);
+			synchronized (AtgParameterMessStellenGruppe.instanzen) {
+				AtgParameterMessStellenGruppe.instanzen.put(objekt, instanz);
 			}
 		}
 
@@ -101,43 +103,48 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.messStellenGruppe</code>
 	 */
-	protected AtgParameterMessStellenGruppe(ClientDavInterface dav,
-			SystemObject objekt) {
-		dav.subscribeReceiver(this, objekt, new DataDescription(
-				dav.getDataModel().getAttributeGroup(
+	protected AtgParameterMessStellenGruppe(final ClientDavInterface dav,
+			final SystemObject objekt) {
+		dav.subscribeReceiver(
+				this,
+				objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup(
 						"atg.parameterMessStellenGruppe"), //$NON-NLS-1$
-				dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+						dav.getDataModel().getAspect(
+								DaVKonstanten.ASP_PARAMETER_SOLL)),
+						ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
 	 * Fuegt diesem Objekt einen Listener hinzu.
-	 * 
+	 *
 	 * @param listener
 	 *            eine neuer Listener
 	 */
-	public final void addListener(final IAtgParameterMessStellenGruppeListener listener) {
+	public final void addListener(
+			final IAtgParameterMessStellenGruppeListener listener) {
 		synchronized (this) {
-			if (listenerMenge.add(listener) && this.kzParameter != null) {
+			if (listenerMenge.add(listener) && (this.kzParameter != null)) {
 				listener.aktualisiereMsgParameter(this.kzParameter,
 						this.lzParameter);
-			}			
+			}
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] resultate) {
+	@Override
+	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
-			for (ResultData resultat : resultate) {
-				if (resultat != null && resultat.getData() != null) {
+			for (final ResultData resultat : resultate) {
+				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
 						final int maxAbweichungMessStellenGruppeKZ = resultat
 								.getData()
@@ -149,17 +156,20 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 										"maxAbweichungVorgängerKurzZeit").intValue(); //$NON-NLS-1$
 						final long vergleichsIntervallKZ = resultat
 								.getData()
-								.getUnscaledValue("VergleichsIntervallKurzZeit").longValue() * Constants.MILLIS_PER_MINUTE; //$NON-NLS-1$					
+								.getUnscaledValue("VergleichsIntervallKurzZeit").longValue() * Constants.MILLIS_PER_MINUTE; //$NON-NLS-1$
 						this.kzParameter = new IMsgDatenartParameter() {
 
+							@Override
 							public int getMaxAbweichungMessStellenGruppe() {
 								return maxAbweichungMessStellenGruppeKZ;
 							}
 
+							@Override
 							public int getMaxAbweichungVorgaenger() {
 								return maxAbweichungVorgaengerKZ;
 							}
 
+							@Override
 							public long getVergleichsIntervall() {
 								return vergleichsIntervallKZ;
 							}
@@ -179,24 +189,27 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 								.getUnscaledValue("VergleichsIntervallLangZeit").longValue() * Constants.MILLIS_PER_HOUR; //$NON-NLS-1$
 						this.lzParameter = new IMsgDatenartParameter() {
 
+							@Override
 							public int getMaxAbweichungMessStellenGruppe() {
 								return maxAbweichungMessStellenGruppeLZ;
 							}
 
+							@Override
 							public int getMaxAbweichungVorgaenger() {
 								return maxAbweichungVorgaengerLZ;
 							}
 
+							@Override
 							public long getVergleichsIntervall() {
 								return vergleichsIntervallLZ;
 							}
 
 						};
 
-						for (IAtgParameterMessStellenGruppeListener listener : this.listenerMenge) {
+						for (final IAtgParameterMessStellenGruppeListener listener : this.listenerMenge) {
 							listener.aktualisiereMsgParameter(kzParameter,
 									lzParameter);
-						}							
+						}
 					}
 				}
 			}

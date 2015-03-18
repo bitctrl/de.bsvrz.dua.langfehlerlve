@@ -66,13 +66,15 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  * Afo DUA-BW-C1C2-17: Vergleich mit allen anderen Messstellen bzw. der
  * Vorgaengermessstelle und ggf. Ausgabe einer Betriebsmeldung). Diese Daten
  * werden hier auch publiziert
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
-		ClientSenderInterface, IDELzFhDatenListener {
+ClientSenderInterface, IDELzFhDatenListener {
+
+	private static final Debug LOGGER = Debug.getLogger();
 
 	private static final BetriebsmeldungIdKonverter KONVERTER = new DefaultBetriebsMeldungsIdKonverter();
 
@@ -147,7 +149,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 	/**
 	 * Erfragt die PID des Aspektes, unter dem hier die Daten des Kurzzeit-
 	 * Vergleichsintervalls veroeffentlicht werden.
-	 * 
+	 *
 	 * @return die PID des Aspektes, unter dem hier die Daten des Kurzzeit-
 	 *         Vergleichsintervalls veroeffentlicht werden
 	 */
@@ -156,7 +158,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 	/**
 	 * Erfragt die PID des Aspektes, unter dem hier die Daten des Langzeit-
 	 * Vergleichsintervalls veroeffentlicht werden.
-	 * 
+	 *
 	 * @return die PID des Aspektes, unter dem hier die Daten des Langzeit-
 	 *         Vergleichsintervalls veroeffentlicht werden
 	 */
@@ -164,14 +166,14 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 
 	/**
 	 * Erfragt eine Identifikation der Vergleichsmethode.
-	 * 
+	 *
 	 * @return eine Identifikation der Vergleichsmethode
 	 */
 	protected abstract String getVergleichsIdentifikation();
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param messStelle
@@ -190,12 +192,12 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected AbstraktAbweichung(ClientDavInterface dav,
-			DELzFhMessStelle messStelle,
-			DELzFhMessStellenGruppe messStellenGruppe,
-			DELzFhMessStelle[] restMessStellen,
-			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
-			throws Exception {
+	protected AbstraktAbweichung(final ClientDavInterface dav,
+			final DELzFhMessStelle messStelle,
+			final DELzFhMessStellenGruppe messStellenGruppe,
+			final DELzFhMessStelle[] restMessStellen,
+			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit)
+					throws Exception {
 		super.init(dav, messStellenGruppe, langZeit);
 
 		this.kanal = new PublikationsKanal(dav);
@@ -206,30 +208,35 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 
 	/**
 	 * Versucht die Berechnung der Bilanzverkehrsstaerke.
-	 * 
+	 *
 	 * @param objekt
 	 *            das Systemobjekt, zu dem das gerade empfangene Datum gehoert
 	 * @param intervallDatum
 	 *            ein gerade empfangenes Intervalldatum != null
 	 */
-	private void versucheBerechnung(SystemObject objekt,
-			Intervall intervallDatum) {
+	private void versucheBerechnung(final SystemObject objekt,
+			final Intervall intervallDatum) {
 
 		if (intervallDatum.getDatum().isKeineDaten()) {
-			ResultData resultat = new ResultData(messStelle.getMessStelle()
-					.getSystemObject(), langZeit ? new DataDescription(dDav
-					.getDataModel().getAttributeGroup(ATG_PID), dDav
-					.getDataModel().getAspect(this.getLzAspPid()))
-					: new DataDescription(dDav.getDataModel()
-							.getAttributeGroup(ATG_PID), dDav.getDataModel()
-							.getAspect(this.getKzAspPid())),
+			final ResultData resultat = new ResultData(messStelle
+					.getMessStelle().getSystemObject(),
+					langZeit ? new DataDescription(AbstraktDELzFhObjekt.dDav
+							.getDataModel().getAttributeGroup(
+									AbstraktAbweichung.ATG_PID),
+							AbstraktDELzFhObjekt.dDav.getDataModel().getAspect(
+									this.getLzAspPid())) : new DataDescription(
+							AbstraktDELzFhObjekt.dDav.getDataModel()
+									.getAttributeGroup(
+											AbstraktAbweichung.ATG_PID),
+							AbstraktDELzFhObjekt.dDav.getDataModel().getAspect(
+									this.getKzAspPid())),
 					intervallDatum.getStart(), null);
 			this.kanal.publiziere(resultat);
 			this.initPuffer();
 		} else {
 			synchronized (this.puffer) {
 				long pufferZeit = -1;
-				for (SystemObject obj : this.puffer.keySet()) {
+				for (final SystemObject obj : this.puffer.keySet()) {
 					if (this.puffer.get(obj) != null) {
 						pufferZeit = this.puffer.get(obj).getStart();
 						break;
@@ -243,7 +250,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 					} else {
 						this.initPuffer();
 						if (pufferZeit > intervallDatum.getStart()) {
-							Debug.getLogger().warning(
+							LOGGER.warning(
 									"Veralteten Datensatz fuer " + //$NON-NLS-1$
 											objekt
 											+ " empfangen:\n" + intervallDatum); //$NON-NLS-1$
@@ -254,7 +261,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 				}
 
 				boolean datenVollstaendig = true;
-				for (SystemObject obj : this.puffer.keySet()) {
+				for (final SystemObject obj : this.puffer.keySet()) {
 					if (this.puffer.get(obj) == null) {
 						datenVollstaendig = false;
 						break;
@@ -274,7 +281,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 	 */
 	synchronized void initPuffer() {
 		this.puffer.put(this.messQuerschnitt.getObjekt(), null);
-		for (SystemObject rms : this.restMessStellen) {
+		for (final SystemObject rms : this.restMessStellen) {
 			this.puffer.put(rms, null);
 		}
 	}
@@ -294,37 +301,42 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 			intervallEnde = this.puffer.get(this.messQuerschnitt.getObjekt())
 					.getEnde();
 
-			Collection<IDELzFhDatum> restDaten = new HashSet<IDELzFhDatum>();
-			for (SystemObject rms : this.restMessStellen) {
+			final Collection<IDELzFhDatum> restDaten = new HashSet<IDELzFhDatum>();
+			for (final SystemObject rms : this.restMessStellen) {
 				restDaten.add(this.puffer.get(rms).getDatum());
 			}
 
 			abweichung = Rechenwerk.multipliziere(Rechenwerk.dividiere(
 					this.puffer.get(this.messQuerschnitt.getObjekt())
-							.getDatum(), Rechenwerk.durchschnitt(restDaten)),
+					.getDatum(), Rechenwerk.durchschnitt(restDaten)),
 					100.0);
 		}
 
-		DataDescription datenBeschreibung = langZeit ? new DataDescription(dDav
-				.getDataModel().getAttributeGroup(ATG_PID), dDav.getDataModel()
-				.getAspect(this.getLzAspPid())) : new DataDescription(dDav
-				.getDataModel().getAttributeGroup(ATG_PID), dDav.getDataModel()
-				.getAspect(this.getKzAspPid()));
-		Data nutzDatum = dDav.createData(datenBeschreibung.getAttributeGroup());
+		final DataDescription datenBeschreibung = langZeit ? new DataDescription(
+				AbstraktDELzFhObjekt.dDav.getDataModel().getAttributeGroup(
+						AbstraktAbweichung.ATG_PID), AbstraktDELzFhObjekt.dDav
+						.getDataModel().getAspect(this.getLzAspPid()))
+				: new DataDescription(AbstraktDELzFhObjekt.dDav.getDataModel()
+						.getAttributeGroup(AbstraktAbweichung.ATG_PID),
+						AbstraktDELzFhObjekt.dDav.getDataModel().getAspect(
+								this.getKzAspPid()));
+		final Data nutzDatum = AbstraktDELzFhObjekt.dDav
+				.createData(datenBeschreibung.getAttributeGroup());
 
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 
 			if (abweichung.isAuswertbar(fahrzeugArt)) {
-				long abweichungMinus100 = Math.round(abweichung
+				final long abweichungMinus100 = Math.round(abweichung
 						.getQ(fahrzeugArt) - 100.0);
 
-				if (abweichungMinus100 >= PROZENT_MIN
-						&& abweichungMinus100 <= PROZENT_MAX) {
+				if ((abweichungMinus100 >= AbstraktAbweichung.PROZENT_MIN)
+						&& (abweichungMinus100 <= AbstraktAbweichung.PROZENT_MAX)) {
 					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
-							.set(abweichungMinus100);
+					.set(abweichungMinus100);
 				} else {
-					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
-							.set(NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+					nutzDatum
+							.getUnscaledValue(fahrzeugArt.getAttributName())
+					.set(AbstraktAbweichung.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 
 				synchronized (this) {
@@ -346,10 +358,10 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 							// .getName()),
 							//											"Der Wert " + fahrzeugArt.getAttributName() + " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
 							// this.abweichungMax
-							//													+ "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
+							//													+ "% vom erwarteten Wert im Intervall (" + //$NON-NLS-1$
 							// this
 							// .getVergleichsIdentifikation()
-							//													+ ") " + //$NON-NLS-1$ 
+							//													+ ") " + //$NON-NLS-1$
 							// FORMAT.format(new Date(
 							// datenZeit))
 							//													+ " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
@@ -358,58 +370,61 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 							//													+ ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
 
 							MessageSender
-									.getInstance()
-									.sendMessage(
-											KONVERTER.konvertiere(
-													new BetriebsmeldungDaten(
-															this.messStelle
-																	.getMessStelle()
-																	.getPruefling()
-																	.getSystemObject()),
-													null, new Object[0]),
-											MessageType.APPLICATION_DOMAIN,
-											null,
-											MessageGrade.ERROR,
-											this.messStelle.getMessStelle()
+							.getInstance()
+							.sendMessage(
+									AbstraktAbweichung.KONVERTER
+													.konvertiere(
+															new BetriebsmeldungDaten(
+																	this.messStelle
+																			.getMessStelle()
+																			.getPruefling()
+																			.getSystemObject()),
+															null, new Object[0]),
+													MessageType.APPLICATION_DOMAIN,
+													null,
+													MessageGrade.ERROR,
+													this.messStelle.getMessStelle()
 													.getPruefling()
 													.getSystemObject(),
-											MessageState.MESSAGE,
-											new MessageCauser(dDav
-													.getLocalUser(),
-													Constants.EMPTY_STRING,
-													DELangZeitFehlerErkennung
+													MessageState.MESSAGE,
+													new MessageCauser(
+													AbstraktDELzFhObjekt.dDav
+															.getLocalUser(),
+															Constants.EMPTY_STRING,
+															DELangZeitFehlerErkennung
 															.getName()),
-											"Der Wert "
-													+ fahrzeugArt
-															.getAttributName()
-													+ " am MQ "
-													+ this.messStelle
-															.getMessStelle()
-															.getPruefling()
-															.getSystemObject()
-													+ " weicht um mehr als " + //$NON-NLS-1$ //$NON-NLS-2$
-													this.abweichungMax
-													+ "% (=" + abweichungMinus100 + "%) vom erwarteten Wert im Intervall (" + //$NON-NLS-1$ 
-													this.getVergleichsIdentifikation()
-													+ ") " + //$NON-NLS-1$ 
-													FORMAT.format(new Date(
-															datenZeit))
-													+ " - " + FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
-													" ("
-													+ this.vergleichsIntervall
-													+ ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
+															"Der Wert "
+																	+ fahrzeugArt
+																	.getAttributName()
+																	+ " am MQ "
+																	+ this.messStelle
+																	.getMessStelle()
+																	.getPruefling()
+																	.getSystemObject()
+																	+ " weicht um mehr als " + //$NON-NLS-1$
+																	this.abweichungMax
+																	+ "% (=" + abweichungMinus100 + "%) vom erwarteten Wert im Intervall (" + //$NON-NLS-1$
+																	this.getVergleichsIdentifikation()
+																	+ ") " + //$NON-NLS-1$
+																	AbstraktAbweichung.FORMAT
+															.format(new Date(
+																	datenZeit))
+																			+ " - " + AbstraktAbweichung.FORMAT.format(new Date(intervallEnde)) + //$NON-NLS-1$
+																			" ("
+																			+ this.vergleichsIntervall
+																			+ ") ab."); //$NON-NLS-1$
 
 						}
 					}
 				}
 			} else {
 				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(
-						NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						AbstraktAbweichung.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 
 		}
 
-		ResultData publikationsDatum = new ResultData(this.messStelle
+		final ResultData publikationsDatum = new ResultData(this.messStelle
 				.getMessStelle().getSystemObject(), datenBeschreibung,
 				datenZeit, nutzDatum);
 
@@ -419,23 +434,27 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(final SystemObject object,
+			final DataDescription dataDescription, final byte state) {
 		// Quellenanmeldung
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereDatum(SystemObject objekt, Intervall intervallDatum) {
+	@Override
+	public void aktualisiereDatum(final SystemObject objekt,
+			final Intervall intervallDatum) {
 		this.versucheBerechnung(objekt, intervallDatum);
 	}
 

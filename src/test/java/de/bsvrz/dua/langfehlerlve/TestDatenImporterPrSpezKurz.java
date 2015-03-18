@@ -39,10 +39,11 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
  * Liest die Testdaten ein.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
+ *
+ * @version $Id: TestDatenImporterPrSpezKurz.java 53825 2015-03-18 09:36:42Z
+ *          peuker $
  */
 class TestDatenImporterPrSpezKurz {
 
@@ -56,15 +57,15 @@ class TestDatenImporterPrSpezKurz {
 	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
 	 */
 	private static final Attribut[] ATTRIBUTE = new Attribut[] {
-			new Attribut("QKfz", true), new Attribut("QPkw", true),
-			new Attribut("QLkw", true), new Attribut("VKfz", false),
-			new Attribut("VPkw", false), new Attribut("VLkw", false),
-			new Attribut("VgKfz", false), new Attribut("B", false),
-			new Attribut("BMax", false), new Attribut("SKfz", false),
-			new Attribut("ALkw", false), new Attribut("KKfz", false),
-			new Attribut("KLkw", false), new Attribut("KPkw", false),
-			new Attribut("VDelta", false), new Attribut("KB", false),
-			new Attribut("QB", false), };
+		new Attribut("QKfz", true), new Attribut("QPkw", true),
+		new Attribut("QLkw", true), new Attribut("VKfz", false),
+		new Attribut("VPkw", false), new Attribut("VLkw", false),
+		new Attribut("VgKfz", false), new Attribut("B", false),
+		new Attribut("BMax", false), new Attribut("SKfz", false),
+		new Attribut("ALkw", false), new Attribut("KKfz", false),
+		new Attribut("KLkw", false), new Attribut("KPkw", false),
+		new Attribut("VDelta", false), new Attribut("KB", false),
+		new Attribut("QB", false), };
 
 	/**
 	 * Daten fuer Knotenpunkte.
@@ -78,14 +79,14 @@ class TestDatenImporterPrSpezKurz {
 
 	/**
 	 * Liest die Tabelle ein.
-	 * 
+	 *
 	 * @param csvDateiName
 	 *            Name der CSV-Datei (mit oder ohne Suffix)
 	 * @throws Exception
 	 *             wenn die Datei nicht geoeffnet werden kann
 	 */
-	void init(String csvDateiName) throws Exception {
-		CSVImporter importer = new CSVImporter(csvDateiName);
+	void init(final String csvDateiName) throws Exception {
+		final CSVImporter importer = new CSVImporter(csvDateiName);
 		importer.getNaechsteZeile();
 		knotenpunkteTab = new MSGDaten(importer.getNaechsteZeile());
 		for (int i = 0; i < 5; i++) {
@@ -124,7 +125,7 @@ class TestDatenImporterPrSpezKurz {
 
 	/**
 	 * Erfragt die Daten fuer Knotenpunkte.
-	 * 
+	 *
 	 * @return Daten fuer Knotenpunkte.
 	 */
 	MSGDaten getKnotenpunkteTab() {
@@ -133,7 +134,7 @@ class TestDatenImporterPrSpezKurz {
 
 	/**
 	 * Erfragt die Daten fuer freie Strecke.
-	 * 
+	 *
 	 * @return Daten fuer freie Strecke.
 	 */
 	MSGDaten getFreieStreckeTab() {
@@ -143,7 +144,7 @@ class TestDatenImporterPrSpezKurz {
 	/**
 	 * Uebersetzt in DAV-Daten der Attributgruppe
 	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param wert
@@ -151,12 +152,12 @@ class TestDatenImporterPrSpezKurz {
 	 * @return DAV-Datum der Attributgruppe
 	 *         <code>atg.verkehrsDatenKurzZeitMq</code>
 	 */
-	static Data getDatensatz(ClientDavInterface dav, long wert) {
-		Data data = dav.createData(dav.getDataModel().getAttributeGroup(
+	static Data getDatensatz(final ClientDavInterface dav, final long wert) {
+		final Data data = dav.createData(dav.getDataModel().getAttributeGroup(
 				DUAKonstanten.ATG_KURZZEIT_MQ));
 
-		for (Attribut attr : ATTRIBUTE) {
-			MesswertUnskaliert mw = new MesswertUnskaliert(attr.getName());
+		for (final Attribut attr : TestDatenImporterPrSpezKurz.ATTRIBUTE) {
+			final MesswertUnskaliert mw = new MesswertUnskaliert(attr.getName());
 
 			if (attr.istQAttribut) {
 				mw.setWertUnskaliert(wert);
@@ -172,10 +173,11 @@ class TestDatenImporterPrSpezKurz {
 
 	/**
 	 * Speichert alle Daten einer Messstellengruppe.
-	 * 
+	 *
 	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
-	 * @version $Id$
+	 *
+	 * @version $Id: TestDatenImporterPrSpezKurz.java 53825 2015-03-18 09:36:42Z
+	 *          peuker $
 	 */
 	final class MSGDaten {
 
@@ -211,8 +213,9 @@ class TestDatenImporterPrSpezKurz {
 
 		/**
 		 * Standardkonstruktor.
-		 * 
-		 * @param qNamen die Namen der einzelnen Spalten
+		 *
+		 * @param qNamen
+		 *            die Namen der einzelnen Spalten
 		 */
 		protected MSGDaten(final String[] qNamen) {
 			this.spaltenMap = new HashMap<String, Integer>();
@@ -228,52 +231,56 @@ class TestDatenImporterPrSpezKurz {
 
 		/**
 		 * Erfragt einen Bilanzwert einer Messstelle.
-		 * 
-		 * @param ms eine Messstelle.
+		 *
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Bilanzwert einer Messstelle.
 		 */
 		protected int getAusgabeBilanz(final String ms) {
 			return this.bilanzMs.get(ms);
 		}
-		
+
 		/**
 		 * Erfragt einen Intervallwert eines MQ an einer Messstelle.
-		 * 
-		 * @param ms eine Messstelle.
+		 *
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Intervallwert einer MQ an einer Messstelle.
 		 */
 		protected int getAusgabeIntervallMq(final String ms) {
 			return this.intervallMq.get(ms);
 		}
-		
+
 		/**
 		 * Erfragt einen Intervallwert eines MQ an einer Messstelle.
-		 * 
-		 * @param ms eine Messstelle.
+		 *
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Intervallwert einer MQ an einer Messstelle.
 		 */
 		protected int getAusgabeIntervallMs(final String ms) {
 			return this.intervallMs.get(ms);
 		}
-		
+
 		/**
 		 * Erfragt einen Abweichungswert einer Messstelle.
-		 * 
-		 * @param ms eine Messstelle.
+		 *
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Abweichungswert einer Messstelle.
 		 */
 		protected int getAusgabeAbweichungMs(final String ms) {
 			return this.abweichung.get(ms);
 		}
-		
+
 		/**
 		 * Fuegt diesem Element eine Zeile hinzu (Eingabedatum).
-		 * 
+		 *
 		 * @param zeile
 		 *            eine neue Zeile.
 		 */
 		protected void addEingabe(final String[] zeile) {
-			Integer[] intZeile = new Integer[zeile.length];
+			final Integer[] intZeile = new Integer[zeile.length];
 
 			for (int i = 0; i < zeile.length; i++) {
 				if (zeile[i].equals("fehlerhaft")) {
@@ -281,11 +288,11 @@ class TestDatenImporterPrSpezKurz {
 				} else {
 					intZeile[i] = Integer.parseInt(zeile[i]);
 				}
-				if (DEBUG) {
+				if (TestDatenImporterPrSpezKurz.DEBUG) {
 					System.out.print(intZeile[i] + ", ");
 				}
 			}
-			if (DEBUG) {
+			if (TestDatenImporterPrSpezKurz.DEBUG) {
 				System.out.println();
 			}
 
@@ -294,7 +301,7 @@ class TestDatenImporterPrSpezKurz {
 
 		/**
 		 * Fuegt diesem Element eine Zeile hinzu (Erwartetes Ergebnis).
-		 * 
+		 *
 		 * @param mqId
 		 *            die ID des MQ bzw. der Messstelle
 		 * @param zeile
@@ -302,7 +309,7 @@ class TestDatenImporterPrSpezKurz {
 		 */
 		protected void addAusgabe(final String mqId, final String[] zeile) {
 
-			if (DEBUG) {
+			if (TestDatenImporterPrSpezKurz.DEBUG) {
 				System.out.print(mqId + ": ");
 			}
 
@@ -313,7 +320,7 @@ class TestDatenImporterPrSpezKurz {
 				this.intervallMq.put(mqId,
 						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
-			if (DEBUG) {
+			if (TestDatenImporterPrSpezKurz.DEBUG) {
 				System.out.print("IMQ=" + this.intervallMq.get(mqId));
 			}
 
@@ -324,7 +331,7 @@ class TestDatenImporterPrSpezKurz {
 				this.intervallMs.put(mqId,
 						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
-			if (DEBUG) {
+			if (TestDatenImporterPrSpezKurz.DEBUG) {
 				System.out.print(", IMS=" + this.intervallMs.get(mqId));
 			}
 
@@ -335,7 +342,7 @@ class TestDatenImporterPrSpezKurz {
 				this.bilanzMs.put(mqId,
 						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
-			if (DEBUG) {
+			if (TestDatenImporterPrSpezKurz.DEBUG) {
 				System.out.print(", BIL=" + this.bilanzMs.get(mqId));
 			}
 
@@ -346,14 +353,14 @@ class TestDatenImporterPrSpezKurz {
 				this.abweichung.put(mqId,
 						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
-			if (DEBUG) {
+			if (TestDatenImporterPrSpezKurz.DEBUG) {
 				System.out.println(", ABW=" + this.abweichung.get(mqId));
 			}
 		}
 
 		/**
 		 * Erfragt die Anzahl der Zeilen.
-		 * 
+		 *
 		 * @return die Anzahl der Zeilen.
 		 */
 		int getAnzahlZeilen() {
@@ -362,12 +369,14 @@ class TestDatenImporterPrSpezKurz {
 
 		/**
 		 * Erfragt den Wert eines Querschnittes in einer bestimmten Zeile.
-		 * 
-		 * @param zeile die Zeile.
-		 * @param qName der Name des Querschnitts (Name in der Tabelle)
+		 *
+		 * @param zeile
+		 *            die Zeile.
+		 * @param qName
+		 *            der Name des Querschnitts (Name in der Tabelle)
 		 * @return den Wert eines Querschnittes in einer bestimmten Zeile.
 		 */
-		long get(int zeile, String qName) {
+		long get(final int zeile, final String qName) {
 			return this.zeilenMap.get(zeile)[this.spaltenMap.get(qName)];
 		}
 
@@ -375,18 +384,19 @@ class TestDatenImporterPrSpezKurz {
 
 	/**
 	 * Information zu einem Attribut innerhalb der Attributgruppe
-	 * <code>atg.verkehrsDatenKurzZeitMq</code>. 
-	 * 
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
+	 *
 	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
-	 * @version $Id$
+	 *
+	 * @version $Id: TestDatenImporterPrSpezKurz.java 53825 2015-03-18 09:36:42Z
+	 *          peuker $
 	 */
 	private static final class Attribut {
 
 		/**
 		 * Der Name des Attributs.
 		 */
-		private String name;
+		private final String name;
 
 		/**
 		 * Ob es sich um ein Q...-Attribut handelt.
@@ -395,20 +405,20 @@ class TestDatenImporterPrSpezKurz {
 
 		/**
 		 * Standardkonstruktor.
-		 * 
+		 *
 		 * @param name
 		 *            der Name des Attributs
 		 * @param istQAttribut
 		 *            ob es sich um ein Q...-Attribut handelt
 		 */
-		Attribut(String name, boolean istQAttribut) {
+		Attribut(final String name, final boolean istQAttribut) {
 			this.name = name;
 			this.istQAttribut = istQAttribut;
 		}
 
 		/**
 		 * Erfragt den Namen des Attributs.
-		 * 
+		 *
 		 * @return der Name des Attributs
 		 */
 		public String getName() {
@@ -417,7 +427,7 @@ class TestDatenImporterPrSpezKurz {
 
 		/**
 		 * Erfragt, ob es sich um ein Q...-Attribut handelt.
-		 * 
+		 *
 		 * @return ob es sich um ein Q...-Attribut handelt
 		 */
 		public boolean isQAttribut() {

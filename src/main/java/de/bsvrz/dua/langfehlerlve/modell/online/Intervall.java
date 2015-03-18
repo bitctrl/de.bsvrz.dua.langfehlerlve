@@ -35,9 +35,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Zeitintervall. Zwei Intervalle sind dann gleich, wenn sie den gleichen Anfang
  * und das gleiche Ende besitzen (unabhaengig von den im Intervall gespeicherten
  * Daten)
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class Intervall {
@@ -59,7 +59,7 @@ public class Intervall {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param start
 	 *            Intervallbegin (absolute Zeit in ms)
 	 * @param ende
@@ -67,14 +67,14 @@ public class Intervall {
 	 * @param datum
 	 *            das Datum, das zu diesem Intervall gehoert
 	 */
-	public Intervall(final long start, final long ende, IDELzFhDatum datum) {
+	public Intervall(final long start, final long ende, final IDELzFhDatum datum) {
 		if (ende < start) {
-			final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(
+					DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 			throw new RuntimeException("Intervallende (" + //$NON-NLS-1$
 					dateFormat.format(new Date(ende))
 					+ ") liegt vor Intervallbegin (" + //$NON-NLS-1$
-					dateFormat.format(new Date(start))
-					+ ")"); //$NON-NLS-1$
+					dateFormat.format(new Date(start)) + ")"); //$NON-NLS-1$
 		}
 		this.start = start;
 		this.ende = ende;
@@ -88,7 +88,7 @@ public class Intervall {
 
 	/**
 	 * Erfragt Intervallbegin (absolute Zeit in ms).
-	 * 
+	 *
 	 * @return Intervallbegin (absolute Zeit in ms)
 	 */
 	public final long getStart() {
@@ -97,7 +97,7 @@ public class Intervall {
 
 	/**
 	 * Erfragt Intervallende (absolute Zeit in ms).
-	 * 
+	 *
 	 * @return Intervallende (absolute Zeit in ms)
 	 */
 	public final long getEnde() {
@@ -106,7 +106,7 @@ public class Intervall {
 
 	/**
 	 * Erfragt das Datum, das zu diesem Intervall gehoert.
-	 * 
+	 *
 	 * @return das Datum, das zu diesem Intervall gehoert
 	 */
 	public final IDELzFhDatum getDatum() {
@@ -115,25 +115,25 @@ public class Intervall {
 
 	/**
 	 * Erfragt, ob der uebergebene Wert im Intervall [begin, ende) liegt.
-	 * 
+	 *
 	 * @param wert
 	 *            ein Wert
 	 * @return ob der uebergebene Wert im Intervall [begin, ende) liegt
 	 */
 	public final boolean isInIntervall(final long wert) {
-		return this.start <= wert && wert < this.ende;
+		return (this.start <= wert) && (wert < this.ende);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		boolean gleich = false;
 
-		if (obj != null && obj instanceof Intervall) {
-			Intervall that = (Intervall) obj;
-			gleich = this.start == that.start && this.ende == that.ende;
+		if ((obj != null) && (obj instanceof Intervall)) {
+			final Intervall that = (Intervall) obj;
+			gleich = (this.start == that.start) && (this.ende == that.ende);
 		}
 
 		return gleich;
@@ -144,14 +144,13 @@ public class Intervall {
 	 */
 	@Override
 	public String toString() {
-		String s = "Datum:\n" + this.datum + "\n";
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		final String s = "Datum:\n" + this.datum + "\n";
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(
+				DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 
 		return "Intervallbegin: " + //$NON-NLS-1$
-				dateFormat.format(new Date(start))
-				+ ", Intervallende: " + //$NON-NLS-1$
-				dateFormat.format(new Date(ende))
-				+ " --> " + s; //$NON-NLS-1$
+		dateFormat.format(new Date(start)) + ", Intervallende: " + //$NON-NLS-1$
+		dateFormat.format(new Date(ende)) + " --> " + s; //$NON-NLS-1$
 	}
 
 }

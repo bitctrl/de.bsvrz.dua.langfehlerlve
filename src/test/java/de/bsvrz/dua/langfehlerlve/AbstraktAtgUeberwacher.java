@@ -40,9 +40,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Ueberprueft den ersten echten (Nutz-)Wert einer Attributgruppe.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
@@ -59,21 +59,21 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 
 	/**
 	 * Erfragt die PID der zu ueberpruefenden Atg.
-	 * 
+	 *
 	 * @return die PID der zu ueberpruefenden Atg.
 	 */
 	abstract String getAtgPid();
 
 	/**
 	 * Erfragt die PID des zu ueberpruefenden Asp.
-	 * 
+	 *
 	 * @return die PID des zu ueberpruefenden Asp.
 	 */
 	abstract String getAspPid();
 
 	/**
 	 * Initialisierungsmethode.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param objekt
@@ -82,7 +82,8 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	 *            der Wert mit dem der erste echte Nutzwert gegengeprueft werden
 	 *            soll
 	 */
-	void init(ClientDavInterface dav, SystemObject objekt, int wert1) {
+	void init(final ClientDavInterface dav, final SystemObject objekt,
+			final int wert1) {
 		this.wert = wert1;
 		dav.subscribeReceiver(this, objekt, new DataDescription(dav
 				.getDataModel().getAttributeGroup(this.getAtgPid()), dav
@@ -96,12 +97,14 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	 */
 	void ueberpruefe() {
 		if (data != null) {
-			for (FahrzeugArt art : FahrzeugArt.getInstanzen()) {
-				Assert.assertEquals("\n---\n" + this.getClass().getSimpleName()
-						+ ":\nFehler in " + data.getObject() + "\n"
-						+ art.toString() + "\n", wert, data.getData()
-						.getUnscaledValue(art.getAttributName()).isState() ? -3
-						: data.getData().getScaledValue(art.getAttributName())
+			for (final FahrzeugArt art : FahrzeugArt.getInstanzen()) {
+				Assert.assertEquals(
+						"\n---\n" + this.getClass().getSimpleName()
+								+ ":\nFehler in " + data.getObject() + "\n"
+								+ art.toString() + "\n", wert, data.getData()
+								.getUnscaledValue(art.getAttributName())
+								.isState() ? -3 : data.getData()
+								.getScaledValue(art.getAttributName())
 								.longValue());
 			}
 		} else {
@@ -113,11 +116,12 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void update(ResultData[] results) {
+	@Override
+	public void update(final ResultData[] results) {
 		if (results != null) {
 			if (this.data == null) {
-				for (ResultData r : results) {
-					if (r != null && r.getData() != null) {
+				for (final ResultData r : results) {
+					if ((r != null) && (r.getData() != null)) {
 						this.data = r;
 						break;
 					}

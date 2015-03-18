@@ -32,23 +32,23 @@ import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 /**
  * Schnittstelle zu den MQ-, MS- bzw. sonstigen Daten die fuer die SWE 4.DELzFh
  * DE Langzeit-Fehlererkennung benoetigt werden
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public interface IDELzFhDatum {
 
 	/**
 	 * Erfragt das Systemobjekt dieses Datums.
-	 * 
+	 *
 	 * @return das Systemobjekt dieses Datums.
 	 */
 	SystemObject getObjekt();
 
 	/**
 	 * Erfragt, ob dieses Datum auf <code>keine Daten</code> steht.
-	 * 
+	 *
 	 * @return ob dieses Datum auf <code>keine Daten</code> steht
 	 */
 	boolean isKeineDaten();
@@ -56,10 +56,11 @@ public interface IDELzFhDatum {
 	/**
 	 * Indiziert, dass der ueber diese Schnittstelle erfragbare Wert fuer die
 	 * uebergebene Fahrzeugart <b>nicht</b> auf einem der folgenden Zustaende
-	 * steht:<br> - <code>nicht ermittelbar</code>,<br> -
-	 * <code>fehlerhaft</code>,<br> -
-	 * <code>nicht ermittelbar oder fehlerhaft</code>.
-	 * 
+	 * steht:<br>
+	 * - <code>nicht ermittelbar</code>,<br>
+	 * - <code>fehlerhaft</code>,<br>
+	 * - <code>nicht ermittelbar oder fehlerhaft</code>.
+	 *
 	 * @param fahrzeugArt
 	 *            eine Fahrzeugart
 	 * @return ob der ueber diese Schnittstelle erfragbare Wert fuer die
@@ -69,7 +70,7 @@ public interface IDELzFhDatum {
 
 	/**
 	 * Erfragt einen Q-Wert fuer eine bestimmte Fahrzeugart.
-	 * 
+	 *
 	 * @param fahrzeugArt
 	 *            eine Fahrzeugart
 	 * @return der Wert fuer die uebergebene Fahrzeugart

@@ -31,9 +31,9 @@ import java.util.Set;
 
 /**
  * Alle Fahrzeugarten die innerhalb der SWE 4.DELzFh benoetigt werden.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class FahrzeugArt {
@@ -65,28 +65,28 @@ public final class FahrzeugArt {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param attributName
 	 *            der Name des Attributs Q... dieser Fahrzeugart in den
 	 *            Attributgruppen, mit denen die SWE DELzFh arbeitet
 	 */
-	private FahrzeugArt(String attributName) {
+	private FahrzeugArt(final String attributName) {
 		this.attributName = attributName;
-		instanzen.add(this);
+		FahrzeugArt.instanzen.add(this);
 	}
 
 	/**
 	 * Erfragt alle statische Instanzen dieser Klasse.
-	 * 
+	 *
 	 * @return alle statische Instanzen dieser Klasse
 	 */
 	public static Set<FahrzeugArt> getInstanzen() {
-		return instanzen;
+		return FahrzeugArt.instanzen;
 	}
 
 	/**
 	 * Erfragt den Namen des Attributs Q... dieser Fahrzeugart
-	 * 
+	 *
 	 * @return den Namen des Attributs Q... dieser Fahrzeugart
 	 */
 	public String getAttributName() {

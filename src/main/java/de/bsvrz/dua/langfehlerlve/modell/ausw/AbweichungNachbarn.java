@@ -37,16 +37,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * Detektorfehler fuer eine Messstelle vorgesehen sind (Afo DUA-BW-C1C2-11 -
  * Vergleich mit allen anderen Messstellen). Diese Daten werden hier auch
  * publiziert
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class AbweichungNachbarn extends AbstraktAbweichung {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param messStelle
@@ -65,31 +65,36 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected AbweichungNachbarn(ClientDavInterface dav,
-			DELzFhMessStelle messStelle,
-			DELzFhMessStellenGruppe messStellenGruppe,
-			DELzFhMessStelle[] restMessStellen,
-			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
-			throws Exception {
+	protected AbweichungNachbarn(final ClientDavInterface dav,
+			final DELzFhMessStelle messStelle,
+			final DELzFhMessStellenGruppe messStellenGruppe,
+			final DELzFhMessStelle[] restMessStellen,
+			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit)
+					throws Exception {
 		super(dav, messStelle, messStellenGruppe, restMessStellen,
 				messQuerschnitt, langZeit);
 
-		for (DELzFhMessStelle rms : restMessStellen) {
-			this.restMessStellen.add(rms.getMessStelle().getPruefling().getSystemObject());
+		for (final DELzFhMessStelle rms : restMessStellen) {
+			this.restMessStellen.add(rms.getMessStelle().getPruefling()
+					.getSystemObject());
 		}
 		this.initPuffer();
 
 		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
 				langZeit ? new DataDescription(dav.getDataModel()
-						.getAttributeGroup(ATG_PID), dav.getDataModel()
-						.getAspect(this.getLzAspPid())) : new DataDescription(
-						dav.getDataModel().getAttributeGroup(ATG_PID), dav
-								.getDataModel().getAspect(this.getKzAspPid())),
-				SenderRole.source());
+						.getAttributeGroup(AbstraktAbweichung.ATG_PID), dav
+						.getDataModel().getAspect(this.getLzAspPid()))
+						: new DataDescription(dav.getDataModel()
+								.getAttributeGroup(AbstraktAbweichung.ATG_PID),
+								dav.getDataModel()
+										.getAspect(this.getKzAspPid())),
+								SenderRole.source());
 
 		messQuerschnitt.addListener(this);
-		for (DELzFhMessStelle rms : restMessStellen) {
-			this.messStellenGruppe.getMq(rms.getMessStelle().getPruefling().getSystemObject()).addListener(this);
+		for (final DELzFhMessStelle rms : restMessStellen) {
+			this.messStellenGruppe.getMq(
+					rms.getMessStelle().getPruefling().getSystemObject())
+					.addListener(this);
 		}
 	}
 
@@ -97,7 +102,8 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
+	protected void aktualisiereMsgParameter(
+			final IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungMessStellenGruppe();
 		this.vergleichsIntervall = DUAUtensilien
 				.getVergleichsIntervallInText(parameter

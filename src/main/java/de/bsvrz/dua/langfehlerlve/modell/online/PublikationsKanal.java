@@ -36,12 +36,14 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Ausgabekanal fuer die Daten eines Systemobjektes und einer Datenbeschreibung.
  * Sorgt dafuer, dass <code>keine Daten</code> nicht unmittelbar zweimal
  * aufeinander folgt
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class PublikationsKanal {
+
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * statische Datenverteiler-Verbindung.
@@ -55,20 +57,20 @@ public class PublikationsKanal {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 */
-	public PublikationsKanal(ClientDavInterface dav) {
-		if (sDav == null) {
-			sDav = dav;
+	public PublikationsKanal(final ClientDavInterface dav) {
+		if (PublikationsKanal.sDav == null) {
+			PublikationsKanal.sDav = dav;
 		}
 	}
 
 	/**
 	 * Publiziert ein Datum. Sorgt dafuer, dass <code>keine Daten</code> nicht
 	 * unmittelbar zweimal aufeinander publiziert wird.
-	 * 
+	 *
 	 * @param resultat
 	 *            ein Datum
 	 */
@@ -76,19 +78,21 @@ public class PublikationsKanal {
 		try {
 			if (resultat.getData() != null) {
 				this.keineDaten = false;
-				sDav.sendData(resultat);
+				PublikationsKanal.sDav.sendData(resultat);
 			} else {
 				if (!this.keineDaten) {
 					this.keineDaten = true;
-					
-					sDav.sendData(resultat);
+
+					PublikationsKanal.sDav.sendData(resultat);
 				}
 			}
-		} catch (DataNotSubscribedException e) {
-			Debug.getLogger().error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
+		} catch (final DataNotSubscribedException e) {
+			LOGGER.error(
+					"Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
 			e.printStackTrace();
-		} catch (SendSubscriptionNotConfirmed e) {
-			Debug.getLogger().error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
+		} catch (final SendSubscriptionNotConfirmed e) {
+			LOGGER.error(
+					"Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

@@ -37,20 +37,20 @@ import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 
 /**
  * Einfaches Rechenwerk zum Verknuepfen von DELzFh-Werten mit der Schnittstelle
- * <code>IDELzFhDatum</code>. Es werden jeweils alle Attribute der
- * Schnittstelle einzeln miteinander verknuepft
- * 
+ * <code>IDELzFhDatum</code>. Es werden jeweils alle Attribute der Schnittstelle
+ * einzeln miteinander verknuepft
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public final class Rechenwerk {
-	
+
 	/**
 	 * Standardkonstruktor.
 	 */
 	private Rechenwerk() {
-		
+
 	}
 
 	/**
@@ -58,18 +58,22 @@ public final class Rechenwerk {
 	 */
 	private static final IDELzFhDatum KEINE_DATEN = new IDELzFhDatum() {
 
-		public double getQ(FahrzeugArt fahrzeugArt) {
+		@Override
+		public double getQ(final FahrzeugArt fahrzeugArt) {
 			return -1.0;
 		}
 
+		@Override
 		public boolean isKeineDaten() {
 			return true;
 		}
 
-		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
+		@Override
+		public boolean isAuswertbar(final FahrzeugArt fahrzeugArt) {
 			return false;
 		}
 
+		@Override
 		public SystemObject getObjekt() {
 			return null;
 		}
@@ -81,18 +85,22 @@ public final class Rechenwerk {
 	 */
 	private static final IDELzFhDatum NICHT_AUSWERTBAR = new IDELzFhDatum() {
 
-		public double getQ(FahrzeugArt fahrzeugArt) {
+		@Override
+		public double getQ(final FahrzeugArt fahrzeugArt) {
 			return -1.0;
 		}
 
+		@Override
 		public boolean isKeineDaten() {
 			return false;
 		}
 
-		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
+		@Override
+		public boolean isAuswertbar(final FahrzeugArt fahrzeugArt) {
 			return true;
 		}
 
+		@Override
 		public SystemObject getObjekt() {
 			return null;
 		}
@@ -102,7 +110,7 @@ public final class Rechenwerk {
 	/**
 	 * Berechnet den Durchschnitt ueber allen Einzelattributen innerhalb der
 	 * uebergebenen Elemente.
-	 * 
+	 *
 	 * @param elemente
 	 *            alle Elemente, ueber die der Durchschnitt ermittelt werden
 	 *            soll
@@ -110,14 +118,14 @@ public final class Rechenwerk {
 	 *         uebergebenen Elemente
 	 */
 	public static IDELzFhDatum durchschnitt(
-			Collection<IDELzFhDatum> elemente) {
+			final Collection<IDELzFhDatum> elemente) {
 		if (elemente.isEmpty()) {
-			return NICHT_AUSWERTBAR;
+			return Rechenwerk.NICHT_AUSWERTBAR;
 		}
 
-		for (IDELzFhDatum element : elemente) {
+		for (final IDELzFhDatum element : elemente) {
 			if (element.isKeineDaten()) {
-				return KEINE_DATEN;
+				return Rechenwerk.KEINE_DATEN;
 			}
 		}
 
@@ -125,11 +133,12 @@ public final class Rechenwerk {
 			return elemente.iterator().next();
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis(elemente.toArray(new IDELzFhDatum[0]));
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final RechenErgebnis ergebnis = new RechenErgebnis(
+				elemente.toArray(new IDELzFhDatum[0]));
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			double zaehler = 0.0;
 			double summe = 0.0;
-			for (IDELzFhDatum element : elemente) {
+			for (final IDELzFhDatum element : elemente) {
 				if (element.isAuswertbar(fahrzeugArt)) {
 					zaehler++;
 					summe += element.getQ(fahrzeugArt);
@@ -150,21 +159,21 @@ public final class Rechenwerk {
 
 	/**
 	 * Summiert die Elemente in allen Attributen.
-	 * 
+	 *
 	 * @param elemente
 	 *            alle Elemente, ueber die der Durchschnitt ermittelt werden
 	 *            soll
 	 * @return die Summe ueber allen Einzelattributen innerhalb der uebergebenen
 	 *         Elemente
 	 */
-	public static IDELzFhDatum addiere(Collection<IDELzFhDatum> elemente) {
-		if (elemente == null || elemente.isEmpty()) {
-			return NICHT_AUSWERTBAR;
+	public static IDELzFhDatum addiere(final Collection<IDELzFhDatum> elemente) {
+		if ((elemente == null) || elemente.isEmpty()) {
+			return Rechenwerk.NICHT_AUSWERTBAR;
 		}
 
-		for (IDELzFhDatum element : elemente) {
+		for (final IDELzFhDatum element : elemente) {
 			if (element.isKeineDaten()) {
-				return KEINE_DATEN;
+				return Rechenwerk.KEINE_DATEN;
 			}
 		}
 
@@ -172,11 +181,12 @@ public final class Rechenwerk {
 			return elemente.iterator().next();
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis(elemente.toArray(new IDELzFhDatum[0]));
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final RechenErgebnis ergebnis = new RechenErgebnis(
+				elemente.toArray(new IDELzFhDatum[0]));
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			double summe = 0.0;
 			boolean auswertbar = true;
-			for (IDELzFhDatum element : elemente) {
+			for (final IDELzFhDatum element : elemente) {
 				if (element.isAuswertbar(fahrzeugArt)) {
 					summe += element.getQ(fahrzeugArt);
 				} else {
@@ -195,22 +205,22 @@ public final class Rechenwerk {
 
 	/**
 	 * Summiert die Argumente in allen Attributen.
-	 * 
+	 *
 	 * @param summand1
 	 *            Summand Nr.1
 	 * @param summand2
 	 *            Summand Nr.1
 	 * @return Summe von Summand Nr.1 und Summand Nr.2
 	 */
-	public static IDELzFhDatum addiere(IDELzFhDatum summand1,
-			IDELzFhDatum summand2) {
-		if (summand1 == null || summand2 == null || summand1.isKeineDaten()
+	public static IDELzFhDatum addiere(final IDELzFhDatum summand1,
+			final IDELzFhDatum summand2) {
+		if ((summand1 == null) || (summand2 == null) || summand1.isKeineDaten()
 				|| summand2.isKeineDaten()) {
-			return KEINE_DATEN;
+			return Rechenwerk.KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis(summand1, summand2);
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final RechenErgebnis ergebnis = new RechenErgebnis(summand1, summand2);
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (summand1.isAuswertbar(fahrzeugArt)
 					&& summand2.isAuswertbar(fahrzeugArt)) {
 				ergebnis.setQ(fahrzeugArt, summand1.getQ(fahrzeugArt)
@@ -224,21 +234,22 @@ public final class Rechenwerk {
 
 	/**
 	 * Subtrahiert die Argumente in allen Attributen.
-	 * 
+	 *
 	 * @param minuend
 	 *            der Minuend
 	 * @param subtrahend
 	 *            der Subtrahend
 	 * @return die Differenz von Minuend und Subtrahend
 	 */
-	public static IDELzFhDatum subtrahiere(IDELzFhDatum minuend,
-			IDELzFhDatum subtrahend) {
-		if (minuend == null || subtrahend == null || minuend.isKeineDaten() || subtrahend.isKeineDaten()) {
-			return KEINE_DATEN;
+	public static IDELzFhDatum subtrahiere(final IDELzFhDatum minuend,
+			final IDELzFhDatum subtrahend) {
+		if ((minuend == null) || (subtrahend == null) || minuend.isKeineDaten()
+				|| subtrahend.isKeineDaten()) {
+			return Rechenwerk.KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis(minuend, subtrahend);
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final RechenErgebnis ergebnis = new RechenErgebnis(minuend, subtrahend);
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (minuend.isAuswertbar(fahrzeugArt)
 					&& subtrahend.isAuswertbar(fahrzeugArt)) {
 				ergebnis.setQ(fahrzeugArt, minuend.getQ(fahrzeugArt)
@@ -252,21 +263,21 @@ public final class Rechenwerk {
 
 	/**
 	 * Subtrahiert die Argumente in allen Attributen.
-	 * 
+	 *
 	 * @param minuend
 	 *            der Minuend
 	 * @param festerSubtrahend
 	 *            der Subtrahend
 	 * @return die Differenz von Minuend und Subtrahend
 	 */
-	public static IDELzFhDatum subtrahiere(IDELzFhDatum minuend,
-			double festerSubtrahend) {
+	public static IDELzFhDatum subtrahiere(final IDELzFhDatum minuend,
+			final double festerSubtrahend) {
 		if (minuend.isKeineDaten()) {
-			return KEINE_DATEN;
+			return Rechenwerk.KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis(minuend);
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final RechenErgebnis ergebnis = new RechenErgebnis(minuend);
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (minuend.isAuswertbar(fahrzeugArt)) {
 				ergebnis.setQ(fahrzeugArt, minuend.getQ(fahrzeugArt)
 						- festerSubtrahend);
@@ -279,26 +290,26 @@ public final class Rechenwerk {
 
 	/**
 	 * Dividiert die beiden Argumente in allen Attributen.
-	 * 
+	 *
 	 * @param dividend
 	 *            der Dividend
 	 * @param divisor
 	 *            der Divisor
 	 * @return Dividend / Divisor
 	 */
-	public static IDELzFhDatum dividiere(IDELzFhDatum dividend,
-			IDELzFhDatum divisor) {
+	public static IDELzFhDatum dividiere(final IDELzFhDatum dividend,
+			final IDELzFhDatum divisor) {
 		if (dividend.isKeineDaten() || divisor.isKeineDaten()) {
-			return KEINE_DATEN;
+			return Rechenwerk.KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis(dividend, divisor);
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final RechenErgebnis ergebnis = new RechenErgebnis(dividend, divisor);
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (dividend.isAuswertbar(fahrzeugArt)
 					&& divisor.isAuswertbar(fahrzeugArt)
-					&& divisor.getQ(fahrzeugArt) != 0) {
-				ergebnis.setQ(fahrzeugArt, dividend.getQ(fahrzeugArt)
-						/ divisor.getQ(fahrzeugArt));
+					&& (divisor.getQ(fahrzeugArt) != 0)) {
+				ergebnis.setQ(fahrzeugArt,
+						dividend.getQ(fahrzeugArt) / divisor.getQ(fahrzeugArt));
 				ergebnis.setAuswertbar(fahrzeugArt, true);
 			}
 		}
@@ -309,21 +320,21 @@ public final class Rechenwerk {
 	/**
 	 * Multipliziert das erste Argumente in allen Attributen mit dem zweiten.
 	 * Argument
-	 * 
+	 *
 	 * @param faktor
 	 *            Faktor Nr.1
 	 * @param festerFaktor
 	 *            Faktor Nr.1
 	 * @return das Produkt
 	 */
-	public static IDELzFhDatum multipliziere(IDELzFhDatum faktor,
+	public static IDELzFhDatum multipliziere(final IDELzFhDatum faktor,
 			final double festerFaktor) {
 		if (faktor.isKeineDaten()) {
-			return KEINE_DATEN;
+			return Rechenwerk.KEINE_DATEN;
 		}
 
-		RechenErgebnis ergebnis = new RechenErgebnis(faktor);
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final RechenErgebnis ergebnis = new RechenErgebnis(faktor);
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (faktor.isAuswertbar(fahrzeugArt)) {
 				ergebnis.setQ(fahrzeugArt, faktor.getQ(fahrzeugArt)
 						* festerFaktor);
@@ -336,39 +347,41 @@ public final class Rechenwerk {
 
 	/**
 	 * Ein durch eine statische Methode dieser Klasse erzeugtes Rechenergebnis.
-	 * 
+	 *
 	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
+	 *
 	 */
 	private static final class RechenErgebnis implements IDELzFhDatum {
 
 		/**
-		 * das Systemobjekt, zu dem dieses Ergebnis gehoert,
-		 * so sich das eindeutig bestimmen laesst.
+		 * das Systemobjekt, zu dem dieses Ergebnis gehoert, so sich das
+		 * eindeutig bestimmen laesst.
 		 */
 		private SystemObject objekt = null;
-		
+
 		/**
 		 * alle hier gespeicherten Werte.
 		 */
-		private Map<FahrzeugArt, Double> werte = new HashMap<FahrzeugArt, Double>();
+		private final Map<FahrzeugArt, Double> werte = new HashMap<FahrzeugArt, Double>();
 
 		/**
 		 * ob (bzw. inwieweit) alle hier gespeicherten Werte auswertbar ist.
 		 */
-		private Map<FahrzeugArt, Boolean> auswertbar = new HashMap<FahrzeugArt, Boolean>();
+		private final Map<FahrzeugArt, Boolean> auswertbar = new HashMap<FahrzeugArt, Boolean>();
 
 		/**
 		 * Standardkonstruktor.
-		 * 
-		 * @param komponenten die einzelnen Bestandteile, aus denen das
-		 * Ergebnis zusammengesetzt sein wird.
+		 *
+		 * @param komponenten
+		 *            die einzelnen Bestandteile, aus denen das Ergebnis
+		 *            zusammengesetzt sein wird.
 		 */
-		private RechenErgebnis(IDELzFhDatum... komponenten) {
+		private RechenErgebnis(final IDELzFhDatum... komponenten) {
 			if (komponenten != null) {
-				Set<SystemObject> objekte = new HashSet<SystemObject>();
-				for (IDELzFhDatum komponente : komponenten) {
-					if (komponente != null && komponente.getObjekt() != null) {
+				final Set<SystemObject> objekte = new HashSet<SystemObject>();
+				for (final IDELzFhDatum komponente : komponenten) {
+					if ((komponente != null)
+							&& (komponente.getObjekt() != null)) {
 						objekte.add(komponente.getObjekt());
 					}
 				}
@@ -376,7 +389,7 @@ public final class Rechenwerk {
 					this.objekt = objekte.iterator().next();
 				}
 			}
-			for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+			for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 				this.auswertbar.put(fahrzeugArt, false);
 				this.werte.put(fahrzeugArt, -1.0);
 			}
@@ -385,57 +398,61 @@ public final class Rechenwerk {
 		/**
 		 * Setzt, ob der ueber diese Schnittstelle erfragbare Wert fuer die
 		 * uebergebene Fahrzeugart auswertbar ist.
-		 * 
+		 *
 		 * @param fahrzeugArt
 		 *            eine Fahrzeugart
 		 * @param auswertbar1
 		 *            ob (bzw. inwieweit) alle hier gespeicherten Werte
 		 *            auswertbar ist
 		 */
-		private void setAuswertbar(FahrzeugArt fahrzeugArt,
-				boolean auswertbar1) {
+		private void setAuswertbar(final FahrzeugArt fahrzeugArt,
+				final boolean auswertbar1) {
 			this.auswertbar.put(fahrzeugArt, auswertbar1);
 		}
 
 		/**
 		 * Setzt den Q-Wert einer Fahrzeugart.
-		 * 
+		 *
 		 * @param fahrzeugArt
 		 *            eine Fahrzeugart
 		 * @param wert
 		 *            der zu setzende Q-Wert
 		 */
-		private void setQ(FahrzeugArt fahrzeugArt, double wert) {
+		private void setQ(final FahrzeugArt fahrzeugArt, final double wert) {
 			this.werte.put(fahrzeugArt, wert);
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
-		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
+		@Override
+		public boolean isAuswertbar(final FahrzeugArt fahrzeugArt) {
 			return this.auswertbar.get(fahrzeugArt);
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
-		public double getQ(FahrzeugArt fahrzeugArt) {
+		@Override
+		public double getQ(final FahrzeugArt fahrzeugArt) {
 			return this.werte.get(fahrzeugArt);
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean isKeineDaten() {
 			return false;
 		}
 
 		/**
-		 * Erfragt das Systemobjekt, zu dem dieses Ergebnis gehoert,
-		 * so sich das eindeutig bestimmen laesst.
-		 * 
+		 * Erfragt das Systemobjekt, zu dem dieses Ergebnis gehoert, so sich das
+		 * eindeutig bestimmen laesst.
+		 *
 		 * @return das Systemobjekt, zu dem dieses Ergebnis gehoert
 		 */
+		@Override
 		public SystemObject getObjekt() {
 			return this.objekt;
 		}

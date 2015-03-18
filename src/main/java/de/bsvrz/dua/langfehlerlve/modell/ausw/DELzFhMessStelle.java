@@ -57,13 +57,13 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
  * auf Objekte dieses Typs benoetigt werden. Ggf. (bei Intervallende) werden die
  * hier aggregierten DELzFh-Werte an die Messstellengruppe zur Analyse
  * weitergereicht
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
-		IDELzFhDatenListener, ClientSenderInterface {
+IDELzFhDatenListener, ClientSenderInterface {
 
 	/**
 	 * diese Messstelle.
@@ -85,12 +85,12 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	/**
 	 * Aktuelle Daten aller mit der Messstelle assoziierten Messquerschnitte.
 	 */
-	private Map<SystemObject, Intervall> mqPuffer = new HashMap<SystemObject, Intervall>();
+	private final Map<SystemObject, Intervall> mqPuffer = new HashMap<SystemObject, Intervall>();
 
 	/**
 	 * Menge von Beobachtern der Online-Daten dieses Objektes.
 	 */
-	private Set<IDELzFhDatenListener> listenerMenge = new HashSet<IDELzFhDatenListener>();
+	private final Set<IDELzFhDatenListener> listenerMenge = new HashSet<IDELzFhDatenListener>();
 
 	/**
 	 * wenn dieser Wert auf <code>!= null</code> steht, bedeutet das, dass das
@@ -112,7 +112,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param msObjekt
@@ -125,9 +125,11 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 * @throws Exception
 	 *             wenn das Objekt nicht sinnvoll initialisiert werden konnte
 	 */
-	protected DELzFhMessStelle(ClientDavInterface dav, SystemObject msObjekt,
-			DELzFhMessStellenGruppe messStellenGruppe, final boolean langZeit)
-			throws Exception {
+	protected DELzFhMessStelle(final ClientDavInterface dav,
+			final SystemObject msObjekt,
+			final DELzFhMessStellenGruppe messStellenGruppe,
+			final boolean langZeit) throws Exception {
+
 		this.messStelle = MessStelle.getInstanz(msObjekt);
 
 		this.mqKanal = new PublikationsKanal(dav);
@@ -148,35 +150,36 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 					dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
 		}
 
-		dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb,
-				SenderRole.source());
-		dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb,
-				SenderRole.source());
-
 		super.init(dav, messStellenGruppe, langZeit);
 
 		if (this.messStelle != null) {
+
+			dav.subscribeSender(this, this.messStelle.getSystemObject(),
+					this.mqDb, SenderRole.source());
+			dav.subscribeSender(this, this.messStelle.getSystemObject(),
+					this.msDb, SenderRole.source());
+
 			if (this.messStelle.getPruefling() != null) {
 				messStellenGruppe.getMq(
 						this.messStelle.getPruefling().getSystemObject())
 						.addListener(this);
 
-				for (MessQuerschnittAllgemein abfahrt : this.messStelle
+				for (final MessQuerschnittAllgemein abfahrt : this.messStelle
 						.getAbfahrten()) {
 					messStellenGruppe.getMq(abfahrt.getSystemObject())
-							.addListener(this);
+					.addListener(this);
 				}
-				for (MessQuerschnittAllgemein zufahrt : this.messStelle
+				for (final MessQuerschnittAllgemein zufahrt : this.messStelle
 						.getZufahrten()) {
 					messStellenGruppe.getMq(zufahrt.getSystemObject())
-							.addListener(this);
+					.addListener(this);
 				}
 				this.initMQPuffer();
 			} else {
 				System.out.println(this.messStelle.getPruefling());
 				throw new DUAInitialisierungsException(
 						"Messstelle " + msObjekt + //$NON-NLS-1$
-								" besitzt keinen Pruefling (MQ)"); //$NON-NLS-1$				
+						" besitzt keinen Pruefling (MQ)"); //$NON-NLS-1$
 			}
 		} else {
 			throw new DUAInitialisierungsException("Messstelle " + msObjekt + //$NON-NLS-1$
@@ -186,7 +189,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 
 	/**
 	 * Erfragt das Strukturobjekt dieser Messstelle.
-	 * 
+	 *
 	 * @return das Strukturobjekt dieser Messstelle
 	 */
 	public final MessStelle getMessStelle() {
@@ -201,26 +204,28 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 			this.mqPuffer.put(this.messStelle.getPruefling().getSystemObject(),
 					null);
 
-			for (MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
+			for (final MessQuerschnittAllgemein abfahrt : this.messStelle
+					.getAbfahrten()) {
 				this.mqPuffer.put(abfahrt.getSystemObject(), null);
 			}
-			for (MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
+			for (final MessQuerschnittAllgemein zufahrt : this.messStelle
+					.getZufahrten()) {
 				this.mqPuffer.put(zufahrt.getSystemObject(), null);
-			}			
+			}
 		}
 	}
 
 	/**
 	 * Fuegt diesem Objekt einen neuen Listener hinzu und informiert diesen ggf.
 	 * ueber aktuelle Daten
-	 * 
+	 *
 	 * @param listener
 	 *            eine neuer Listener
 	 */
 	public final void addListener(final IDELzFhDatenListener listener) {
 		synchronized (this.listenerMenge) {
 			if (this.listenerMenge.add(listener)
-					&& this.fertigesIntervall != null) {
+					&& (this.fertigesIntervall != null)) {
 				listener.aktualisiereDatum(this.messStelle.getSystemObject(),
 						this.fertigesIntervall);
 			}
@@ -230,16 +235,18 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(final SystemObject object,
+			final DataDescription dataDescription, final byte state) {
 		// Quellenanmeldung
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 
@@ -247,21 +254,22 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 * Untersucht, ob eine Berechnung des Q-Wertes fuer Messstellen eingeleitet
 	 * werden kann (durch das empfangene Datum getriggert). Dies ist der Fall,
 	 * wenn ein Datum
-	 * 
+	 *
 	 * @param mqObjekt
 	 *            ein Systemobjekt des MQ, fuer den Daten empfangen wurden
 	 * @param neuesDatum
 	 *            ein MQ-Datum mit Nutzdaten
 	 */
 	private synchronized void versucheMessStellenBerechnung(
-			SystemObject mqObjekt, Intervall neuesDatum) {
+			final SystemObject mqObjekt, final Intervall neuesDatum) {
 		synchronized (this.mqPuffer) {
 			if (this.mqPuffer.size() > 0) {
 				if (this.mqPuffer.size() > 1) {
 					int schonEingetroffeneIntervalle = 0;
 
-					for (SystemObject mq : this.mqPuffer.keySet()) {
-						Intervall aktuellesIntervall = this.mqPuffer.get(mq);
+					for (final SystemObject mq : this.mqPuffer.keySet()) {
+						final Intervall aktuellesIntervall = this.mqPuffer
+								.get(mq);
 						if (aktuellesIntervall != null) {
 							if (neuesDatum.getStart() > aktuellesIntervall
 									.getStart()) {
@@ -272,23 +280,23 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 								if (neuesDatum.getStart() == aktuellesIntervall
 										.getStart()) {
 									schonEingetroffeneIntervalle++;
-//								} else {
-//									throw new RuntimeException(
-//											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
+									// } else {
+									// throw new RuntimeException(
+									//											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
 								}
 							}
 						}
 					}
 					this.mqPuffer.put(mqObjekt, neuesDatum);
 
-					if (this.mqPuffer.size() - 1 == schonEingetroffeneIntervalle) {
+					if ((this.mqPuffer.size() - 1) == schonEingetroffeneIntervalle) {
 						veroeffentlicheAktuellenMsWert();
 					}
 				} else {
 					this.mqPuffer.put(mqObjekt, neuesDatum);
 					veroeffentlicheAktuellenMsWert();
 				}
-			}			
+			}
 		}
 	}
 
@@ -298,13 +306,13 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 */
 	private void veroeffentlicheAktuellenMsWert() {
 		IDELzFhDatum pDatum = null;
-		Set<IDELzFhDatum> abfahrtsDaten = new HashSet<IDELzFhDatum>();
-		Set<IDELzFhDatum> zufahrtsDaten = new HashSet<IDELzFhDatum>();
+		final Set<IDELzFhDatum> abfahrtsDaten = new HashSet<IDELzFhDatum>();
+		final Set<IDELzFhDatum> zufahrtsDaten = new HashSet<IDELzFhDatum>();
 
 		Intervall intervall = null;
 
-		for (SystemObject mq : this.mqPuffer.keySet()) {
-			Intervall aktuellesIntervall = this.mqPuffer.get(mq);
+		for (final SystemObject mq : this.mqPuffer.keySet()) {
+			final Intervall aktuellesIntervall = this.mqPuffer.get(mq);
 			if (aktuellesIntervall != null) {
 				intervall = aktuellesIntervall;
 
@@ -315,7 +323,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 				}
 
 				if (!brk) {
-					for (MessQuerschnittAllgemein zufahrt : this.messStelle
+					for (final MessQuerschnittAllgemein zufahrt : this.messStelle
 							.getZufahrten()) {
 						if (zufahrt.getSystemObject().equals(mq)) {
 							zufahrtsDaten.add(aktuellesIntervall.getDatum());
@@ -326,7 +334,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 				}
 
 				if (!brk) {
-					for (MessQuerschnittAllgemein abfahrt : this.messStelle
+					for (final MessQuerschnittAllgemein abfahrt : this.messStelle
 							.getAbfahrten()) {
 						if (abfahrt.getSystemObject().equals(mq)) {
 							abfahrtsDaten.add(aktuellesIntervall.getDatum());
@@ -337,15 +345,16 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 			}
 		}
 
-		IDELzFhDatum ergebnis = Rechenwerk.subtrahiere(Rechenwerk.addiere(
-				pDatum, Rechenwerk.addiere(zufahrtsDaten)), Rechenwerk
-				.addiere(abfahrtsDaten));
+		final IDELzFhDatum ergebnis = Rechenwerk.subtrahiere(
+				Rechenwerk.addiere(pDatum, Rechenwerk.addiere(zufahrtsDaten)),
+				Rechenwerk.addiere(abfahrtsDaten));
 
-		this.fertigesIntervall = new Intervall(intervall.getStart(), intervall
-				.getEnde(), ergebnis);
+		this.fertigesIntervall = new Intervall(intervall.getStart(),
+				intervall.getEnde(), ergebnis);
 
-		Data nutzDaten = dDav.createData(this.msDb.getAttributeGroup());
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		final Data nutzDaten = AbstraktDELzFhObjekt.dDav.createData(this.msDb
+				.getAttributeGroup());
+		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (this.fertigesIntervall.getDatum().getQ(fahrzeugArt) < 0.0) {
 				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName()).set(
 						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
@@ -356,13 +365,13 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 			}
 		}
 
-		ResultData msIntervallVSResultat = new ResultData(this.messStelle
-				.getSystemObject(), this.msDb, this.fertigesIntervall
-				.getStart(), nutzDaten);
+		final ResultData msIntervallVSResultat = new ResultData(
+				this.messStelle.getSystemObject(), this.msDb,
+				this.fertigesIntervall.getStart(), nutzDaten);
 		this.msKanal.publiziere(msIntervallVSResultat);
 
 		synchronized (this.listenerMenge) {
-			for (IDELzFhDatenListener listener : this.listenerMenge) {
+			for (final IDELzFhDatenListener listener : this.listenerMenge) {
 				listener.aktualisiereDatum(this.messStelle.getSystemObject(),
 						this.fertigesIntervall);
 			}
@@ -377,16 +386,19 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereDatum(SystemObject mqObjekt,
-			Intervall intervallDatum) {
+	@Override
+	public void aktualisiereDatum(final SystemObject mqObjekt,
+			final Intervall intervallDatum) {
 		if (intervallDatum.getDatum().isKeineDaten()) {
-			ResultData msIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.msDb,
+			final ResultData msIntervallVSResultat = new ResultData(
+					this.messStelle.getSystemObject(), this.msDb,
 					intervallDatum.getStart(), null);
 			this.fertigesIntervall = intervallDatum;
 			synchronized (this.listenerMenge) {
-				for (IDELzFhDatenListener listener : this.listenerMenge) {
-					listener.aktualisiereDatum(this.messStelle
-							.getSystemObject(), this.fertigesIntervall);
+				for (final IDELzFhDatenListener listener : this.listenerMenge) {
+					listener.aktualisiereDatum(
+							this.messStelle.getSystemObject(),
+							this.fertigesIntervall);
 				}
 			}
 			this.msKanal.publiziere(msIntervallVSResultat);
@@ -397,24 +409,25 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		if (this.messStelle.getPruefling().getSystemObject().equals(mqObjekt)) {
 			Data nutzDaten = null;
 			if (!intervallDatum.getDatum().isKeineDaten()) {
-				nutzDaten = dDav.createData(this.mqDb.getAttributeGroup());
-				for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+				nutzDaten = AbstraktDELzFhObjekt.dDav.createData(this.mqDb
+						.getAttributeGroup());
+				for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 					if (intervallDatum.getDatum().getQ(fahrzeugArt) < 0.0) {
 						nutzDaten.getUnscaledValue(
 								fahrzeugArt.getAttributName()).set(
-								DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+										DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					} else {
 						nutzDaten.getUnscaledValue(
 								fahrzeugArt.getAttributName()).set(
-								Math.round(intervallDatum.getDatum().getQ(
-										fahrzeugArt)));
+										Math.round(intervallDatum.getDatum().getQ(
+												fahrzeugArt)));
 					}
 				}
 			}
 
-			ResultData mqIntervallVSResultat = new ResultData(this.messStelle
-					.getSystemObject(), this.mqDb, intervallDatum.getStart(),
-					nutzDaten);
+			final ResultData mqIntervallVSResultat = new ResultData(
+					this.messStelle.getSystemObject(), this.mqDb,
+					intervallDatum.getStart(), nutzDaten);
 			this.mqKanal.publiziere(mqIntervallVSResultat);
 		}
 	}
@@ -423,7 +436,8 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
+	protected void aktualisiereMsgParameter(
+			final IMsgDatenartParameter parameter) {
 		this.initMQPuffer();
 	}
 

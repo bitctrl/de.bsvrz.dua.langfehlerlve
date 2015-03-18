@@ -30,23 +30,25 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
 
 /**
  * Liest die Testdaten ein.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
+ *
+ * @version $Id: TestDatenImporterPrSpezLang.java 53825 2015-03-18 09:36:42Z
+ *          peuker $
  */
 final class TestDatenImporterPrSpezLang extends TestDatenImporterPrSpezKurz {
 
 	/**
 	 * Liest die Tabelle ein.
-	 * 
+	 *
 	 * @param csvDateiName
 	 *            Name der CSV-Datei (mit oder ohne Suffix)
 	 * @throws Exception
 	 *             wenn die Datei nicht geoeffnet werden kann
 	 */
-	void init(String csvDateiName) throws Exception {
-		CSVImporter importer = new CSVImporter(csvDateiName);
+	@Override
+	void init(final String csvDateiName) throws Exception {
+		final CSVImporter importer = new CSVImporter(csvDateiName);
 		importer.getNaechsteZeile();
 		knotenpunkteTab = new MSGDaten(importer.getNaechsteZeile());
 		for (int i = 0; i < 4; i++) {

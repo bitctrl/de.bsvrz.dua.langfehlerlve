@@ -26,14 +26,15 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
-
 /**
- * Ueberprueft den ersten echten (Nutz-)Wert von 
- * <code>atg.intervallVerkehrsStärke</code>, <code>asp.messQuerschnittLangZeit</code>.
- * 
+ * Ueberprueft den ersten echten (Nutz-)Wert von
+ * <code>atg.intervallVerkehrsStärke</code>,
+ * <code>asp.messQuerschnittLangZeit</code>.
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
+ *
+ * @version $Id: AtgIntervallUeberwacherMqLang.java 53825 2015-03-18 09:36:42Z
+ *          peuker $
  */
 class AtgIntervallUeberwacherMqLang extends AtgIntervallUeberwacherMqKurz {
 

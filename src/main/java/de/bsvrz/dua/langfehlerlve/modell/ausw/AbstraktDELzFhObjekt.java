@@ -35,13 +35,13 @@ import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
  * Grundgeruest einer Klasse, die immer die aktuellen Parameter einer
  * Messstellengruppe in Bezug auf ein bestimmtes Vergleichsintervall (Lang- oder
  * Kurzzeit) benoetigt.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstraktDELzFhObjekt implements
-		IAtgParameterMessStellenGruppeListener {
+IAtgParameterMessStellenGruppeListener {
 
 	/**
 	 * statische Datenverteiler-Verbindung.
@@ -61,7 +61,7 @@ public abstract class AbstraktDELzFhObjekt implements
 
 	/**
 	 * Initialisiert diese Klasse anstelle eines Konstruktors.
-	 * 
+	 *
 	 * @param dav
 	 *            Datenverteiler-Verbindung
 	 * @param messStellenGruppe1
@@ -73,8 +73,8 @@ public abstract class AbstraktDELzFhObjekt implements
 	protected final void init(final ClientDavInterface dav,
 			final DELzFhMessStellenGruppe messStellenGruppe1,
 			final boolean langZeit1) {
-		if (dDav == null) {
-			dDav = dav;
+		if (AbstraktDELzFhObjekt.dDav == null) {
+			AbstraktDELzFhObjekt.dDav = dav;
 		}
 		this.messStellenGruppe = messStellenGruppe1;
 		this.langZeit = langZeit1;
@@ -85,7 +85,7 @@ public abstract class AbstraktDELzFhObjekt implements
 	/**
 	 * Aktualisiert die Parameter der assoziierten Messstellengruppe fuer dieses
 	 * Objekt (und dieses Vergleichsintervall).
-	 * 
+	 *
 	 * @param parameter
 	 *            aktuelle Parameter fuer die Ueberwachung
 	 */
@@ -95,7 +95,7 @@ public abstract class AbstraktDELzFhObjekt implements
 	/**
 	 * Indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
 	 * kuemmert.
-	 * 
+	 *
 	 * @return ob sich dieses Objekt um das Langzeit-Vergleichsintervall
 	 *         kuemmert
 	 */
@@ -106,8 +106,10 @@ public abstract class AbstraktDELzFhObjekt implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereMsgParameter(IMsgDatenartParameter kzParameter,
-			IMsgDatenartParameter lzParameter) {
+	@Override
+	public void aktualisiereMsgParameter(
+			final IMsgDatenartParameter kzParameter,
+			final IMsgDatenartParameter lzParameter) {
 		if (this.isLangZeit()) {
 			this.aktualisiereMsgParameter(lzParameter);
 		} else {

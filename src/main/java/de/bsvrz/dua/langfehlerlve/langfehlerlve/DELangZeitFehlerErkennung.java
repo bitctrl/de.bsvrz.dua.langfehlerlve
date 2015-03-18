@@ -57,21 +57,23 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  * Überschreitung gewisser pro Messstellengruppe (topographisch sinnvolle
  * Zusammenfassung mehrerer Messstellen bzw. Messquerschnitte) definierter
  * Grenzwerte werden Betriebsmeldungen ausgegeben.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
+ *
+ * @version $Id: DELangZeitFehlerErkennung.java 53825 2015-03-18 09:36:42Z
+ *          peuker $
  */
 public class DELangZeitFehlerErkennung implements StandardApplication {
 
+	private static final Debug LOGGER = Debug.getLogger();
 	/**
 	 * die Argumente der Kommandozeile.
 	 */
-	private ArrayList<String> komArgumente = new ArrayList<String>();
+	private final ArrayList<String> komArgumente = new ArrayList<String>();
 
 	/**
 	 * Erfragt den Namen dieser Applikation.
-	 * 
+	 *
 	 * @return der Name dieser Applikation
 	 */
 	public static final String getName() {
@@ -81,28 +83,32 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void initialize(ClientDavInterface dav) throws Exception {
-		Collection<ConfigurationArea> kbFilter = DUAUtensilien
+	@Override
+	public void initialize(final ClientDavInterface dav) throws Exception {
+		final Collection<ConfigurationArea> kbFilter = DUAUtensilien
 				.getKonfigurationsBereicheAlsObjekte(dav, DUAUtensilien
 						.getArgument(
 								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 								this.komArgumente));
-		
-		MessageSender.getInstance().setApplicationLabel("DE-Langzeitfehlererkennung");
+
+		MessageSender.getInstance().setApplicationLabel(
+				"DE-Langzeitfehlererkennung");
 
 		DuaVerkehrsNetz.initialisiere(dav);
 
-		Collection<SystemObject> msgObjekte = DUAUtensilien.getBasisInstanzen(
-				dav.getDataModel().getType(
-						DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav, kbFilter);
+		final Collection<SystemObject> msgObjekte = DUAUtensilien
+				.getBasisInstanzen(
+						dav.getDataModel().getType(
+								DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav,
+						kbFilter);
 
 		String config = "Ueberwachte Messstellengruppen:\n";
-		for (SystemObject msgObjekt : msgObjekte) {
+		for (final SystemObject msgObjekt : msgObjekte) {
 			config += msgObjekt + "\n";
 		}
-		Debug.getLogger().config(config);
+		LOGGER.config(config);
 
-		for (SystemObject msgObjekt : msgObjekte) {
+		for (final SystemObject msgObjekt : msgObjekte) {
 			new DELzFhMessStellenGruppe(dav, msgObjekt,
 					DELzFhMessStellenGruppe.LANGZEIT_AUSWERTUNG);
 			new DELzFhMessStellenGruppe(dav, msgObjekt,
@@ -113,21 +119,23 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void parseArguments(ArgumentList argumente) throws Exception {
+	@Override
+	public void parseArguments(final ArgumentList argumente) throws Exception {
 
-		Thread
-				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-					public void uncaughtException(@SuppressWarnings("unused")
-					Thread t, Throwable e) {
-						Debug.getLogger().error(
-								"Applikation wird wegen"
-										+ " unerwartetem Fehler beendet", e);
-						e.printStackTrace();
-						Runtime.getRuntime().exit(-1);
-					}
-				});
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(
+					@SuppressWarnings("unused") final Thread t,
+					final Throwable e) {
+				LOGGER.error(
+						"Applikation wird wegen"
+								+ " unerwartetem Fehler beendet", e);
+				e.printStackTrace();
+				Runtime.getRuntime().exit(-1);
+			}
+		});
 
-		for (String s : argumente.getArgumentStrings()) {
+		for (final String s : argumente.getArgumentStrings()) {
 			if (s != null) {
 				this.komArgumente.add(s);
 			}
@@ -138,11 +146,11 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 
 	/**
 	 * Startet diese Applikation.
-	 * 
+	 *
 	 * @param argumente
 	 *            Argumente der Kommandozeile
 	 */
-	public static void main(String[] argumente) {
+	public static void main(final String[] argumente) {
 		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(),
 				argumente);
 	}

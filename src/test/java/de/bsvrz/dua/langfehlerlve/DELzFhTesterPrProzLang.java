@@ -42,9 +42,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Testet den Modul DE Langzeit-Fehlererkennung nach PruefSpez.
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class DELzFhTesterPrProzLang extends DELzFhTesterPrProzKurz {
@@ -54,80 +54,82 @@ public class DELzFhTesterPrProzLang extends DELzFhTesterPrProzKurz {
 	 */
 	private static final String DATEN_QUELLE2 = Verbindung.TEST_DATEN_VERZEICHNIS
 			+ "Langzeitdat_3.0.csv"; //$NON-NLS-1$
-	
+
 	/**
 	 * Alle hier betrachteten Systemobjekte.
 	 */
 	private static final String[] OBJEKTE = new String[] { "Q1", "QZ11",
-			"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
-			"QA4" };
+		"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
+	"QA4" };
 
 	/**
 	 * Alle hier betrachteten Messstellen.
 	 */
 	private static final String[] MS_OBJEKTE = new String[] { "Q1", "Q2", "Q3",
-			"Q4" };
+	"Q4" };
 
 	/**
 	 * Testet nach PruefSpez.
-	 * 
+	 *
 	 * @throws Exception
 	 *             wird weitergereicht.
 	 */
+	@Override
 	@Test
 	public void test() throws Exception {
-		TestDatenImporterPrSpezLang daten = new TestDatenImporterPrSpezLang();
-		daten.init(DATEN_QUELLE2);
+		final TestDatenImporterPrSpezLang daten = new TestDatenImporterPrSpezLang();
+		daten.init(DELzFhTesterPrProzLang.DATEN_QUELLE2);
 
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
-		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
-		for (String ms : MS_OBJEKTE) {
-			SystemObject objJa = dav.getDataModel()
-					.getObject("ms.sys.ja." + ms.substring(1));
-			SystemObject objNein = dav.getDataModel().getObject(
-					"ms.sys.nein." + ms.substring(1));
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(
+				DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		final ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
+		for (final String ms : DELzFhTesterPrProzLang.MS_OBJEKTE) {
+			final SystemObject objJa = DELzFhTesterPrProzKurz.dav
+					.getDataModel().getObject("ms.sys.ja." + ms.substring(1));
+			final SystemObject objNein = DELzFhTesterPrProzKurz.dav
+					.getDataModel().getObject("ms.sys.nein." + ms.substring(1));
 
 			/**
 			 * MQ-Intervall
 			 */
 			AbstraktAtgUeberwacher dummy = null;
 			dummy = new AtgIntervallUeberwacherMqLang();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMq(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
+					.getKnotenpunkteTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsLang();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
+					.getKnotenpunkteTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherLang();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(
-					ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
+					.getKnotenpunkteTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherLang();
-			dummy.init(dav, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeAbweichungMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
+					.getKnotenpunkteTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 
 			dummy = new AtgIntervallUeberwacherMqLang();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMq(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
+					.getFreieStreckeTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsLang();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
+					.getFreieStreckeTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherLang();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeBilanz(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
+					.getFreieStreckeTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherLangAlle();
-			dummy.init(dav, objNein, daten.getFreieStreckeTab()
-					.getAusgabeAbweichungMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
+					.getFreieStreckeTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 		}
 
-		long jetzt = System.currentTimeMillis();
-		GregorianCalendar cal = new GregorianCalendar();
+		final long jetzt = System.currentTimeMillis();
+		final GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(jetzt);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -135,33 +137,38 @@ public class DELzFhTesterPrProzLang extends DELzFhTesterPrProzKurz {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 
-		System.out.println(dateFormat.format(new Date(cal
-				.getTimeInMillis())));
+		System.out.println(dateFormat.format(new Date(cal.getTimeInMillis())));
 
-		DataDescription ddMq = new DataDescription(dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+		final DataDescription ddMq = new DataDescription(
+				DELzFhTesterPrProzKurz.dav.getDataModel().getAttributeGroup(
+						DUAKonstanten.ATG_KURZZEIT_MQ),
+				DELzFhTesterPrProzKurz.dav.getDataModel().getAspect(
+						DUAKonstanten.ASP_ANALYSE));
 
-		for (int i = 0; i < daten.getKnotenpunkteTab().getAnzahlZeilen() + 1; i++) {
-			for (String objPidEnd : OBJEKTE) {
-				Data dataJa = TestDatenImporterPrSpezKurz.getDatensatz(dav,
-						daten.getKnotenpunkteTab().get(i % 4, objPidEnd));
-				Data dataNein = TestDatenImporterPrSpezKurz.getDatensatz(dav,
-						daten.getFreieStreckeTab().get(i % 4, objPidEnd));
-				ResultData resultatJa = new ResultData(dav.getDataModel()
-						.getObject("ms.sys.ja." + objPidEnd.toLowerCase()),
-						ddMq, cal.getTimeInMillis(), dataJa);
-				ResultData resultatNein = new ResultData(dav.getDataModel()
-						.getObject("ms.sys.nein." + objPidEnd.toLowerCase()),
+		for (int i = 0; i < (daten.getKnotenpunkteTab().getAnzahlZeilen() + 1); i++) {
+			for (final String objPidEnd : DELzFhTesterPrProzLang.OBJEKTE) {
+				final Data dataJa = TestDatenImporterPrSpezKurz.getDatensatz(
+						DELzFhTesterPrProzKurz.dav, daten.getKnotenpunkteTab()
+								.get(i % 4, objPidEnd));
+				final Data dataNein = TestDatenImporterPrSpezKurz.getDatensatz(
+						DELzFhTesterPrProzKurz.dav, daten.getFreieStreckeTab()
+								.get(i % 4, objPidEnd));
+				final ResultData resultatJa = new ResultData(
+						DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
+								"ms.sys.ja." + objPidEnd.toLowerCase()), ddMq,
+						cal.getTimeInMillis(), dataJa);
+				final ResultData resultatNein = new ResultData(
+						DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
+								"ms.sys.nein." + objPidEnd.toLowerCase()),
 						ddMq, cal.getTimeInMillis(), dataNein);
-				dav.sendData(resultatJa);
-				dav.sendData(resultatNein);
+				DELzFhTesterPrProzKurz.dav.sendData(resultatJa);
+				DELzFhTesterPrProzKurz.dav.sendData(resultatNein);
 			}
 
 			cal.add(Calendar.HOUR_OF_DAY, 1);
 			try {
 				Thread.sleep(1000L);
-			} catch (InterruptedException ex) {
+			} catch (final InterruptedException ex) {
 				//
 			}
 		}
@@ -171,11 +178,11 @@ public class DELzFhTesterPrProzLang extends DELzFhTesterPrProzKurz {
 		 */
 		try {
 			Thread.sleep(2000L);
-		} catch (InterruptedException ex) {
+		} catch (final InterruptedException ex) {
 			//
 		}
 
-		for (AbstraktAtgUeberwacher uw : ueberwacher) {
+		for (final AbstraktAtgUeberwacher uw : ueberwacher) {
 			uw.ueberpruefe();
 		}
 	}
@@ -183,16 +190,18 @@ public class DELzFhTesterPrProzLang extends DELzFhTesterPrProzKurz {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
-		// 		
+	@Override
+	public void dataRequest(final SystemObject object,
+			final DataDescription dataDescription, final byte state) {
+		//
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(final SystemObject object,
+			final DataDescription dataDescription) {
 		return false;
 	}
 

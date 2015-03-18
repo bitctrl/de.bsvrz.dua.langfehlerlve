@@ -36,16 +36,16 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * Diese Klasse fuehrt alle Berechnungen durch, die zur Erkennung systematischer
  * Detektorfehler fuer eine Messstelle vorgesehen sind (Afo DUA-BW-C1C2-13 -
  * Vergleich mit Vorgaenger). Diese Daten werden hier auch publiziert
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public class AbweichungVorgaenger extends AbstraktAbweichung {
 
 	/**
 	 * Standardkonstruktor.
-	 * 
+	 *
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param messStelle
@@ -63,12 +63,12 @@ public class AbweichungVorgaenger extends AbstraktAbweichung {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected AbweichungVorgaenger(ClientDavInterface dav,
-			DELzFhMessStelle messStelle,
-			DELzFhMessStellenGruppe messStellenGruppe,
-			DELzFhMessStelle messStelleMinus1,
-			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
-			throws Exception {
+	protected AbweichungVorgaenger(final ClientDavInterface dav,
+			final DELzFhMessStelle messStelle,
+			final DELzFhMessStellenGruppe messStellenGruppe,
+			final DELzFhMessStelle messStelleMinus1,
+			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit)
+					throws Exception {
 		super(dav, messStelle, messStellenGruppe,
 				new DELzFhMessStelle[] { messStelleMinus1 }, messQuerschnitt,
 				langZeit);
@@ -79,11 +79,13 @@ public class AbweichungVorgaenger extends AbstraktAbweichung {
 
 		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
 				langZeit ? new DataDescription(dav.getDataModel()
-						.getAttributeGroup(ATG_PID), dav.getDataModel()
-						.getAspect(this.getLzAspPid())) : new DataDescription(
-						dav.getDataModel().getAttributeGroup(ATG_PID), dav
-								.getDataModel().getAspect(this.getKzAspPid())),
-				SenderRole.source());
+						.getAttributeGroup(AbstraktAbweichung.ATG_PID), dav
+						.getDataModel().getAspect(this.getLzAspPid()))
+						: new DataDescription(dav.getDataModel()
+								.getAttributeGroup(AbstraktAbweichung.ATG_PID),
+								dav.getDataModel()
+										.getAspect(this.getKzAspPid())),
+								SenderRole.source());
 
 		messQuerschnitt.addListener(this);
 		messStelleMinus1.addListener(this);
@@ -93,7 +95,8 @@ public class AbweichungVorgaenger extends AbstraktAbweichung {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
+	protected void aktualisiereMsgParameter(
+			final IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungVorgaenger();
 		this.vergleichsIntervall = DUAUtensilien
 				.getVergleichsIntervallInText(parameter

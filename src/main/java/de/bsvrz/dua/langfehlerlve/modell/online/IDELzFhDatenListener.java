@@ -31,14 +31,14 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 /**
  * Hoert auf Aktualisierungen der DELzFh-Intervalldaten eines Messquerschnitts
  * bzw. einer Messstelle. Dies sind:<br>
- *  - <code>QKfz(MessQuerschnitt)</code><br> -
- * <code>QLkw(MessQuerschnitt)</code><br> -
- * <code>QPkw(MessQuerschnitt)</code><br>
- * 
+ * - <code>QKfz(MessQuerschnitt)</code><br>
+ * - <code>QLkw(MessQuerschnitt)</code><br>
+ * - <code>QPkw(MessQuerschnitt)</code><br>
+ *
  * berechnet analog DUA-BW-C1C2-2
- * 
+ *
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
+ *
  * @version $Id$
  */
 public interface IDELzFhDatenListener {
@@ -47,7 +47,7 @@ public interface IDELzFhDatenListener {
 	 * Aktualisiert die DELzFh-Intervalldaten eines Messquerschnitts bzw. einer
 	 * Messstelle immer wenn ein Intervall als abgeschlossen wargenommen wurde
 	 * bzw. wenn keine Daten empfangen wurden
-	 * 
+	 *
 	 * @param objekt
 	 *            ein Systemobjekt eines Messquerschnitts fuer das die Daten
 	 *            sind
