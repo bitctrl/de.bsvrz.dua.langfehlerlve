@@ -125,7 +125,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(
-					@SuppressWarnings("unused") final Thread t,
+					final Thread t,
 					final Throwable e) {
 				LOGGER.error(
 						"Applikation wird wegen"
