@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -78,6 +79,7 @@ public class DELzFhTesterPrProzLang extends DELzFhTesterPrProzKurz {
 		TestDatenImporterPrSpezLang daten = new TestDatenImporterPrSpezLang();
 		daten.init(DATEN_QUELLE2);
 
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
 		for (String ms : MS_OBJEKTE) {
 			SystemObject objJa = dav.getDataModel()
@@ -133,7 +135,7 @@ public class DELzFhTesterPrProzLang extends DELzFhTesterPrProzKurz {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 
-		System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(cal
+		System.out.println(dateFormat.format(new Date(cal
 				.getTimeInMillis())));
 
 		DataDescription ddMq = new DataDescription(dav.getDataModel()

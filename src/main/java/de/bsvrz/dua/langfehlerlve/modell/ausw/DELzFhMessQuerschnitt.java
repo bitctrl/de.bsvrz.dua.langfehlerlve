@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -280,12 +281,13 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 				final long intervallAnfang = intervallEnde
 						- this.intervallLaenge;
 
+				final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 				Debug.getLogger().fine(
 						"Intervallende: "
-								+ DUAKonstanten.ZEIT_FORMAT_GENAU
+								+ dateFormat
 										.format(new Date(intervallEnde))
 								+ " Intervallanfang: "
-								+ DUAKonstanten.ZEIT_FORMAT_GENAU
+								+ dateFormat
 										.format(new Date(intervallAnfang))
 								+ ", i: " + this.intervallLaenge);
 
@@ -315,14 +317,15 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 */
 	private void berechneFertigesIntervall(final long start, final long ende) {
 
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 		Debug.getLogger().fine(
 				"Start: "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU
+						+ dateFormat
 								.format(new Date(start))
 						+ " ("
 						+ start
 						+ "), Ende: "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU
+						+ dateFormat
 								.format(new Date(ende)) + " (" + ende + ")");
 
 		Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
@@ -380,9 +383,11 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 *            der Jetzt-Zeitpunkt
 	 */
 	private synchronized void setJetzt(final long jetzt) {
+
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 		Debug.getLogger().fine(
 				"Jetzt: "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU
+						+ dateFormat
 								.format(new Date(jetzt)) + " (" + jetzt + ")");
 
 		if (this.puffer.size() > 1) {
@@ -428,9 +433,12 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 				s += "leer\n";
 			} else {
 				s += "\n";
+				
+				final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+				
 				for (MQDatum element : this.puffer) {
 					s += "    "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+							+ dateFormat.format(new Date(
 									element.getZeitStempel())) + ": ";
 					if (element.isKeineDaten()) {
 						s += "keine Daten\n";
@@ -563,9 +571,11 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 		 */
 		@Override
 		public String toString() {
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+
 			String s = (this.objekt == null ? "kein Objekt" : this.objekt)
 					+ " --> "
-					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
+					+ dateFormat.format(new Date(
 							this.datenZeit)) + " (" + this.datenZeit + ")\n";
 
 			if (this.keineDaten) {

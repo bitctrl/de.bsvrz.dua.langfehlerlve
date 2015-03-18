@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.langfehlerlve;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -139,6 +140,8 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 	public void test() throws Exception {
 		TestDatenImporterPrSpezKurz daten = new TestDatenImporterPrSpezKurz();
 		daten.init(DATEN_QUELLE1);
+		
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 
 		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
 		for (String ms : MS_OBJEKTE) {
@@ -195,7 +198,7 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 		int naechsterStart = (((int) (aktuelleMinute / 5)) + 1) * 5;
 		cal.set(Calendar.MINUTE, naechsterStart);
 
-		System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(cal
+		System.out.println(dateFormat.format(new Date(cal
 				.getTimeInMillis())));
 
 		DataDescription ddMq = new DataDescription(dav.getDataModel()

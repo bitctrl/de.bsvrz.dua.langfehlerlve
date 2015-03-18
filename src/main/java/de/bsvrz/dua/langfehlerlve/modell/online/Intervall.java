@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.online;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
@@ -68,10 +69,11 @@ public class Intervall {
 	 */
 	public Intervall(final long start, final long ende, IDELzFhDatum datum) {
 		if (ende < start) {
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 			throw new RuntimeException("Intervallende (" + //$NON-NLS-1$
-					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
+					dateFormat.format(new Date(ende))
 					+ ") liegt vor Intervallbegin (" + //$NON-NLS-1$
-					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
+					dateFormat.format(new Date(start))
 					+ ")"); //$NON-NLS-1$
 		}
 		this.start = start;
@@ -143,11 +145,12 @@ public class Intervall {
 	@Override
 	public String toString() {
 		String s = "Datum:\n" + this.datum + "\n";
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 
 		return "Intervallbegin: " + //$NON-NLS-1$
-				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
+				dateFormat.format(new Date(start))
 				+ ", Intervallende: " + //$NON-NLS-1$
-				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
+				dateFormat.format(new Date(ende))
 				+ " --> " + s; //$NON-NLS-1$
 	}
 
