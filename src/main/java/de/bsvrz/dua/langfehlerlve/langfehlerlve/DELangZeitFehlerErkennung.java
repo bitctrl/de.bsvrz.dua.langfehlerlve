@@ -59,9 +59,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  * Grenzwerte werden Betriebsmeldungen ausgegeben.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: DELangZeitFehlerErkennung.java 53825 2015-03-18 09:36:42Z
- *          peuker $
  */
 public class DELangZeitFehlerErkennung implements StandardApplication {
 

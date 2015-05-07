@@ -32,9 +32,6 @@ package de.bsvrz.dua.langfehlerlve;
  * <code>asp.messQuerschnittLangZeit</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: AtgIntervallUeberwacherMqLang.java 53825 2015-03-18 09:36:42Z
- *          peuker $
  */
 class AtgIntervallUeberwacherMqLang extends AtgIntervallUeberwacherMqKurz {
 

@@ -39,8 +39,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * publiziert
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class AbweichungNachbarn extends AbstraktAbweichung {
 

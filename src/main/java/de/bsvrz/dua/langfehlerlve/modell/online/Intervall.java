@@ -37,8 +37,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Daten)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class Intervall {
 

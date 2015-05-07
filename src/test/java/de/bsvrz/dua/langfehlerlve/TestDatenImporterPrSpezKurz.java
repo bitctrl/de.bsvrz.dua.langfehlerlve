@@ -41,9 +41,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.test.CSVImporter;
  * Liest die Testdaten ein.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: TestDatenImporterPrSpezKurz.java 53825 2015-03-18 09:36:42Z
- *          peuker $
  */
 class TestDatenImporterPrSpezKurz {
 
@@ -173,11 +170,6 @@ class TestDatenImporterPrSpezKurz {
 
 	/**
 	 * Speichert alle Daten einer Messstellengruppe.
-	 *
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 *
-	 * @version $Id: TestDatenImporterPrSpezKurz.java 53825 2015-03-18 09:36:42Z
-	 *          peuker $
 	 */
 	final class MSGDaten {
 
@@ -385,11 +377,6 @@ class TestDatenImporterPrSpezKurz {
 	/**
 	 * Information zu einem Attribut innerhalb der Attributgruppe
 	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
-	 *
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 *
-	 * @version $Id: TestDatenImporterPrSpezKurz.java 53825 2015-03-18 09:36:42Z
-	 *          peuker $
 	 */
 	private static final class Attribut {
 

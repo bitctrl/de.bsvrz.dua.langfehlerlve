@@ -68,8 +68,6 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  * werden hier auch publiziert
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 ClientSenderInterface, IDELzFhDatenListener {

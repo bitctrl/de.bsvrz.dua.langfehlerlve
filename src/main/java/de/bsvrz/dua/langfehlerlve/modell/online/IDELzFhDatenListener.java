@@ -38,8 +38,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * berechnet analog DUA-BW-C1C2-2
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public interface IDELzFhDatenListener {
 

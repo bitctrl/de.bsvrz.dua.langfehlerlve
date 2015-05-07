@@ -52,8 +52,6 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
  * Testet den Modul DE Langzeit-Fehlererkennung nach PruefSpez.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 

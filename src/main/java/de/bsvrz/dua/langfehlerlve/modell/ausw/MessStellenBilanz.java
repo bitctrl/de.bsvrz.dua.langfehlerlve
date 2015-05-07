@@ -53,8 +53,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * hier auch publiziert
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class MessStellenBilanz implements ClientSenderInterface,
 IDELzFhDatenListener {
@@ -559,10 +557,6 @@ IDELzFhDatenListener {
 	 * Sollte geworfen werden, wenn beim Einfuegen eines Intervalls in diesen
 	 * Puffer die Intervalle (in Bezug auf ihre Intervallgrenzen) inkompatibel
 	 * werden.
-	 *
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 *
-	 * @version $Id$
 	 */
 	private class PufferException extends Exception {
 

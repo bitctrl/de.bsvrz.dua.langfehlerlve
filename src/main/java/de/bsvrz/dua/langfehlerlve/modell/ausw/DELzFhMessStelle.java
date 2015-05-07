@@ -59,8 +59,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
  * weitergereicht
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 IDELzFhDatenListener, ClientSenderInterface {

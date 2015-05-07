@@ -32,9 +32,6 @@ package de.bsvrz.dua.langfehlerlve;
  * <code>asp.messQuerschnittZumVorgängerLangZeit</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: AtgAbweichungUeberwacherLang.java 53825 2015-03-18 09:36:42Z
- *          peuker $
  */
 class AtgAbweichungUeberwacherLang extends AtgAbweichungUeberwacherKurz {
 

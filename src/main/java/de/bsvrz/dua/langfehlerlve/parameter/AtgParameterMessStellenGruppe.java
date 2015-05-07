@@ -48,9 +48,6 @@ import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
  * <code>atg.parameterMessStellenGruppe</code>).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: AtgParameterMessStellenGruppe.java 53825 2015-03-18 09:36:42Z
- *          peuker $
  */
 public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 

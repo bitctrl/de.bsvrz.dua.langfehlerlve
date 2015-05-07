@@ -32,9 +32,6 @@ package de.bsvrz.dua.langfehlerlve;
  * <code>asp.messQuerschnittKurzZeit</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: AtgBilanzUeberwacherLang.java 53825 2015-03-18 09:36:42Z peuker
- *          $
  */
 class AtgBilanzUeberwacherLang extends AtgBilanzUeberwacherKurz {
 

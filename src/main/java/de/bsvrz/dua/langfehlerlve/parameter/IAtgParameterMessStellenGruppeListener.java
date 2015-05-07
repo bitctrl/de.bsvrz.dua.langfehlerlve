@@ -31,9 +31,6 @@ package de.bsvrz.dua.langfehlerlve.parameter;
  * <code>atg.parameterMessStellenGruppe</code>).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: IAtgParameterMessStellenGruppeListener.java 53825 2015-03-18
- *          09:36:42Z peuker $
  */
 public interface IAtgParameterMessStellenGruppeListener {
 

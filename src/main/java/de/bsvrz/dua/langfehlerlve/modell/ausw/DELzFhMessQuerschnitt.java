@@ -68,8 +68,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Messstelle bzw. die Messstellengruppe weitergeleitet
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 ClientReceiverInterface {

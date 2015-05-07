@@ -38,8 +38,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * Utensilien.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class Util {
 

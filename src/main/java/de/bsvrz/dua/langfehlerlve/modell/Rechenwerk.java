@@ -41,8 +41,6 @@ import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
  * einzeln miteinander verknuepft
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class Rechenwerk {
 

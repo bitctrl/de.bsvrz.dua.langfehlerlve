@@ -46,9 +46,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Verbindung gesetzt.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: DELzFhMessStellenGruppe.java 53825 2015-03-18 09:36:42Z peuker
- *          $
  */
 public class DELzFhMessStellenGruppe {
 

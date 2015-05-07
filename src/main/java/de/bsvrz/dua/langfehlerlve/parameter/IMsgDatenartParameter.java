@@ -32,8 +32,6 @@ package de.bsvrz.dua.langfehlerlve.parameter;
  * KZ-Vergleichswerte.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public interface IMsgDatenartParameter {
 

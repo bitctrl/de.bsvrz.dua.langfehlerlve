@@ -32,9 +32,6 @@ package de.bsvrz.dua.langfehlerlve;
  * .
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id: AtgIntervallUeberwacherMsLang.java 53825 2015-03-18 09:36:42Z
- *          peuker $
  */
 class AtgIntervallUeberwacherMsLang extends AtgIntervallUeberwacherMqKurz {
 

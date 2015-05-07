@@ -37,8 +37,6 @@ import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
  * Kurzzeit) benoetigt.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public abstract class AbstraktDELzFhObjekt implements
 IAtgParameterMessStellenGruppeListener {

@@ -34,8 +34,6 @@ import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
  * DE Langzeit-Fehlererkennung benoetigt werden
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public interface IDELzFhDatum {
 
