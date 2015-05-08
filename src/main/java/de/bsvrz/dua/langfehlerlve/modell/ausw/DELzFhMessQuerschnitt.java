@@ -299,7 +299,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements Clien
 		DELzFhMessQuerschnitt.LOGGER.fine("Start: " + dateFormat.format(new Date(start)) + " (" + start + "), Ende: "
 				+ dateFormat.format(new Date(ende)) + " (" + ende + ")");
 
-		final Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
+		final Set<MQDatum> datenImIntervall = new HashSet<MQDatum>();
 		for (final MQDatum mQDatum : this.puffer) {
 			if ((start <= mQDatum.getZeitStempel()) && (mQDatum.getZeitStempel() < ende)) {
 				datenImIntervall.add(mQDatum);
@@ -307,7 +307,8 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements Clien
 			}
 		}
 
-		this.fertigesIntervall = new Intervall(start, ende, Rechenwerk.durchschnitt(datenImIntervall));
+		this.fertigesIntervall = new Intervall(start, ende,
+				Rechenwerk.durchschnitt(new ArrayList<IDELzFhDatum>(datenImIntervall)));
 
 		for (final IDELzFhDatenListener listener : this.listenerMenge) {
 			listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall);
@@ -422,7 +423,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements Clien
 		/**
 		 * Das Systemobjekt des Datums.
 		 */
-		private SystemObject objekt = null;
+		private SystemObject objekt;
 
 		/**
 		 * Datenzeit dieses Wertes.
@@ -499,6 +500,23 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements Clien
 			}
 
 			return ergebnis;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = (prime * result) + (int) (datenZeit ^ (datenZeit >>> 32));
+			result = (prime * result) + (keineDaten ? 1231 : 1237);
+			result = (prime * result) + ((objekt == null) ? 0 : objekt.hashCode());
+			long temp;
+			temp = Double.doubleToLongBits(qKfz);
+			result = (prime * result) + (int) (temp ^ (temp >>> 32));
+			temp = Double.doubleToLongBits(qLkw);
+			result = (prime * result) + (int) (temp ^ (temp >>> 32));
+			temp = Double.doubleToLongBits(qPkw);
+			result = (prime * result) + (int) (temp ^ (temp >>> 32));
+			return result;
 		}
 
 		@Override
