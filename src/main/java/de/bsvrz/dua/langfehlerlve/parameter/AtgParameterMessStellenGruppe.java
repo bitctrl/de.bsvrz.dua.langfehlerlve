@@ -80,8 +80,8 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	 *            ein Objekt vom Typ <code>typ.messStellenGruppe</code>
 	 * @return eine statische Instanz dieser Klasse oder <code>null</code>
 	 */
-	public static final AtgParameterMessStellenGruppe getInstanz(
-			final ClientDavInterface dav, final SystemObject objekt) {
+	public static final AtgParameterMessStellenGruppe getInstanz(final ClientDavInterface dav,
+			final SystemObject objekt) {
 		AtgParameterMessStellenGruppe instanz = null;
 
 		synchronized (AtgParameterMessStellenGruppe.instanzen) {
@@ -106,16 +106,11 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	 * @param objekt
 	 *            ein Objekt vom Typ <code>typ.messStellenGruppe</code>
 	 */
-	protected AtgParameterMessStellenGruppe(final ClientDavInterface dav,
-			final SystemObject objekt) {
-		dav.subscribeReceiver(
-				this,
-				objekt,
-				new DataDescription(dav.getDataModel().getAttributeGroup(
-						"atg.parameterMessStellenGruppe"), //$NON-NLS-1$
-						dav.getDataModel().getAspect(
-								DaVKonstanten.ASP_PARAMETER_SOLL)),
-						ReceiveOptions.normal(), ReceiverRole.receiver());
+	protected AtgParameterMessStellenGruppe(final ClientDavInterface dav, final SystemObject objekt) {
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"), //$NON-NLS-1$
+						dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL)),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -124,36 +119,27 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	 * @param listener
 	 *            eine neuer Listener
 	 */
-	public final void addListener(
-			final IAtgParameterMessStellenGruppeListener listener) {
+	public final void addListener(final IAtgParameterMessStellenGruppeListener listener) {
 		synchronized (this) {
 			if (listenerMenge.add(listener) && (this.kzParameter != null)) {
-				listener.aktualisiereMsgParameter(this.kzParameter,
-						this.lzParameter);
+				listener.aktualisiereMsgParameter(this.kzParameter, this.lzParameter);
 			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
 			for (final ResultData resultat : resultate) {
 				if ((resultat != null) && (resultat.getData() != null)) {
 					synchronized (this) {
-						final int maxAbweichungMessStellenGruppeKZ = resultat
-								.getData()
-								.getUnscaledValue(
-										"maxAbweichungMessStellenGruppeKurzZeit").intValue(); //$NON-NLS-1$
-						final int maxAbweichungVorgaengerKZ = resultat
-								.getData()
-								.getUnscaledValue(
-										"maxAbweichungVorgängerKurzZeit").intValue(); //$NON-NLS-1$
-						final long vergleichsIntervallKZ = resultat
-								.getData()
-								.getUnscaledValue("VergleichsIntervallKurzZeit").longValue() * Constants.MILLIS_PER_MINUTE; //$NON-NLS-1$
+						final int maxAbweichungMessStellenGruppeKZ = resultat.getData()
+								.getUnscaledValue("maxAbweichungMessStellenGruppeKurzZeit").intValue(); //$NON-NLS-1$
+						final int maxAbweichungVorgaengerKZ = resultat.getData()
+								.getUnscaledValue("maxAbweichungVorgängerKurzZeit").intValue(); //$NON-NLS-1$
+						final long vergleichsIntervallKZ = resultat.getData()
+								.getUnscaledValue("VergleichsIntervallKurzZeit").longValue() //$NON-NLS-1$
+								* Constants.MILLIS_PER_MINUTE;
 						this.kzParameter = new IMsgDatenartParameter() {
 
 							@Override
@@ -173,17 +159,13 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 
 						};
 
-						final int maxAbweichungMessStellenGruppeLZ = resultat
-								.getData()
-								.getUnscaledValue(
-										"maxAbweichungMessStellenGruppeLangZeit").intValue(); //$NON-NLS-1$
-						final int maxAbweichungVorgaengerLZ = resultat
-								.getData()
-								.getUnscaledValue(
-										"maxAbweichungVorgängerLangZeit").intValue(); //$NON-NLS-1$
-						final long vergleichsIntervallLZ = resultat
-								.getData()
-								.getUnscaledValue("VergleichsIntervallLangZeit").longValue() * Constants.MILLIS_PER_HOUR; //$NON-NLS-1$
+						final int maxAbweichungMessStellenGruppeLZ = resultat.getData()
+								.getUnscaledValue("maxAbweichungMessStellenGruppeLangZeit").intValue(); //$NON-NLS-1$
+						final int maxAbweichungVorgaengerLZ = resultat.getData()
+								.getUnscaledValue("maxAbweichungVorgängerLangZeit").intValue(); //$NON-NLS-1$
+						final long vergleichsIntervallLZ = resultat.getData()
+								.getUnscaledValue("VergleichsIntervallLangZeit").longValue() //$NON-NLS-1$
+								* Constants.MILLIS_PER_HOUR;
 						this.lzParameter = new IMsgDatenartParameter() {
 
 							@Override
@@ -204,8 +186,7 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 						};
 
 						for (final IAtgParameterMessStellenGruppeListener listener : this.listenerMenge) {
-							listener.aktualisiereMsgParameter(kzParameter,
-									lzParameter);
+							listener.aktualisiereMsgParameter(kzParameter, lzParameter);
 						}
 					}
 				}

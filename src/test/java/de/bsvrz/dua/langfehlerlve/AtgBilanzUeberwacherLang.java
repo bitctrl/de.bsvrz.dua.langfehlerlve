@@ -35,9 +35,6 @@ package de.bsvrz.dua.langfehlerlve;
  */
 class AtgBilanzUeberwacherLang extends AtgBilanzUeberwacherKurz {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittLangZeit";

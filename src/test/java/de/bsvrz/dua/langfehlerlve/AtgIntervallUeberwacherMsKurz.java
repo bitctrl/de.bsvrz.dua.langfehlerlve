@@ -35,9 +35,6 @@ package de.bsvrz.dua.langfehlerlve;
  */
 class AtgIntervallUeberwacherMsKurz extends AtgIntervallUeberwacherMqKurz {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messStelleKurzZeit";

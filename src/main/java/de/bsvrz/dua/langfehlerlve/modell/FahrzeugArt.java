@@ -91,9 +91,6 @@ public final class FahrzeugArt {
 		return this.attributName;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "Attributname: " + this.attributName; //$NON-NLS-1$

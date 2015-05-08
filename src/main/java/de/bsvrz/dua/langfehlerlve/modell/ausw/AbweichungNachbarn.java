@@ -63,73 +63,47 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected AbweichungNachbarn(final ClientDavInterface dav,
-			final DELzFhMessStelle messStelle,
-			final DELzFhMessStellenGruppe messStellenGruppe,
-			final DELzFhMessStelle[] restMessStellen,
-			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit)
-					throws Exception {
-		super(dav, messStelle, messStellenGruppe, restMessStellen,
-				messQuerschnitt, langZeit);
+	protected AbweichungNachbarn(final ClientDavInterface dav, final DELzFhMessStelle messStelle,
+			final DELzFhMessStellenGruppe messStellenGruppe, final DELzFhMessStelle[] restMessStellen,
+			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit) throws Exception {
+		super(dav, messStelle, messStellenGruppe, restMessStellen, messQuerschnitt, langZeit);
 
 		for (final DELzFhMessStelle rms : restMessStellen) {
-			this.restMessStellen.add(rms.getMessStelle().getPruefling()
-					.getSystemObject());
+			this.restMessStellen.add(rms.getMessStelle().getPruefling().getSystemObject());
 		}
 		this.initPuffer();
 
 		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
-				langZeit ? new DataDescription(dav.getDataModel()
-						.getAttributeGroup(AbstraktAbweichung.ATG_PID), dav
-						.getDataModel().getAspect(this.getLzAspPid()))
-						: new DataDescription(dav.getDataModel()
-								.getAttributeGroup(AbstraktAbweichung.ATG_PID),
-								dav.getDataModel()
-										.getAspect(this.getKzAspPid())),
-								SenderRole.source());
+				langZeit ? new DataDescription(dav.getDataModel().getAttributeGroup(AbstraktAbweichung.ATG_PID),
+						dav.getDataModel().getAspect(this.getLzAspPid()))
+						: new DataDescription(dav.getDataModel().getAttributeGroup(AbstraktAbweichung.ATG_PID),
+								dav.getDataModel().getAspect(this.getKzAspPid())),
+				SenderRole.source());
 
 		messQuerschnitt.addListener(this);
 		for (final DELzFhMessStelle rms : restMessStellen) {
-			this.messStellenGruppe.getMq(
-					rms.getMessStelle().getPruefling().getSystemObject())
-					.addListener(this);
+			this.messStellenGruppe.getMq(rms.getMessStelle().getPruefling().getSystemObject()).addListener(this);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	protected void aktualisiereMsgParameter(
-			final IMsgDatenartParameter parameter) {
+	protected void aktualisiereMsgParameter(final IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungMessStellenGruppe();
-		this.vergleichsIntervall = DUAUtensilien
-				.getVergleichsIntervallInText(parameter
-						.getVergleichsIntervall());
+		this.vergleichsIntervall = DUAUtensilien.getVergleichsIntervallInText(parameter.getVergleichsIntervall());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getKzAspPid() {
 		return "asp.messQuerschnittDerMessStellenGruppeKurzZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getLzAspPid() {
 		return "asp.messQuerschnittDerMessStellenGruppeLangZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getVergleichsIdentifikation() {
 		return "Vergleich mit Nachbarn"; //$NON-NLS-1$
 	}
-
 }

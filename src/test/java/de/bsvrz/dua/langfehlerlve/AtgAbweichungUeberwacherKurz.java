@@ -35,17 +35,11 @@ package de.bsvrz.dua.langfehlerlve;
  */
 class AtgAbweichungUeberwacherKurz extends AbstraktAtgUeberwacher {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittZumVorgängerKurzZeit";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAtgPid() {
 		return "atg.abweichungVerkehrsStärke";

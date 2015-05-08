@@ -80,13 +80,12 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	 *            der Wert mit dem der erste echte Nutzwert gegengeprueft werden
 	 *            soll
 	 */
-	void init(final ClientDavInterface dav, final SystemObject objekt,
-			final int wert1) {
+	void init(final ClientDavInterface dav, final SystemObject objekt, final int wert1) {
 		this.wert = wert1;
-		dav.subscribeReceiver(this, objekt, new DataDescription(dav
-				.getDataModel().getAttributeGroup(this.getAtgPid()), dav
-				.getDataModel().getAspect(this.getAspPid())), ReceiveOptions
-				.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup(this.getAtgPid()),
+						dav.getDataModel().getAspect(this.getAspPid())),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -97,23 +96,16 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 		if (data != null) {
 			for (final FahrzeugArt art : FahrzeugArt.getInstanzen()) {
 				Assert.assertEquals(
-						"\n---\n" + this.getClass().getSimpleName()
-								+ ":\nFehler in " + data.getObject() + "\n"
-								+ art.toString() + "\n", wert, data.getData()
-								.getUnscaledValue(art.getAttributName())
-								.isState() ? -3 : data.getData()
-								.getScaledValue(art.getAttributName())
-								.longValue());
+						"\n---\n" + this.getClass().getSimpleName() + ":\nFehler in " + data.getObject() + "\n"
+						+ art.toString() + "\n",
+						wert, data.getData().getUnscaledValue(art.getAttributName()).isState() ? -3
+								: data.getData().getScaledValue(art.getAttributName()).longValue());
 			}
 		} else {
-			Assert.assertTrue("\n---\n" + this.getClass().getSimpleName()
-					+ ":\nKein Datum empfangen!\n", wert < 0);
+			Assert.assertTrue("\n---\n" + this.getClass().getSimpleName() + ":\nKein Datum empfangen!\n", wert < 0);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] results) {
 		if (results != null) {

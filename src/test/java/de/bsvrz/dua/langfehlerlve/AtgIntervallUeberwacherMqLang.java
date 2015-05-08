@@ -35,9 +35,6 @@ package de.bsvrz.dua.langfehlerlve;
  */
 class AtgIntervallUeberwacherMqLang extends AtgIntervallUeberwacherMqKurz {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittLangZeit";

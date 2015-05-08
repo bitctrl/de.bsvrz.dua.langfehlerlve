@@ -69,8 +69,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
-ClientReceiverInterface {
+public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements ClientReceiverInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -122,22 +121,20 @@ ClientReceiverInterface {
 	 * @throws DUAInitialisierungsException
 	 *             wenn das Objekt nicht sinnvoll initialisiert werden konnte
 	 */
-	protected DELzFhMessQuerschnitt(final ClientDavInterface dav,
-			final SystemObject mqObjekt,
-			final DELzFhMessStellenGruppe messStellenGruppe,
-			final boolean langZeit) throws DUAInitialisierungsException {
+	protected DELzFhMessQuerschnitt(final ClientDavInterface dav, final SystemObject mqObjekt,
+			final DELzFhMessStellenGruppe messStellenGruppe, final boolean langZeit)
+					throws DUAInitialisierungsException {
 		this.intervallLaengeInitialisiert = false;
 		this.mqObjekt = mqObjekt;
 
 		final DataDescription fsAnalyseDatenBeschreibung = new DataDescription(
-				dav.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_KURZZEIT_MQ), dav.getDataModel()
-						.getAspect(DUAKonstanten.ASP_ANALYSE));
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		super.init(dav, messStellenGruppe, langZeit);
 
-		dav.subscribeReceiver(this, mqObjekt, fsAnalyseDatenBeschreibung,
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, mqObjekt, fsAnalyseDatenBeschreibung, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
 	}
 
 	/**
@@ -158,17 +155,12 @@ ClientReceiverInterface {
 	 */
 	public final void addListener(final IDELzFhDatenListener listener) {
 		synchronized (this) {
-			if (this.listenerMenge.add(listener)
-					&& (this.fertigesIntervall != null)) {
-				listener.aktualisiereDatum(this.mqObjekt,
-						this.fertigesIntervall);
+			if (this.listenerMenge.add(listener) && (this.fertigesIntervall != null)) {
+				listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall);
 			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void update(final ResultData[] resultate) {
 		if (resultate != null) {
@@ -176,13 +168,11 @@ ClientReceiverInterface {
 				if (resultat != null) {
 					if (resultat.getData() == null) {
 						synchronized (this) {
-							this.fertigesIntervall = new Intervall(
-									resultat.getDataTime(),
-									resultat.getDataTime(), new IDELzFhDatum() {
+							this.fertigesIntervall = new Intervall(resultat.getDataTime(), resultat.getDataTime(),
+									new IDELzFhDatum() {
 
 										@Override
-										public double getQ(
-												final FahrzeugArt fahrzeugArt) {
+										public double getQ(final FahrzeugArt fahrzeugArt) {
 											return -1;
 										}
 
@@ -192,8 +182,7 @@ ClientReceiverInterface {
 										}
 
 										@Override
-										public boolean isAuswertbar(
-												final FahrzeugArt fahrzeugArt) {
+										public boolean isAuswertbar(final FahrzeugArt fahrzeugArt) {
 											return false;
 										}
 
@@ -209,32 +198,24 @@ ClientReceiverInterface {
 							 * Listener.
 							 */
 							for (final IDELzFhDatenListener listener : this.listenerMenge) {
-								listener.aktualisiereDatum(this.mqObjekt,
-										this.fertigesIntervall);
+								listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall);
 							}
-							LOGGER
-							.finer(this
-									+ "Habe \"keine Daten\" empfangen. Puffer wird geloescht.");
+							DELzFhMessQuerschnitt.LOGGER
+									.finer(this + "Habe \"keine Daten\" empfangen. Puffer wird geloescht.");
 							this.puffer.clear();
 						}
 					} else {
 						final MQDatum dummy = new MQDatum(resultat);
 						this.addDatum(dummy);
-						LOGGER.finer(
-								"Habe Datum empfangen:\n" + dummy + ":\n"
-										+ this);
+						DELzFhMessQuerschnitt.LOGGER.finer("Habe Datum empfangen:\n" + dummy + ":\n" + this);
 					}
 				}
 			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	protected void aktualisiereMsgParameter(
-			final IMsgDatenartParameter parameter) {
+	protected void aktualisiereMsgParameter(final IMsgDatenartParameter parameter) {
 		this.intervallLaengeInitialisiert = true;
 		if (this.intervallLaenge != parameter.getVergleichsIntervall()) {
 			this.intervallLaenge = parameter.getVergleichsIntervall();
@@ -281,32 +262,24 @@ ClientReceiverInterface {
 					}
 				}
 
-				final long intervallEnde = this
-						.getEndeLetztesIntervallVor(aktuelleDatenZeit);
-				final long intervallAnfang = intervallEnde
-						- this.intervallLaenge;
+				final long intervallEnde = this.getEndeLetztesIntervallVor(aktuelleDatenZeit);
+				final long intervallAnfang = intervallEnde - this.intervallLaenge;
 
-				final SimpleDateFormat dateFormat = new SimpleDateFormat(
-						DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
-				LOGGER.fine(
-						"Intervallende: "
-								+ dateFormat.format(new Date(intervallEnde))
-								+ " Intervallanfang: "
-								+ dateFormat.format(new Date(intervallAnfang))
-								+ ", i: " + this.intervallLaenge);
+				final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+				DELzFhMessQuerschnitt.LOGGER
+						.fine("Intervallende: " + dateFormat.format(new Date(intervallEnde)) + " Intervallanfang: "
+								+ dateFormat.format(new Date(intervallAnfang)) + ", i: " + this.intervallLaenge);
 
-				if ((zweitLetztesDatum != null)
-						&& ((intervallAnfang <= zweitLetztesDatum
-						.getZeitStempel())
-						&& (zweitLetztesDatum.getZeitStempel() < intervallEnde) && !((intervallAnfang <= aktuelleDatenZeit) && (aktuelleDatenZeit < intervallEnde)))) {
+				if ((zweitLetztesDatum != null) && ((intervallAnfang <= zweitLetztesDatum.getZeitStempel())
+						&& (zweitLetztesDatum.getZeitStempel() < intervallEnde)
+						&& !((intervallAnfang <= aktuelleDatenZeit) && (aktuelleDatenZeit < intervallEnde)))) {
 					/**
 					 * Das heißt, es existieren wenigstens zwei Werte, von denen
 					 * die letzten beiden jeweils innerhalb und außerhalb des
 					 * vergangenen Intervalls liegen
 					 */
 
-					this.berechneFertigesIntervall(intervallAnfang,
-							intervallEnde);
+					this.berechneFertigesIntervall(intervallAnfang, intervallEnde);
 				}
 			}
 		}
@@ -322,24 +295,19 @@ ClientReceiverInterface {
 	 */
 	private void berechneFertigesIntervall(final long start, final long ende) {
 
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(
-				DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
-		LOGGER.fine(
-				"Start: " + dateFormat.format(new Date(start)) + " (" + start
-				+ "), Ende: " + dateFormat.format(new Date(ende))
-				+ " (" + ende + ")");
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		DELzFhMessQuerschnitt.LOGGER.fine("Start: " + dateFormat.format(new Date(start)) + " (" + start + "), Ende: "
+				+ dateFormat.format(new Date(ende)) + " (" + ende + ")");
 
 		final Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
 		for (final MQDatum mQDatum : this.puffer) {
-			if ((start <= mQDatum.getZeitStempel())
-					&& (mQDatum.getZeitStempel() < ende)) {
+			if ((start <= mQDatum.getZeitStempel()) && (mQDatum.getZeitStempel() < ende)) {
 				datenImIntervall.add(mQDatum);
-				LOGGER.fine(mQDatum.toString());
+				DELzFhMessQuerschnitt.LOGGER.fine(mQDatum.toString());
 			}
 		}
 
-		this.fertigesIntervall = new Intervall(start, ende,
-				Rechenwerk.durchschnitt(datenImIntervall));
+		this.fertigesIntervall = new Intervall(start, ende, Rechenwerk.durchschnitt(datenImIntervall));
 
 		for (final IDELzFhDatenListener listener : this.listenerMenge) {
 			listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall);
@@ -366,10 +334,8 @@ ClientReceiverInterface {
 			nullElement.set(Calendar.HOUR_OF_DAY, 0);
 		}
 
-		final long jetztMinus0Element = zeitStempel
-				- nullElement.getTimeInMillis();
-		final long vollstaendigVergangeneIntervalleBisJetzt = jetztMinus0Element
-				/ this.intervallLaenge;
+		final long jetztMinus0Element = zeitStempel - nullElement.getTimeInMillis();
+		final long vollstaendigVergangeneIntervalleBisJetzt = jetztMinus0Element / this.intervallLaenge;
 		final long intervallEnde = nullElement.getTimeInMillis()
 				+ (vollstaendigVergangeneIntervalleBisJetzt * this.intervallLaenge);
 
@@ -384,11 +350,8 @@ ClientReceiverInterface {
 	 */
 	private synchronized void setJetzt(final long jetzt) {
 
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(
-				DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
-		LOGGER.fine(
-				"Jetzt: " + dateFormat.format(new Date(jetzt)) + " (" + jetzt
-				+ ")");
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		DELzFhMessQuerschnitt.LOGGER.fine("Jetzt: " + dateFormat.format(new Date(jetzt)) + " (" + jetzt + ")");
 
 		if (this.puffer.size() > 1) {
 			int i = 0;
@@ -402,14 +365,13 @@ ClientReceiverInterface {
 
 			if (zweitLetztesDatum != null) {
 				final long aeltesterErlaubterZeitStempel = this
-						.getEndeLetztesIntervallVor(zweitLetztesDatum
-								.getZeitStempel());
+						.getEndeLetztesIntervallVor(zweitLetztesDatum.getZeitStempel());
 
 				final Collection<MQDatum> zuLoeschendeElemente = new ArrayList<MQDatum>();
 				for (final MQDatum pufferElement : this.puffer) {
 					if (pufferElement.getZeitStempel() < aeltesterErlaubterZeitStempel) {
 						zuLoeschendeElemente.add(pufferElement);
-						LOGGER.fine("Loesche: " + pufferElement);
+						DELzFhMessQuerschnitt.LOGGER.fine("Loesche: " + pufferElement);
 					}
 				}
 
@@ -418,16 +380,11 @@ ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
-		String s = "Datenerfassung ("
-				+ (this.langZeit ? "langzeit" : "kurzzeit") + "): "
-				+ this.mqObjekt.getPid() + "\n";
-		s += "  Aktuelle Intervalllaenge: " + (this.intervallLaenge / 1000L)
-				+ "s\n";
+		String s = "Datenerfassung (" + (this.langZeit ? "langzeit" : "kurzzeit") + "): " + this.mqObjekt.getPid()
+				+ "\n";
+		s += "  Aktuelle Intervalllaenge: " + (this.intervallLaenge / 1000L) + "s\n";
 
 		synchronized (this) {
 			s += "  Pufferdaten: ";
@@ -436,25 +393,17 @@ ClientReceiverInterface {
 			} else {
 				s += "\n";
 
-				final SimpleDateFormat dateFormat = new SimpleDateFormat(
-						DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+				final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 
 				for (final MQDatum element : this.puffer) {
-					s += "    "
-							+ dateFormat.format(new Date(element
-									.getZeitStempel())) + ": ";
+					s += "    " + dateFormat.format(new Date(element.getZeitStempel())) + ": ";
 					if (element.isKeineDaten()) {
 						s += "keine Daten\n";
 					} else {
-						s += "QKfz: "
-								+ (element.getQ(FahrzeugArt.KFZ) < 0 ? "/"
-										: element.getQ(FahrzeugArt.KFZ));
-						s += ", QLkw: "
-								+ (element.getQ(FahrzeugArt.LKW) < 0 ? "/"
-										: element.getQ(FahrzeugArt.LKW));
-						s += ", QPkw: "
-								+ (element.getQ(FahrzeugArt.PKW) < 0 ? "/"
-										: element.getQ(FahrzeugArt.PKW)) + "\n";
+						s += "QKfz: " + (element.getQ(FahrzeugArt.KFZ) < 0 ? "/" : element.getQ(FahrzeugArt.KFZ));
+						s += ", QLkw: " + (element.getQ(FahrzeugArt.LKW) < 0 ? "/" : element.getQ(FahrzeugArt.LKW));
+						s += ", QPkw: " + (element.getQ(FahrzeugArt.PKW) < 0 ? "/" : element.getQ(FahrzeugArt.PKW))
+								+ "\n";
 					}
 				}
 			}
@@ -467,9 +416,6 @@ ClientReceiverInterface {
 	 * Enthaelt alle Werte eines Datums der Attributgruppe
 	 * <code>atg.verkehrsDatenKurzZeitMq</code>, die fuer die SWE 4.DELzFh DE
 	 * Langzeit-Fehlererkennung benoetigt werden (sortierbar nach Zeitstempel).
-	 *
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 *
 	 */
 	private static class MQDatum implements IZeitStempel, IDELzFhDatum {
 
@@ -517,49 +463,32 @@ ClientReceiverInterface {
 
 				if (resultat.getData() != null) {
 					final Data data = resultat.getData();
-					this.qKfz = data
-							.getItem("QKfz").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-					this.qLkw = data
-							.getItem("QLkw").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-					this.qPkw = data
-							.getItem("QPkw").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+					this.qKfz = data.getItem("QKfz").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+					this.qLkw = data.getItem("QLkw").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+					this.qPkw = data.getItem("QPkw").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
 					this.keineDaten = true;
 				}
 			} else {
-				throw new NullPointerException(
-						"<<null>> ist kein gueltiges Argument"); //$NON-NLS-1$
+				throw new NullPointerException("<<null>> ist kein gueltiges Argument"); //$NON-NLS-1$
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final boolean isKeineDaten() {
 			return this.keineDaten;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public long getZeitStempel() {
 			return this.datenZeit;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int compareTo(final IZeitStempel that) {
-			return -new Long(this.getZeitStempel()).compareTo(that
-					.getZeitStempel());
+			return -new Long(this.getZeitStempel()).compareTo(that.getZeitStempel());
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean equals(final Object obj) {
 			boolean ergebnis = false;
@@ -572,17 +501,12 @@ ClientReceiverInterface {
 			return ergebnis;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public String toString() {
-			final SimpleDateFormat dateFormat = new SimpleDateFormat(
-					DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 
-			String s = (this.objekt == null ? "kein Objekt" : this.objekt)
-					+ " --> " + dateFormat.format(new Date(this.datenZeit))
-					+ " (" + this.datenZeit + ")\n";
+			String s = (this.objekt == null ? "kein Objekt" : this.objekt) + " --> "
+					+ dateFormat.format(new Date(this.datenZeit)) + " (" + this.datenZeit + ")\n";
 
 			if (this.keineDaten) {
 				s += "keine Daten"; //$NON-NLS-1$
@@ -595,9 +519,6 @@ ClientReceiverInterface {
 			return s;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public double getQ(final FahrzeugArt fahrzeugArt) {
 			double ergebnis = -1.0;
@@ -613,9 +534,6 @@ ClientReceiverInterface {
 			return ergebnis;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean isAuswertbar(final FahrzeugArt fahrzeugArt) {
 			boolean ergebnis = true;
@@ -631,9 +549,6 @@ ClientReceiverInterface {
 			return ergebnis;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public SystemObject getObjekt() {
 			return this.objekt;

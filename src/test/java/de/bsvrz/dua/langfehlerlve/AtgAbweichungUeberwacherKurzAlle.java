@@ -35,9 +35,6 @@ package de.bsvrz.dua.langfehlerlve;
  */
 class AtgAbweichungUeberwacherKurzAlle extends AtgAbweichungUeberwacherKurz {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittDerMessStellenGruppeKurzZeit";

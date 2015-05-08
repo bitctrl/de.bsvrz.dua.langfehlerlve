@@ -67,12 +67,10 @@ public class Intervall {
 	 */
 	public Intervall(final long start, final long ende, final IDELzFhDatum datum) {
 		if (ende < start) {
-			final SimpleDateFormat dateFormat = new SimpleDateFormat(
-					DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 			throw new RuntimeException("Intervallende (" + //$NON-NLS-1$
-					dateFormat.format(new Date(ende))
-					+ ") liegt vor Intervallbegin (" + //$NON-NLS-1$
-					dateFormat.format(new Date(start)) + ")"); //$NON-NLS-1$
+					dateFormat.format(new Date(ende)) + ") liegt vor Intervallbegin (" + //$NON-NLS-1$
+			dateFormat.format(new Date(start)) + ")"); //$NON-NLS-1$
 		}
 		this.start = start;
 		this.ende = ende;
@@ -122,9 +120,6 @@ public class Intervall {
 		return (this.start <= wert) && (wert < this.ende);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		boolean gleich = false;
@@ -137,18 +132,14 @@ public class Intervall {
 		return gleich;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		final String s = "Datum:\n" + this.datum + "\n";
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(
-				DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 
 		return "Intervallbegin: " + //$NON-NLS-1$
-		dateFormat.format(new Date(start)) + ", Intervallende: " + //$NON-NLS-1$
-		dateFormat.format(new Date(ende)) + " --> " + s; //$NON-NLS-1$
+				dateFormat.format(new Date(start)) + ", Intervallende: " + //$NON-NLS-1$
+				dateFormat.format(new Date(ende)) + " --> " + s; //$NON-NLS-1$
 	}
 
 }

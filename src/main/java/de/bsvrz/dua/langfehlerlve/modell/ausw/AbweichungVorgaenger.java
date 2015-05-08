@@ -61,65 +61,42 @@ public class AbweichungVorgaenger extends AbstraktAbweichung {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected AbweichungVorgaenger(final ClientDavInterface dav,
-			final DELzFhMessStelle messStelle,
-			final DELzFhMessStellenGruppe messStellenGruppe,
-			final DELzFhMessStelle messStelleMinus1,
-			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit)
-					throws Exception {
-		super(dav, messStelle, messStellenGruppe,
-				new DELzFhMessStelle[] { messStelleMinus1 }, messQuerschnitt,
+	protected AbweichungVorgaenger(final ClientDavInterface dav, final DELzFhMessStelle messStelle,
+			final DELzFhMessStellenGruppe messStellenGruppe, final DELzFhMessStelle messStelleMinus1,
+			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit) throws Exception {
+		super(dav, messStelle, messStellenGruppe, new DELzFhMessStelle[] { messStelleMinus1 }, messQuerschnitt,
 				langZeit);
 
-		this.restMessStellen.add(messStelleMinus1.getMessStelle()
-				.getSystemObject());
+		this.restMessStellen.add(messStelleMinus1.getMessStelle().getSystemObject());
 		this.initPuffer();
 
 		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
-				langZeit ? new DataDescription(dav.getDataModel()
-						.getAttributeGroup(AbstraktAbweichung.ATG_PID), dav
-						.getDataModel().getAspect(this.getLzAspPid()))
-						: new DataDescription(dav.getDataModel()
-								.getAttributeGroup(AbstraktAbweichung.ATG_PID),
-								dav.getDataModel()
-										.getAspect(this.getKzAspPid())),
+				langZeit ? new DataDescription(dav.getDataModel().getAttributeGroup(AbstraktAbweichung.ATG_PID),
+						dav.getDataModel().getAspect(this.getLzAspPid()))
+						: new DataDescription(dav.getDataModel().getAttributeGroup(AbstraktAbweichung.ATG_PID),
+								dav.getDataModel().getAspect(this.getKzAspPid())),
 								SenderRole.source());
 
 		messQuerschnitt.addListener(this);
 		messStelleMinus1.addListener(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	protected void aktualisiereMsgParameter(
-			final IMsgDatenartParameter parameter) {
+	protected void aktualisiereMsgParameter(final IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungVorgaenger();
-		this.vergleichsIntervall = DUAUtensilien
-				.getVergleichsIntervallInText(parameter
-						.getVergleichsIntervall());
+		this.vergleichsIntervall = DUAUtensilien.getVergleichsIntervallInText(parameter.getVergleichsIntervall());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getKzAspPid() {
 		return "asp.messQuerschnittZumVorgängerKurzZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getLzAspPid() {
 		return "asp.messQuerschnittZumVorgängerLangZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getVergleichsIdentifikation() {
 		return "Vergleich mit Vorgaenger"; //$NON-NLS-1$

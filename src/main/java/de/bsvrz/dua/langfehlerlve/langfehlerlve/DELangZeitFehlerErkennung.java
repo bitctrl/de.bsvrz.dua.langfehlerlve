@@ -77,56 +77,37 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		return "DE Langzeit-Fehlererkennung";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialize(final ClientDavInterface dav) throws Exception {
-		final Collection<ConfigurationArea> kbFilter = DUAUtensilien
-				.getKonfigurationsBereicheAlsObjekte(dav, DUAUtensilien
-						.getArgument(
-								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
-								this.komArgumente));
+		final Collection<ConfigurationArea> kbFilter = DUAUtensilien.getKonfigurationsBereicheAlsObjekte(dav,
+				DUAUtensilien.getArgument(DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID, this.komArgumente));
 
-		MessageSender.getInstance().setApplicationLabel(
-				"DE-Langzeitfehlererkennung");
+		MessageSender.getInstance().setApplicationLabel("DE-Langzeitfehlererkennung");
 
 		DuaVerkehrsNetz.initialisiere(dav);
 
 		final Collection<SystemObject> msgObjekte = DUAUtensilien
-				.getBasisInstanzen(
-						dav.getDataModel().getType(
-								DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav,
-						kbFilter);
+				.getBasisInstanzen(dav.getDataModel().getType(DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav, kbFilter);
 
 		String config = "Ueberwachte Messstellengruppen:\n";
 		for (final SystemObject msgObjekt : msgObjekte) {
 			config += msgObjekt + "\n";
 		}
-		LOGGER.config(config);
+		DELangZeitFehlerErkennung.LOGGER.config(config);
 
 		for (final SystemObject msgObjekt : msgObjekte) {
-			new DELzFhMessStellenGruppe(dav, msgObjekt,
-					DELzFhMessStellenGruppe.LANGZEIT_AUSWERTUNG);
-			new DELzFhMessStellenGruppe(dav, msgObjekt,
-					DELzFhMessStellenGruppe.KURZZEIT_AUSWERTUNG);
+			new DELzFhMessStellenGruppe(dav, msgObjekt, DELzFhMessStellenGruppe.LANGZEIT_AUSWERTUNG);
+			new DELzFhMessStellenGruppe(dav, msgObjekt, DELzFhMessStellenGruppe.KURZZEIT_AUSWERTUNG);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void parseArguments(final ArgumentList argumente) throws Exception {
 
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			@Override
-			public void uncaughtException(
-					final Thread t,
-					final Throwable e) {
-				LOGGER.error(
-						"Applikation wird wegen"
-								+ " unerwartetem Fehler beendet", e);
+			public void uncaughtException(final Thread t, final Throwable e) {
+				DELangZeitFehlerErkennung.LOGGER.error("Applikation wird wegen" + " unerwartetem Fehler beendet", e);
 				e.printStackTrace();
 				Runtime.getRuntime().exit(-1);
 			}
@@ -148,8 +129,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	 *            Argumente der Kommandozeile
 	 */
 	public static void main(final String[] argumente) {
-		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(),
-				argumente);
+		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(), argumente);
 	}
 
 }

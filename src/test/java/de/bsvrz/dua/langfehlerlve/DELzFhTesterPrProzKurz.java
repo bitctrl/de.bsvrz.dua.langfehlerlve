@@ -58,14 +58,13 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 	/**
 	 * Pfad zu Testdaten.
 	 */
-	private static final String DATEN_QUELLE1 = Verbindung.TEST_DATEN_VERZEICHNIS
-			+ "Kurzzeitdat_3.0.csv"; //$NON-NLS-1$
+	private static final String DATEN_QUELLE1 = Verbindung.TEST_DATEN_VERZEICHNIS + "Kurzzeitdat_3.0.csv"; //$NON-NLS-1$
 
 	/**
 	 * Alle hier betrachteten Systemobjekte.
 	 */
-	static final String[] OBJEKTE = new String[] { "Q1", "QZ11", "QA11",
-			"QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4", "QA4" };
+	static final String[] OBJEKTE = new String[] { "Q1", "QZ11", "QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4",
+			"QZ4", "QA4" };
 
 	/**
 	 * Alle hier betrachteten Messstellen.
@@ -88,52 +87,38 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 		StandardApplicationRunner.run(new StandardApplication() {
 
 			@Override
-			public void initialize(final ClientDavInterface connection)
-					throws Exception {
+			public void initialize(final ClientDavInterface connection) throws Exception {
 				DELzFhTesterPrProzKurz.dav = connection;
 			}
 
 			@Override
-			public void parseArguments(final ArgumentList argumentList)
-					throws Exception {
+			public void parseArguments(final ArgumentList argumentList) throws Exception {
 				argumentList.fetchUnusedArguments();
 			}
 
 		}, Verbindung.CON_DATA_PR_SPEZ.clone());
 
 		final DataDescription ddMq = new DataDescription(
-				DELzFhTesterPrProzKurz.dav.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_KURZZEIT_MQ),
-				DELzFhTesterPrProzKurz.dav.getDataModel().getAspect(
-						DUAKonstanten.ASP_ANALYSE));
+				DELzFhTesterPrProzKurz.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						DELzFhTesterPrProzKurz.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		for (final String objPidEnd : DELzFhTesterPrProzKurz.OBJEKTE) {
-			System.out.println("Anmeldung: " + "ms.sys.ja."
-					+ objPidEnd.toLowerCase() + ", " + "ms.sys.nein."
+			System.out.println("Anmeldung: " + "ms.sys.ja." + objPidEnd.toLowerCase() + ", " + "ms.sys.nein."
 					+ objPidEnd.toLowerCase());
-			DELzFhTesterPrProzKurz.dav.subscribeSender(
-					this,
-					DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
-							"ms.sys.ja." + objPidEnd.toLowerCase()), ddMq,
-					SenderRole.source());
-			DELzFhTesterPrProzKurz.dav.subscribeSender(
-					this,
-					DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
-							"ms.sys.nein." + objPidEnd.toLowerCase()), ddMq,
-					SenderRole.source());
+			DELzFhTesterPrProzKurz.dav.subscribeSender(this,
+					DELzFhTesterPrProzKurz.dav.getDataModel().getObject("ms.sys.ja." + objPidEnd.toLowerCase()), ddMq,
+							SenderRole.source());
+			DELzFhTesterPrProzKurz.dav.subscribeSender(this,
+					DELzFhTesterPrProzKurz.dav.getDataModel().getObject("ms.sys.nein." + objPidEnd.toLowerCase()), ddMq,
+							SenderRole.source());
 		}
 
-		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(),
-				Verbindung.CON_DATA_PR_SPEZ.clone());
+		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(), Verbindung.CON_DATA_PR_SPEZ.clone());
 
-		Util.parametriere(
-				DELzFhTesterPrProzKurz.dav,
-				DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
-						"gruppe.sys.ja"), 5, 4, 114, 114, 90, 90);
-		Util.parametriere(
-				DELzFhTesterPrProzKurz.dav,
-				DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
-						"gruppe.sys.nein"), 5, 4, 103, 103, 111, 111);
+		Util.parametriere(DELzFhTesterPrProzKurz.dav,
+				DELzFhTesterPrProzKurz.dav.getDataModel().getObject("gruppe.sys.ja"), 5, 4, 114, 114, 90, 90);
+		Util.parametriere(DELzFhTesterPrProzKurz.dav,
+				DELzFhTesterPrProzKurz.dav.getDataModel().getObject("gruppe.sys.nein"), 5, 4, 103, 103, 111, 111);
 
 		Thread.sleep(5000L);
 	}
@@ -149,52 +134,43 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 		final TestDatenImporterPrSpezKurz daten = new TestDatenImporterPrSpezKurz();
 		daten.init(DELzFhTesterPrProzKurz.DATEN_QUELLE1);
 
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(
-				DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 
 		final ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
 		for (final String ms : DELzFhTesterPrProzKurz.MS_OBJEKTE) {
-			final SystemObject objJa = DELzFhTesterPrProzKurz.dav
-					.getDataModel().getObject("ms.sys.ja." + ms.substring(1));
-			final SystemObject objNein = DELzFhTesterPrProzKurz.dav
-					.getDataModel().getObject("ms.sys.nein." + ms.substring(1));
+			final SystemObject objJa = DELzFhTesterPrProzKurz.dav.getDataModel()
+					.getObject("ms.sys.ja." + ms.substring(1));
+			final SystemObject objNein = DELzFhTesterPrProzKurz.dav.getDataModel()
+					.getObject("ms.sys.nein." + ms.substring(1));
 
 			/**
 			 * MQ-Intervall
 			 */
 			AbstraktAtgUeberwacher dummy = null;
 			dummy = new AtgIntervallUeberwacherMqKurz();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
-					.getKnotenpunkteTab().getAusgabeIntervallMq(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten.getKnotenpunkteTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsKurz();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
-					.getKnotenpunkteTab().getAusgabeIntervallMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten.getKnotenpunkteTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherKurz();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
-					.getKnotenpunkteTab().getAusgabeBilanz(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherKurz();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten
-					.getKnotenpunkteTab().getAusgabeAbweichungMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objJa, daten.getKnotenpunkteTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 
 			dummy = new AtgIntervallUeberwacherMqKurz();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
-					.getFreieStreckeTab().getAusgabeIntervallMq(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten.getFreieStreckeTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsKurz();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
-					.getFreieStreckeTab().getAusgabeIntervallMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten.getFreieStreckeTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherKurz();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
-					.getFreieStreckeTab().getAusgabeBilanz(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten.getFreieStreckeTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherKurzAlle();
-			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten
-					.getFreieStreckeTab().getAusgabeAbweichungMs(ms));
+			dummy.init(DELzFhTesterPrProzKurz.dav, objNein, daten.getFreieStreckeTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 		}
 
@@ -210,27 +186,21 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 		System.out.println(dateFormat.format(new Date(cal.getTimeInMillis())));
 
 		final DataDescription ddMq = new DataDescription(
-				DELzFhTesterPrProzKurz.dav.getDataModel().getAttributeGroup(
-						DUAKonstanten.ATG_KURZZEIT_MQ),
-				DELzFhTesterPrProzKurz.dav.getDataModel().getAspect(
-						DUAKonstanten.ASP_ANALYSE));
+				DELzFhTesterPrProzKurz.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+						DELzFhTesterPrProzKurz.dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		for (int i = 0; i < (daten.getKnotenpunkteTab().getAnzahlZeilen() + 1); i++) {
 			for (final String objPidEnd : DELzFhTesterPrProzKurz.OBJEKTE) {
-				final Data dataJa = TestDatenImporterPrSpezKurz.getDatensatz(
-						DELzFhTesterPrProzKurz.dav, daten.getKnotenpunkteTab()
-								.get(i % 5, objPidEnd));
-				final Data dataNein = TestDatenImporterPrSpezKurz.getDatensatz(
-						DELzFhTesterPrProzKurz.dav, daten.getFreieStreckeTab()
-								.get(i % 5, objPidEnd));
+				final Data dataJa = TestDatenImporterPrSpezKurz.getDatensatz(DELzFhTesterPrProzKurz.dav,
+						daten.getKnotenpunkteTab().get(i % 5, objPidEnd));
+				final Data dataNein = TestDatenImporterPrSpezKurz.getDatensatz(DELzFhTesterPrProzKurz.dav,
+						daten.getFreieStreckeTab().get(i % 5, objPidEnd));
 				final ResultData resultatJa = new ResultData(
-						DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
-								"ms.sys.ja." + objPidEnd.toLowerCase()), ddMq,
-						cal.getTimeInMillis(), dataJa);
+						DELzFhTesterPrProzKurz.dav.getDataModel().getObject("ms.sys.ja." + objPidEnd.toLowerCase()),
+						ddMq, cal.getTimeInMillis(), dataJa);
 				final ResultData resultatNein = new ResultData(
-						DELzFhTesterPrProzKurz.dav.getDataModel().getObject(
-								"ms.sys.nein." + objPidEnd.toLowerCase()),
-						ddMq, cal.getTimeInMillis(), dataNein);
+						DELzFhTesterPrProzKurz.dav.getDataModel().getObject("ms.sys.nein." + objPidEnd.toLowerCase()),
+								ddMq, cal.getTimeInMillis(), dataNein);
 				DELzFhTesterPrProzKurz.dav.sendData(resultatJa);
 				DELzFhTesterPrProzKurz.dav.sendData(resultatNein);
 			}
@@ -257,21 +227,13 @@ public class DELzFhTesterPrProzKurz implements ClientSenderInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public void dataRequest(final SystemObject object,
-			final DataDescription dataDescription, final byte state) {
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
 		//
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public boolean isRequestSupported(final SystemObject object,
-			final DataDescription dataDescription) {
+	public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
 		return false;
 	}
 

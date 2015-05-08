@@ -60,8 +60,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
-IDELzFhDatenListener, ClientSenderInterface {
+public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements IDELzFhDatenListener, ClientSenderInterface {
 
 	/**
 	 * diese Messstelle.
@@ -123,28 +122,22 @@ IDELzFhDatenListener, ClientSenderInterface {
 	 * @throws Exception
 	 *             wenn das Objekt nicht sinnvoll initialisiert werden konnte
 	 */
-	protected DELzFhMessStelle(final ClientDavInterface dav,
-			final SystemObject msObjekt,
-			final DELzFhMessStellenGruppe messStellenGruppe,
-			final boolean langZeit) throws Exception {
+	protected DELzFhMessStelle(final ClientDavInterface dav, final SystemObject msObjekt,
+			final DELzFhMessStellenGruppe messStellenGruppe, final boolean langZeit) throws Exception {
 
 		this.messStelle = MessStelle.getInstanz(msObjekt);
 
 		this.mqKanal = new PublikationsKanal(dav);
 		this.msKanal = new PublikationsKanal(dav);
 
-		this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup(
-				"atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+		this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
 				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
-		this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup(
-				"atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+		this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
 				dav.getDataModel().getAspect("asp.messStelleKurzZeit")); //$NON-NLS-1$
 		if (langZeit) {
-			this.mqDb = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+			this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
 					dav.getDataModel().getAspect("asp.messQuerschnittLangZeit")); //$NON-NLS-1$
-			this.msDb = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
+			this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
 					dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
 		}
 
@@ -152,31 +145,22 @@ IDELzFhDatenListener, ClientSenderInterface {
 
 		if (this.messStelle != null) {
 
-			dav.subscribeSender(this, this.messStelle.getSystemObject(),
-					this.mqDb, SenderRole.source());
-			dav.subscribeSender(this, this.messStelle.getSystemObject(),
-					this.msDb, SenderRole.source());
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb, SenderRole.source());
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb, SenderRole.source());
 
 			if (this.messStelle.getPruefling() != null) {
-				messStellenGruppe.getMq(
-						this.messStelle.getPruefling().getSystemObject())
-						.addListener(this);
+				messStellenGruppe.getMq(this.messStelle.getPruefling().getSystemObject()).addListener(this);
 
-				for (final MessQuerschnittAllgemein abfahrt : this.messStelle
-						.getAbfahrten()) {
-					messStellenGruppe.getMq(abfahrt.getSystemObject())
-					.addListener(this);
+				for (final MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
+					messStellenGruppe.getMq(abfahrt.getSystemObject()).addListener(this);
 				}
-				for (final MessQuerschnittAllgemein zufahrt : this.messStelle
-						.getZufahrten()) {
-					messStellenGruppe.getMq(zufahrt.getSystemObject())
-					.addListener(this);
+				for (final MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
+					messStellenGruppe.getMq(zufahrt.getSystemObject()).addListener(this);
 				}
 				this.initMQPuffer();
 			} else {
 				System.out.println(this.messStelle.getPruefling());
-				throw new DUAInitialisierungsException(
-						"Messstelle " + msObjekt + //$NON-NLS-1$
+				throw new DUAInitialisierungsException("Messstelle " + msObjekt + //$NON-NLS-1$
 						" besitzt keinen Pruefling (MQ)"); //$NON-NLS-1$
 			}
 		} else {
@@ -199,15 +183,12 @@ IDELzFhDatenListener, ClientSenderInterface {
 	 */
 	private void initMQPuffer() {
 		synchronized (this.mqPuffer) {
-			this.mqPuffer.put(this.messStelle.getPruefling().getSystemObject(),
-					null);
+			this.mqPuffer.put(this.messStelle.getPruefling().getSystemObject(), null);
 
-			for (final MessQuerschnittAllgemein abfahrt : this.messStelle
-					.getAbfahrten()) {
+			for (final MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
 				this.mqPuffer.put(abfahrt.getSystemObject(), null);
 			}
-			for (final MessQuerschnittAllgemein zufahrt : this.messStelle
-					.getZufahrten()) {
+			for (final MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
 				this.mqPuffer.put(zufahrt.getSystemObject(), null);
 			}
 		}
@@ -222,29 +203,19 @@ IDELzFhDatenListener, ClientSenderInterface {
 	 */
 	public final void addListener(final IDELzFhDatenListener listener) {
 		synchronized (this.listenerMenge) {
-			if (this.listenerMenge.add(listener)
-					&& (this.fertigesIntervall != null)) {
-				listener.aktualisiereDatum(this.messStelle.getSystemObject(),
-						this.fertigesIntervall);
+			if (this.listenerMenge.add(listener) && (this.fertigesIntervall != null)) {
+				listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
 			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public void dataRequest(final SystemObject object,
-			final DataDescription dataDescription, final byte state) {
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
 		// Quellenanmeldung
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public boolean isRequestSupported(final SystemObject object,
-			final DataDescription dataDescription) {
+	public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
 		return false;
 	}
 
@@ -258,29 +229,26 @@ IDELzFhDatenListener, ClientSenderInterface {
 	 * @param neuesDatum
 	 *            ein MQ-Datum mit Nutzdaten
 	 */
-	private synchronized void versucheMessStellenBerechnung(
-			final SystemObject mqObjekt, final Intervall neuesDatum) {
+	private synchronized void versucheMessStellenBerechnung(final SystemObject mqObjekt, final Intervall neuesDatum) {
 		synchronized (this.mqPuffer) {
 			if (this.mqPuffer.size() > 0) {
 				if (this.mqPuffer.size() > 1) {
 					int schonEingetroffeneIntervalle = 0;
 
 					for (final SystemObject mq : this.mqPuffer.keySet()) {
-						final Intervall aktuellesIntervall = this.mqPuffer
-								.get(mq);
+						final Intervall aktuellesIntervall = this.mqPuffer.get(mq);
 						if (aktuellesIntervall != null) {
-							if (neuesDatum.getStart() > aktuellesIntervall
-									.getStart()) {
+							if (neuesDatum.getStart() > aktuellesIntervall.getStart()) {
 								veroeffentlicheAktuellenMsWert();
 								this.mqPuffer.put(mqObjekt, neuesDatum);
 								return;
 							} else {
-								if (neuesDatum.getStart() == aktuellesIntervall
-										.getStart()) {
+								if (neuesDatum.getStart() == aktuellesIntervall.getStart()) {
 									schonEingetroffeneIntervalle++;
 									// } else {
 									// throw new RuntimeException(
-									//											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
+									// "Veralteten Zeitstempel empfangen: " +
+									// mqObjekt); //$NON-NLS-1$
 								}
 							}
 						}
@@ -321,8 +289,7 @@ IDELzFhDatenListener, ClientSenderInterface {
 				}
 
 				if (!brk) {
-					for (final MessQuerschnittAllgemein zufahrt : this.messStelle
-							.getZufahrten()) {
+					for (final MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
 						if (zufahrt.getSystemObject().equals(mq)) {
 							zufahrtsDaten.add(aktuellesIntervall.getDatum());
 							brk = true;
@@ -332,8 +299,7 @@ IDELzFhDatenListener, ClientSenderInterface {
 				}
 
 				if (!brk) {
-					for (final MessQuerschnittAllgemein abfahrt : this.messStelle
-							.getAbfahrten()) {
+					for (final MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
 						if (abfahrt.getSystemObject().equals(mq)) {
 							abfahrtsDaten.add(aktuellesIntervall.getDatum());
 							break;
@@ -344,34 +310,28 @@ IDELzFhDatenListener, ClientSenderInterface {
 		}
 
 		final IDELzFhDatum ergebnis = Rechenwerk.subtrahiere(
-				Rechenwerk.addiere(pDatum, Rechenwerk.addiere(zufahrtsDaten)),
-				Rechenwerk.addiere(abfahrtsDaten));
+				Rechenwerk.addiere(pDatum, Rechenwerk.addiere(zufahrtsDaten)), Rechenwerk.addiere(abfahrtsDaten));
 
-		this.fertigesIntervall = new Intervall(intervall.getStart(),
-				intervall.getEnde(), ergebnis);
+		this.fertigesIntervall = new Intervall(intervall.getStart(), intervall.getEnde(), ergebnis);
 
-		final Data nutzDaten = AbstraktDELzFhObjekt.dDav.createData(this.msDb
-				.getAttributeGroup());
+		final Data nutzDaten = AbstraktDELzFhObjekt.dDav.createData(this.msDb.getAttributeGroup());
 		for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 			if (this.fertigesIntervall.getDatum().getQ(fahrzeugArt) < 0.0) {
-				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName()).set(
-						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+						.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else {
-				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName()).set(
-						Math.round(this.fertigesIntervall.getDatum().getQ(
-								fahrzeugArt)));
+				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+						.set(Math.round(this.fertigesIntervall.getDatum().getQ(fahrzeugArt)));
 			}
 		}
 
-		final ResultData msIntervallVSResultat = new ResultData(
-				this.messStelle.getSystemObject(), this.msDb,
+		final ResultData msIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.msDb,
 				this.fertigesIntervall.getStart(), nutzDaten);
 		this.msKanal.publiziere(msIntervallVSResultat);
 
 		synchronized (this.listenerMenge) {
 			for (final IDELzFhDatenListener listener : this.listenerMenge) {
-				listener.aktualisiereDatum(this.messStelle.getSystemObject(),
-						this.fertigesIntervall);
+				listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
 			}
 		}
 
@@ -381,22 +341,15 @@ IDELzFhDatenListener, ClientSenderInterface {
 		this.initMQPuffer();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public void aktualisiereDatum(final SystemObject mqObjekt,
-			final Intervall intervallDatum) {
+	public void aktualisiereDatum(final SystemObject mqObjekt, final Intervall intervallDatum) {
 		if (intervallDatum.getDatum().isKeineDaten()) {
-			final ResultData msIntervallVSResultat = new ResultData(
-					this.messStelle.getSystemObject(), this.msDb,
+			final ResultData msIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.msDb,
 					intervallDatum.getStart(), null);
 			this.fertigesIntervall = intervallDatum;
 			synchronized (this.listenerMenge) {
 				for (final IDELzFhDatenListener listener : this.listenerMenge) {
-					listener.aktualisiereDatum(
-							this.messStelle.getSystemObject(),
-							this.fertigesIntervall);
+					listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
 				}
 			}
 			this.msKanal.publiziere(msIntervallVSResultat);
@@ -407,35 +360,26 @@ IDELzFhDatenListener, ClientSenderInterface {
 		if (this.messStelle.getPruefling().getSystemObject().equals(mqObjekt)) {
 			Data nutzDaten = null;
 			if (!intervallDatum.getDatum().isKeineDaten()) {
-				nutzDaten = AbstraktDELzFhObjekt.dDav.createData(this.mqDb
-						.getAttributeGroup());
+				nutzDaten = AbstraktDELzFhObjekt.dDav.createData(this.mqDb.getAttributeGroup());
 				for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 					if (intervallDatum.getDatum().getQ(fahrzeugArt) < 0.0) {
-						nutzDaten.getUnscaledValue(
-								fahrzeugArt.getAttributName()).set(
-										DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+								.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					} else {
-						nutzDaten.getUnscaledValue(
-								fahrzeugArt.getAttributName()).set(
-										Math.round(intervallDatum.getDatum().getQ(
-												fahrzeugArt)));
+						nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+								.set(Math.round(intervallDatum.getDatum().getQ(fahrzeugArt)));
 					}
 				}
 			}
 
-			final ResultData mqIntervallVSResultat = new ResultData(
-					this.messStelle.getSystemObject(), this.mqDb,
+			final ResultData mqIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.mqDb,
 					intervallDatum.getStart(), nutzDaten);
 			this.mqKanal.publiziere(mqIntervallVSResultat);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	protected void aktualisiereMsgParameter(
-			final IMsgDatenartParameter parameter) {
+	protected void aktualisiereMsgParameter(final IMsgDatenartParameter parameter) {
 		this.initMQPuffer();
 	}
 
