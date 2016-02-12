@@ -2,8 +2,7 @@
 *  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung  *
 ***********************************************************************************************
 
-Version: 1.4.0
-
+Version: ${version}
 
 Übersicht
 =========
