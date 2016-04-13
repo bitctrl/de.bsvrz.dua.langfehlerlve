@@ -22,6 +22,9 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 Versionsgeschichte
 ==================
+1.5.0
+- Umstellung auf Funclib-Bitctrl-Dua
+
 1.4.0
 - Umstellung auf Maven-Build
 
