@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -47,14 +47,14 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  * Fehlern bei der Verkehrdatenerfassung einzelner Messquerschnitte, die durch
  * die Plausibilisierungsstufen nicht ermittelbar sind. Mit diesen Fehlern sind
  * z. B. dauerhaft zu niedrige oder zu hohe Fahrzeugmengenwerte (QPkw, QLkw,
- * QKfz) gemeint. Diese lassen sich nur durch einen längerfristigen Vergleich
- * von verkehrlich ähnlichen Messquerschnitten nachweisen. Um solche Fehler
- * erkennen zu können, werden hier Funktionen realisiert, die sowohl laufend
- * Indikatoren für systematische Abweichungen im Rahmen einer permanent
- * durchgeführten kurzfristigen Bilanzierung (i. d. R. 5 Minuten-Intervalle) als
- * auch relative Fehlerangaben für einen längeren Bilanzierungszeitraum (i. d.
+ * QKfz) gemeint. Diese lassen sich nur durch einen lÃ¤ngerfristigen Vergleich
+ * von verkehrlich Ã¤hnlichen Messquerschnitten nachweisen. Um solche Fehler
+ * erkennen zu kÃ¶nnen, werden hier Funktionen realisiert, die sowohl laufend
+ * Indikatoren fÃ¼r systematische Abweichungen im Rahmen einer permanent
+ * durchgefÃ¼hrten kurzfristigen Bilanzierung (i. d. R. 5 Minuten-Intervalle) als
+ * auch relative Fehlerangaben fÃ¼r einen lÃ¤ngeren Bilanzierungszeitraum (i. d.
  * R. ein Tag) ermitteln. Diese Daten werden permanent publiziert. Bei der
- * Überschreitung gewisser pro Messstellengruppe (topographisch sinnvolle
+ * Ãœberschreitung gewisser pro Messstellengruppe (topographisch sinnvolle
  * Zusammenfassung mehrerer Messstellen bzw. Messquerschnitte) definierter
  * Grenzwerte werden Betriebsmeldungen ausgegeben.
  *

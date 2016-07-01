@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -136,7 +136,7 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 						final int maxAbweichungMessStellenGruppeKZ = resultat.getData()
 								.getUnscaledValue("maxAbweichungMessStellenGruppeKurzZeit").intValue(); //$NON-NLS-1$
 						final int maxAbweichungVorgaengerKZ = resultat.getData()
-								.getUnscaledValue("maxAbweichungVorg‰ngerKurzZeit").intValue(); //$NON-NLS-1$
+								.getUnscaledValue("maxAbweichungVorg√§ngerKurzZeit").intValue(); //$NON-NLS-1$
 						final long vergleichsIntervallKZ = resultat.getData()
 								.getUnscaledValue("VergleichsIntervallKurzZeit").longValue() //$NON-NLS-1$
 								* Constants.MILLIS_PER_MINUTE;
@@ -162,7 +162,7 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 						final int maxAbweichungMessStellenGruppeLZ = resultat.getData()
 								.getUnscaledValue("maxAbweichungMessStellenGruppeLangZeit").intValue(); //$NON-NLS-1$
 						final int maxAbweichungVorgaengerLZ = resultat.getData()
-								.getUnscaledValue("maxAbweichungVorg‰ngerLangZeit").intValue(); //$NON-NLS-1$
+								.getUnscaledValue("maxAbweichungVorg√§ngerLangZeit").intValue(); //$NON-NLS-1$
 						final long vergleichsIntervallLZ = resultat.getData()
 								.getUnscaledValue("VergleichsIntervallLangZeit").longValue() //$NON-NLS-1$
 								* Constants.MILLIS_PER_HOUR;

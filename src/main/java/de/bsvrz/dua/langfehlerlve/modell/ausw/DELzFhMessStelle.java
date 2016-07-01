@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -53,7 +53,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
 /**
  * Diese Klasse korrespondiert mit einem DAV-Objekt vom Typ
  * <code>typ.messStelle</code> und kapselt direkt oder indirekt saemtliche
- * Funktionalit‰ten, die innerhalb der SWE DE Langzeit-Fehlererkennung in Bezug
+ * Funktionalit√§ten, die innerhalb der SWE DE Langzeit-Fehlererkennung in Bezug
  * auf Objekte dieses Typs benoetigt werden. Ggf. (bei Intervallende) werden die
  * hier aggregierten DELzFh-Werte an die Messstellengruppe zur Analyse
  * weitergereicht
@@ -130,14 +130,14 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements IDELzFhDat
 		this.mqKanal = new PublikationsKanal(dav);
 		this.msKanal = new PublikationsKanal(dav);
 
-		this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt‰rke"), //$NON-NLS-1$
+		this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt√§rke"), //$NON-NLS-1$
 				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
-		this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt‰rke"), //$NON-NLS-1$
+		this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt√§rke"), //$NON-NLS-1$
 				dav.getDataModel().getAspect("asp.messStelleKurzZeit")); //$NON-NLS-1$
 		if (langZeit) {
-			this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt‰rke"), //$NON-NLS-1$
+			this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt√§rke"), //$NON-NLS-1$
 					dav.getDataModel().getAspect("asp.messQuerschnittLangZeit")); //$NON-NLS-1$
-			this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt‰rke"), //$NON-NLS-1$
+			this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsSt√§rke"), //$NON-NLS-1$
 					dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
 		}
 
@@ -268,7 +268,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements IDELzFhDat
 
 	/**
 	 * Berechnet und veroeffentlicht ein MS-Datum auf Basis der im MQ-Puffer
-	 * gespeicherten Daten. Danach werde alle gepufferten Daten wieder gelˆscht
+	 * gespeicherten Daten. Danach werde alle gepufferten Daten wieder gel√∂scht
 	 */
 	private void veroeffentlicheAktuellenMsWert() {
 		IDELzFhDatum pDatum = null;

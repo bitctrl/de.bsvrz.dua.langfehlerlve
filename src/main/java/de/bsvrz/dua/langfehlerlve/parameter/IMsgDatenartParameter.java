@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -36,33 +36,33 @@ package de.bsvrz.dua.langfehlerlve.parameter;
 public interface IMsgDatenartParameter {
 
 	/**
-	 * Erfragt Vergleichsintervall für die Langzeitfehlererkennung von
+	 * Erfragt Vergleichsintervall fÃ¼r die Langzeitfehlererkennung von
 	 * Verkehrsdaten in ms.
 	 *
-	 * @return Vergleichsintervall für die Langzeitfehlererkennung von
+	 * @return Vergleichsintervall fÃ¼r die Langzeitfehlererkennung von
 	 *         Verkehrsdaten in ms
 	 */
 	long getVergleichsIntervall();
 
 	/**
-	 * Erfragt die maximal zulässige Toleranz für die Abweichung von Messwerten
-	 * beim Vergleich mit dem Vorgänger beim Kurzzeitintervall für die
+	 * Erfragt die maximal zulÃ¤ssige Toleranz fÃ¼r die Abweichung von Messwerten
+	 * beim Vergleich mit dem VorgÃ¤nger beim Kurzzeitintervall fÃ¼r die
 	 * Langzeitfehlererkennung von Verkehrsdaten.
 	 *
-	 * @return maximal zulässige Toleranz für die Abweichung von Messwerten beim
-	 *         Vergleich mit dem Vorgänger beim Kurzzeitintervall für die
+	 * @return maximal zulÃ¤ssige Toleranz fÃ¼r die Abweichung von Messwerten beim
+	 *         Vergleich mit dem VorgÃ¤nger beim Kurzzeitintervall fÃ¼r die
 	 *         Langzeitfehlererkennung von Verkehrsdaten
 	 */
 	int getMaxAbweichungVorgaenger();
 
 	/**
-	 * Erfragt die maximal zulässige Toleranz für die Abweichung von Messwerten
+	 * Erfragt die maximal zulÃ¤ssige Toleranz fÃ¼r die Abweichung von Messwerten
 	 * beim Vergleich mit den Werten der MessStellenGruppe beim
-	 * Kurzzeitintervall für die Langzeitfehlererkennung von Verkehrsdaten.
+	 * Kurzzeitintervall fÃ¼r die Langzeitfehlererkennung von Verkehrsdaten.
 	 *
-	 * @return maximal zulässige Toleranz für die Abweichung von Messwerten beim
+	 * @return maximal zulÃ¤ssige Toleranz fÃ¼r die Abweichung von Messwerten beim
 	 *         Vergleich mit den Werten der MessStellenGruppe beim
-	 *         Kurzzeitintervall für die Langzeitfehlererkennung von
+	 *         Kurzzeitintervall fÃ¼r die Langzeitfehlererkennung von
 	 *         Verkehrsdaten
 	 */
 	int getMaxAbweichungMessStellenGruppe();

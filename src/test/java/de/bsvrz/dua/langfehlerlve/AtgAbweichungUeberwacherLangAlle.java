@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -28,7 +28,7 @@ package de.bsvrz.dua.langfehlerlve;
 
 /**
  * Ueberprueft den ersten echten (Nutz-)Wert von
- * <code>atg.abweichungVerkehrsSt‰rke</code>,
+ * <code>atg.abweichungVerkehrsSt√§rke</code>,
  * <code>asp.messQuerschnittDerMessStellenGruppeLangZeit</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder

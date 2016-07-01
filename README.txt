@@ -1,27 +1,32 @@
 ***********************************************************************************************
-*  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung  *
+*  Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung  *
 ***********************************************************************************************
 
 Version: ${version}
 
-Übersicht
+Ãœbersicht
 =========
 
 Die SWE DE Langzeit-Fehlererkennung dient zur Erkennung von systematischen Fehlern bei der
 Verkehrdatenerfassung einzelner Messquerschnitte, die durch die Plausibilisierungsstufen
 nicht ermittelbar sind. Mit diesen Fehlern sind z. B. dauerhaft zu niedrige oder zu hohe
-Fahrzeugmengenwerte (QPkw, QLkw, QKfz) gemeint. Diese lassen sich nur durch einen längerfristigen
-Vergleich von verkehrlich ähnlichen Messquerschnitten nachweisen. Um solche Fehler erkennen zu
-können, werden hier Funktionen realisiert, die sowohl laufend Indikatoren für systematische
-Abweichungen im Rahmen einer permanent durchgeführten kurzfristigen Bilanzierung (i. d. R. 
-5 Minuten-Intervalle) als auch relative Fehlerangaben für einen längeren Bilanzierungszeitraum
-(i. d. R. ein Tag) ermitteln. Diese Daten werden permanent publiziert. Bei der Überschreitung
+Fahrzeugmengenwerte (QPkw, QLkw, QKfz) gemeint. Diese lassen sich nur durch einen lÃ¤ngerfristigen
+Vergleich von verkehrlich Ã¤hnlichen Messquerschnitten nachweisen. Um solche Fehler erkennen zu
+kÃ¶nnen, werden hier Funktionen realisiert, die sowohl laufend Indikatoren fÃ¼r systematische
+Abweichungen im Rahmen einer permanent durchgefÃ¼hrten kurzfristigen Bilanzierung (i. d. R. 
+5 Minuten-Intervalle) als auch relative Fehlerangaben fÃ¼r einen lÃ¤ngeren Bilanzierungszeitraum
+(i. d. R. ein Tag) ermitteln. Diese Daten werden permanent publiziert. Bei der Ãœberschreitung
 gewisser pro Messstellengruppe (topographisch sinnvolle Zusammenfassung mehrerer Messstellen
 bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegeben.
 
 
 Versionsgeschichte
 ==================
+
+1.6.0
+=====
+- Umstellung auf Java 8 und UTF-8
+
 1.5.0
 - Umstellung auf Funclib-Bitctrl-Dua
 
@@ -44,7 +49,7 @@ Versionsgeschichte
          
 1.2.2
 
-  - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
+  - FIX: SÃ¤mtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
          DataDescription(atg, asp)
 
 1.2.0
@@ -62,7 +67,7 @@ Versionsgeschichte
 Bemerkungen
 ===========
 
-Diese SWE ist eine eigenständige Datenverteiler-Applikation, welche über die Klasse
+Diese SWE ist eine eigenstÃ¤ndige Datenverteiler-Applikation, welche Ã¼ber die Klasse
 de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung mit folgenden
 Parametern gestartet werden kann (zusaetzlich zu den normalen Parametern jeder
 Datenverteiler-Applikation):
@@ -70,7 +75,7 @@ Datenverteiler-Applikation):
 	
 - Tests:
 
-Alle Tests befinden sich unterhalb des Verzeichnisses junit und sind als JUnit-Tests ausführbar.
+Alle Tests befinden sich unterhalb des Verzeichnisses junit und sind als JUnit-Tests ausfÃ¼hrbar.
 Dabei wird implizit eine Instanz der SWE 4.DELzFh DE Langzeit-Fehlererkennung gestartet. Die implizit
 gestartete SWE 4.DELzFh DE Langzeit-Fehlererkennung wird dann ueber den Datenverteiler mit Testdaten
 versorgt waehrend die Rueckmeldungen (auch ueber DAV empfangen) mit den erwarteten Rueckmeldungen
@@ -100,13 +105,13 @@ In den Tabellen stehen jeweils links, die fuer die MQs des Testkonfigurationsber
 (kb.deLzFhTest) gesendeten Werte. Rechts stehen die Werte, die als Ergebnisse in den
 unterschiedlichen Attributgruppen erwartet werden.
 		
-Die Tests wurden so bereits erfolgreich ausgeführt.
+Die Tests wurden so bereits erfolgreich ausgefÃ¼hrt.
 
 
 Disclaimer
 ==========
 
-Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
 Copyright (C) 2007 BitCtrl Systems GmbH 
 
 This program is free software; you can redistribute it and/or modify it under
@@ -128,7 +133,7 @@ Kontakt
 =======
 
 BitCtrl Systems GmbH
-Weißenfelser Straße 67
+WeiÃŸenfelser StraÃŸe 67
 04229 Leipzig
 Phone: +49 34A-490670
 mailto: info@bitctrl.de

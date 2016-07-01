@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -102,11 +102,11 @@ public final class Util {
 				"atg.parameterMessStellenGruppe")); //$NON-NLS-1$
 
 		data.getItem("VergleichsIntervallKurzZeit").asUnscaledValue().set(kurzZeitAgg); //$NON-NLS-1$
-		data.getItem("maxAbweichungVorg‰ngerKurzZeit").asUnscaledValue().set(maxAbwVorKurz); //$NON-NLS-1$
+		data.getItem("maxAbweichungVorg√§ngerKurzZeit").asUnscaledValue().set(maxAbwVorKurz); //$NON-NLS-1$
 		data.getItem("maxAbweichungMessStellenGruppeKurzZeit").asUnscaledValue().set(maxAbwGrpKurz); //$NON-NLS-1$
 
 		data.getItem("VergleichsIntervallLangZeit").asUnscaledValue().set(langZeitAgg); //$NON-NLS-1$
-		data.getItem("maxAbweichungVorg‰ngerLangZeit").asUnscaledValue().set(maxAbwVorLang); //$NON-NLS-1$
+		data.getItem("maxAbweichungVorg√§ngerLangZeit").asUnscaledValue().set(maxAbwVorLang); //$NON-NLS-1$
 		data.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(maxAbwGrpLang); //$NON-NLS-1$
 
 		resultat = new ResultData(mg1, ddParam, System.currentTimeMillis(),

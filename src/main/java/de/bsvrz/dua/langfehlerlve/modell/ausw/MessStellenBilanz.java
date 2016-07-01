@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -60,19 +60,19 @@ public class MessStellenBilanz implements ClientSenderInterface, IDELzFhDatenLis
 
 	/**
 	 * Untere Grenze des Attributtyps
-	 * <code>att.verkehrsSt‰rkeStundeBilanz</code>.
+	 * <code>att.verkehrsSt√§rkeStundeBilanz</code>.
 	 */
 	private static final double BILANZ_MIN = -100000000.0;
 
 	/**
-	 * Obere Grenze des Attributtyps <code>att.verkehrsSt‰rkeStundeBilanz</code>
+	 * Obere Grenze des Attributtyps <code>att.verkehrsSt√§rkeStundeBilanz</code>
 	 * .
 	 */
 	private static final double BILANZ_MAX = 100000000.0;
 
 	/**
 	 * Zustand des <code>nicht ermittelbar/fehlerhaft</code> des Attributtyps
-	 * <code>att.verkehrsSt‰rkeStundeBilanz</code>.
+	 * <code>att.verkehrsSt√§rkeStundeBilanz</code>.
 	 */
 	private static final long NICHT_ERMITTELBAR_BZW_FEHLERHAFT = -100000003;
 
@@ -178,10 +178,10 @@ public class MessStellenBilanz implements ClientSenderInterface, IDELzFhDatenLis
 		if (MessStellenBilanz.dDav == null) {
 			MessStellenBilanz.dDav = dav;
 			MessStellenBilanz.pubBeschreibungLz = new DataDescription(
-					dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsSt‰rke"), //$NON-NLS-1$
+					dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsSt√§rke"), //$NON-NLS-1$
 							dav.getDataModel().getAspect("asp.messQuerschnittLangZeit")); //$NON-NLS-1$
 			MessStellenBilanz.pubBeschreibungKz = new DataDescription(
-					dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsSt‰rke"), //$NON-NLS-1$
+					dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsSt√§rke"), //$NON-NLS-1$
 							dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
 		}
 		this.kanal = new PublikationsKanal(dav);
@@ -350,7 +350,7 @@ public class MessStellenBilanz implements ClientSenderInterface, IDELzFhDatenLis
 	/**
 	 * Erfragt ein in Bezug auf Intervallanfang und -ende prototypisches
 	 * Pufferelement mit Nutzdaten. Das Element hat die Eigenschaft, den
-	 * gleichen Start- und Endezeitstempel zu besitzen wie s‰mtliche anderen
+	 * gleichen Start- und Endezeitstempel zu besitzen wie s√§mtliche anderen
 	 * Elemente (mit Nutzdaten) im Puffer auch.
 	 *
 	 * @return ein in Bezug auf Intervallanfang und -ende prototypisches

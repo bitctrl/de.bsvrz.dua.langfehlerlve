@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -89,12 +89,12 @@ public class AbweichungVorgaenger extends AbstraktAbweichung {
 
 	@Override
 	protected String getKzAspPid() {
-		return "asp.messQuerschnittZumVorg‰ngerKurzZeit"; //$NON-NLS-1$
+		return "asp.messQuerschnittZumVorg√§ngerKurzZeit"; //$NON-NLS-1$
 	}
 
 	@Override
 	protected String getLzAspPid() {
-		return "asp.messQuerschnittZumVorg‰ngerLangZeit"; //$NON-NLS-1$
+		return "asp.messQuerschnittZumVorg√§ngerLangZeit"; //$NON-NLS-1$
 	}
 
 	@Override
