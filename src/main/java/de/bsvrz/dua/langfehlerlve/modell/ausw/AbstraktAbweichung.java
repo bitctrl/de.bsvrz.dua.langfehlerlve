@@ -1,64 +1,56 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Langzeit-Fehlererkennung LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.langfehlerlve.
+ * 
+ * de.bsvrz.dua.langfehlerlve is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.langfehlerlve is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.langfehlerlve.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import com.bitctrl.Constants;
-
-import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.ClientSenderInterface;
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dav.daf.main.DataDescription;
-import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.*;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung;
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.dua.langfehlerlve.modell.Rechenwerk;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatenListener;
 import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
-import de.bsvrz.sys.funclib.bitctrl.daf.BetriebsmeldungDaten;
 import de.bsvrz.sys.funclib.bitctrl.daf.BetriebsmeldungIdKonverter;
 import de.bsvrz.sys.funclib.bitctrl.daf.DefaultBetriebsMeldungsIdKonverter;
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
 import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
-import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-import de.bsvrz.sys.funclib.operatingMessage.MessageState;
+import de.bsvrz.sys.funclib.operatingMessage.MessageTemplate;
 import de.bsvrz.sys.funclib.operatingMessage.MessageType;
+import de.bsvrz.sys.funclib.operatingMessage.OperatingMessage;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.*;
 
 /**
  * Diese Klasse fuehrt alle Berechnungen durch, die zur Erkennung systematischer
@@ -66,13 +58,13 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
  * Afo DUA-BW-C1C2-17: Vergleich mit allen anderen Messstellen bzw. der
  * Vorgaengermessstelle und ggf. Ausgabe einer Betriebsmeldung). Diese Daten
  * werden hier auch publiziert
- *
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
-public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
-		implements ClientSenderInterface, IDELzFhDatenListener {
-
-	private static final Debug LOGGER = Debug.getLogger();
+public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
+		ClientSenderInterface, IDELzFhDatenListener {
 
 	private static final BetriebsmeldungIdKonverter KONVERTER = new DefaultBetriebsMeldungsIdKonverter();
 
@@ -100,7 +92,8 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 	/**
 	 * Zeitausgabeformat fuer Betriebsmeldungen.
 	 */
-	private static final SimpleDateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm"); //$NON-NLS-1$
+	private static final SimpleDateFormat FORMAT = new SimpleDateFormat(
+			"dd.MM.yyyy HH:mm"); //$NON-NLS-1$
 
 	/**
 	 * Publikationskanal.
@@ -128,7 +121,8 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 	 * puffert alle aktuellen hier benoetigten Onlinedaten zur Berechnung der
 	 * (Zwischen-)Bilanzen.
 	 */
-	protected Map<SystemObject, Intervall> puffer = Collections.synchronizedMap(new HashMap<SystemObject, Intervall>());
+	protected Map<SystemObject, Intervall> puffer = Collections
+			.synchronizedMap(new HashMap<SystemObject, Intervall>());
 
 	/**
 	 * die maximal zulässige Toleranz für die Abweichung von Messwerten beim
@@ -140,12 +134,12 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 	/**
 	 * Die Laenge des Vergleichsintervalls als Text.
 	 */
-	protected String vergleichsIntervall = Constants.EMPTY_STRING;
+	protected String vergleichsIntervall = "";
 
 	/**
 	 * Erfragt die PID des Aspektes, unter dem hier die Daten des Kurzzeit-
 	 * Vergleichsintervalls veroeffentlicht werden.
-	 *
+	 * 
 	 * @return die PID des Aspektes, unter dem hier die Daten des Kurzzeit-
 	 *         Vergleichsintervalls veroeffentlicht werden
 	 */
@@ -154,7 +148,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 	/**
 	 * Erfragt die PID des Aspektes, unter dem hier die Daten des Langzeit-
 	 * Vergleichsintervalls veroeffentlicht werden.
-	 *
+	 * 
 	 * @return die PID des Aspektes, unter dem hier die Daten des Langzeit-
 	 *         Vergleichsintervalls veroeffentlicht werden
 	 */
@@ -162,14 +156,39 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 
 	/**
 	 * Erfragt eine Identifikation der Vergleichsmethode.
-	 *
+	 * 
 	 * @return eine Identifikation der Vergleichsmethode
 	 */
 	protected abstract String getVergleichsIdentifikation();
+	
+	/** Text der Betriebsmeldung */
+	private static final MessageTemplate MESSAGE_TEMPLATE = new MessageTemplate(
+			MessageGrade.WARNING, 
+			MessageType.APPLICATION_DOMAIN,
+	        MessageTemplate.fixed("Langzeitmessfehler: Der Wert "),
+	        MessageTemplate.variable("attr"),
+	        MessageTemplate.fixed(" weicht um mehr als "),
+			MessageTemplate.variable("abw"),
+	        MessageTemplate.fixed(" % vom erwarteten Wert im Intervall "),
+			MessageTemplate.variable("von"),
+			MessageTemplate.fixed(" - "),
+			MessageTemplate.variable("bis"),
+			MessageTemplate.fixed(" ("),
+			MessageTemplate.variable("dauer"),
+			MessageTemplate.fixed(") ab am "),
+			MessageTemplate.object(),
+			MessageTemplate.fixed(". "),
+	        MessageTemplate.ids()
+	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-PP-MA]");
+	
+	/**
+	 * Format der Zeitangabe innerhalb der Betriebsmeldung. 
+	 */
+	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.GERMAN);
 
 	/**
 	 * Standardkonstruktor.
-	 *
+	 * 
 	 * @param dav
 	 *            Verbindung zum Datenverteiler
 	 * @param messStelle
@@ -188,9 +207,12 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected AbstraktAbweichung(final ClientDavInterface dav, final DELzFhMessStelle messStelle,
-			final DELzFhMessStellenGruppe messStellenGruppe, final DELzFhMessStelle[] restMessStellen,
-			final DELzFhMessQuerschnitt messQuerschnitt, final boolean langZeit) throws Exception {
+	protected AbstraktAbweichung(ClientDavInterface dav,
+			DELzFhMessStelle messStelle,
+			DELzFhMessStellenGruppe messStellenGruppe,
+			DELzFhMessStelle[] restMessStellen,
+			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
+			throws Exception {
 		super.init(dav, messStellenGruppe, langZeit);
 
 		this.kanal = new PublikationsKanal(dav);
@@ -201,32 +223,30 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 
 	/**
 	 * Versucht die Berechnung der Bilanzverkehrsstaerke.
-	 *
+	 * 
 	 * @param objekt
 	 *            das Systemobjekt, zu dem das gerade empfangene Datum gehoert
 	 * @param intervallDatum
 	 *            ein gerade empfangenes Intervalldatum != null
 	 */
-	private void versucheBerechnung(final SystemObject objekt, final Intervall intervallDatum) {
+	private void versucheBerechnung(SystemObject objekt,
+			Intervall intervallDatum) {
 
 		if (intervallDatum.getDatum().isKeineDaten()) {
-			final ResultData resultat = new ResultData(
-					messStelle.getMessStelle().getSystemObject(), langZeit
-							? new DataDescription(
-									AbstraktDELzFhObjekt.dDav.getDataModel()
-											.getAttributeGroup(AbstraktAbweichung.ATG_PID),
-									AbstraktDELzFhObjekt.dDav.getDataModel().getAspect(this.getLzAspPid()))
-							: new DataDescription(
-									AbstraktDELzFhObjekt.dDav.getDataModel()
-											.getAttributeGroup(AbstraktAbweichung.ATG_PID),
-									AbstraktDELzFhObjekt.dDav.getDataModel().getAspect(this.getKzAspPid())),
-																	intervallDatum.getStart(), null);
+			ResultData resultat = new ResultData(messStelle.getMessStelle()
+					.getSystemObject(), langZeit ? new DataDescription(dDav
+					.getDataModel().getAttributeGroup(ATG_PID), dDav
+					.getDataModel().getAspect(this.getLzAspPid()))
+					: new DataDescription(dDav.getDataModel()
+							.getAttributeGroup(ATG_PID), dDav.getDataModel()
+							.getAspect(this.getKzAspPid())),
+					intervallDatum.getStart(), null);
 			this.kanal.publiziere(resultat);
 			this.initPuffer();
 		} else {
 			synchronized (this.puffer) {
 				long pufferZeit = -1;
-				for (final SystemObject obj : this.puffer.keySet()) {
+				for (SystemObject obj : this.puffer.keySet()) {
 					if (this.puffer.get(obj) != null) {
 						pufferZeit = this.puffer.get(obj).getStart();
 						break;
@@ -240,8 +260,10 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 					} else {
 						this.initPuffer();
 						if (pufferZeit > intervallDatum.getStart()) {
-							AbstraktAbweichung.LOGGER.warning("Veralteten Datensatz fuer " + //$NON-NLS-1$
-									objekt + " empfangen:\n" + intervallDatum); //$NON-NLS-1$
+							Debug.getLogger().warning(
+									"Veralteten Datensatz fuer " + //$NON-NLS-1$
+											objekt
+											+ " empfangen:\n" + intervallDatum); //$NON-NLS-1$
 						} else {
 							this.puffer.put(objekt, intervallDatum);
 						}
@@ -249,7 +271,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 				}
 
 				boolean datenVollstaendig = true;
-				for (final SystemObject obj : this.puffer.keySet()) {
+				for (SystemObject obj : this.puffer.keySet()) {
 					if (this.puffer.get(obj) == null) {
 						datenVollstaendig = false;
 						break;
@@ -269,7 +291,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 	 */
 	synchronized void initPuffer() {
 		this.puffer.put(this.messQuerschnitt.getObjekt(), null);
-		for (final SystemObject rms : this.restMessStellen) {
+		for (SystemObject rms : this.restMessStellen) {
 			this.puffer.put(rms, null);
 		}
 	}
@@ -284,125 +306,152 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt
 		long intervallEnde = -1;
 
 		synchronized (this.puffer) {
-			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt()).getStart();
-			intervallEnde = this.puffer.get(this.messQuerschnitt.getObjekt()).getEnde();
+			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt())
+					.getStart();
+			intervallEnde = this.puffer.get(this.messQuerschnitt.getObjekt())
+					.getEnde();
 
-			final Collection<IDELzFhDatum> restDaten = new HashSet<IDELzFhDatum>();
-			for (final SystemObject rms : this.restMessStellen) {
+			Collection<IDELzFhDatum> restDaten = new HashSet<IDELzFhDatum>();
+			for (SystemObject rms : this.restMessStellen) {
 				restDaten.add(this.puffer.get(rms).getDatum());
 			}
 
-			abweichung = Rechenwerk
-					.multipliziere(Rechenwerk.dividiere(this.puffer.get(this.messQuerschnitt.getObjekt()).getDatum(),
-							Rechenwerk.durchschnitt(restDaten)), 100.0);
+			abweichung = Rechenwerk.multipliziere(Rechenwerk.dividiere(
+					this.puffer.get(this.messQuerschnitt.getObjekt())
+							.getDatum(), Rechenwerk.durchschnitt(restDaten)),
+					100.0);
 		}
 
-		final DataDescription datenBeschreibung = langZeit
-				? new DataDescription(
-						AbstraktDELzFhObjekt.dDav.getDataModel().getAttributeGroup(AbstraktAbweichung.ATG_PID),
-						AbstraktDELzFhObjekt.dDav.getDataModel().getAspect(this.getLzAspPid()))
-						: new DataDescription(
-						AbstraktDELzFhObjekt.dDav.getDataModel().getAttributeGroup(AbstraktAbweichung.ATG_PID),
-								AbstraktDELzFhObjekt.dDav.getDataModel().getAspect(this.getKzAspPid()));
-				final Data nutzDatum = AbstraktDELzFhObjekt.dDav.createData(datenBeschreibung.getAttributeGroup());
+		DataDescription datenBeschreibung = langZeit ? new DataDescription(dDav
+				.getDataModel().getAttributeGroup(ATG_PID), dDav.getDataModel()
+				.getAspect(this.getLzAspPid())) : new DataDescription(dDav
+				.getDataModel().getAttributeGroup(ATG_PID), dDav.getDataModel()
+				.getAspect(this.getKzAspPid()));
+		Data nutzDatum = dDav.createData(datenBeschreibung.getAttributeGroup());
 
-				for (final FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 
-					if (abweichung.isAuswertbar(fahrzeugArt)) {
-						final long abweichungMinus100 = Math.round(abweichung.getQ(fahrzeugArt) - 100.0);
+			if (abweichung.isAuswertbar(fahrzeugArt)) {
+				long abweichungMinus100 = Math.round(abweichung
+						.getQ(fahrzeugArt) - 100.0);
 
-						if ((abweichungMinus100 >= AbstraktAbweichung.PROZENT_MIN)
-								&& (abweichungMinus100 <= AbstraktAbweichung.PROZENT_MAX)) {
-							nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(abweichungMinus100);
-						} else {
-							nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
-							.set(AbstraktAbweichung.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-						}
-
-						synchronized (this) {
-							if (this.abweichungMax >= 0) {
-								if (Math.abs(abweichungMinus100) > this.abweichungMax) {
-									// MessageSender
-									// .getInstance()
-									// .sendMessage(
-									// MessageType.APPLICATION_DOMAIN,
-									// DELangZeitFehlerErkennung.getName(),
-									// MessageGrade.ERROR,
-									// this.messStelle.getMessStelle()
-									// .getPruefling()
-									// .getSystemObject(),
-									// new MessageCauser(dDav
-									// .getLocalUser(),
-									// Constants.EMPTY_STRING,
-									// DELangZeitFehlerErkennung
-									// .getName()),
-									// "Der Wert " + fahrzeugArt.getAttributName() + "
-							// weicht um mehr als " + //$NON-NLS-1$
-							// //$NON-NLS-2$
-									// this.abweichungMax
-									// + "% vom erwarteten Wert im Intervall (" +
-							// //$NON-NLS-1$
-									// this
-									// .getVergleichsIdentifikation()
-									// + ") " + //$NON-NLS-1$
-									// FORMAT.format(new Date(
-									// datenZeit))
-									// + " - " + FORMAT.format(new Date(intervallEnde))
-							// + //$NON-NLS-1$
-									// " ("
-									// + this.vergleichsIntervall
-									// + ") ab."); //$NON-NLS-1$ //$NON-NLS-2$
-
-									MessageSender.getInstance()
-									.sendMessage(
-											AbstraktAbweichung.KONVERTER
-											.konvertiere(
-													new BetriebsmeldungDaten(this.messStelle.getMessStelle()
-																	.getPruefling().getSystemObject()),
-															null, new Object[0]),
-											MessageType.APPLICATION_DOMAIN, null, MessageGrade.ERROR,
-											this.messStelle.getMessStelle().getPruefling().getSystemObject(),
-											MessageState.MESSAGE,
-											new MessageCauser(AbstraktDELzFhObjekt.dDav.getLocalUser(),
-													Constants.EMPTY_STRING, DELangZeitFehlerErkennung.getName()),
-									"Der Wert " + fahrzeugArt.getAttributName() + " am MQ "
-											+ this.messStelle.getMessStelle().getPruefling().getSystemObject()
-											+ " weicht um mehr als " + //$NON-NLS-1$
-											this.abweichungMax + "% (=" + abweichungMinus100 //$NON-NLS-1$
-											+ "%) vom erwarteten Wert im Intervall (" +
-											this.getVergleichsIdentifikation() + ") " + //$NON-NLS-1$
-											AbstraktAbweichung.FORMAT.format(new Date(datenZeit)) + " - " //$NON-NLS-1$
-											+ AbstraktAbweichung.FORMAT.format(new Date(intervallEnde)) +
-											" (" + this.vergleichsIntervall + ") ab."); //$NON-NLS-2$
-
-								}
-							}
-						}
-					} else {
-						nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
-						.set(AbstraktAbweichung.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
-					}
-
+				if (abweichungMinus100 >= PROZENT_MIN
+						&& abweichungMinus100 <= PROZENT_MAX) {
+					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
+							.set(abweichungMinus100);
+				} else {
+					nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName())
+							.set(NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 				}
 
-				final ResultData publikationsDatum = new ResultData(this.messStelle.getMessStelle().getSystemObject(),
-				datenBeschreibung, datenZeit, nutzDatum);
+				synchronized (this) {
+					if (this.abweichungMax > 0) {
+						if (Math.abs(abweichungMinus100) > this.abweichungMax) {
+							OperatingMessage message = MESSAGE_TEMPLATE.newMessage(this.messStelle.getMessStelle().getPruefling().getSystemObject());
+							message.put("attr", fahrzeugArt.getAttributName());
+							message.put("von", formatDate(Instant.ofEpochMilli(datenZeit)));
+							message.put("bis", formatDate(Instant.ofEpochMilli(intervallEnde)));
+							message.put("dauer", formatDuration(intervallEnde-datenZeit));
+							message.put("abw", abweichungMax);
+							message.addId("[DUA-LF-MA01]");
+							message.send();
+						}
+					}
+				}
+			} else {
+				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(
+						NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+			}
 
-				this.kanal.publiziere(publikationsDatum);
+		}
+
+		ResultData publikationsDatum = new ResultData(this.messStelle
+				.getMessStelle().getSystemObject(), datenBeschreibung,
+				datenZeit, nutzDatum);
+
+		this.kanal.publiziere(publikationsDatum);
 	}
 
-	@Override
-	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
+
+	/**
+	 * Formatiert ein Zeitbereich
+	 * @param tmp Dauer in Millisekunden
+	 * @return Ein Text wie "1 Stunde 13 Minuten"
+	 */
+	public static String formatDuration(long tmp) {
+		long ms = tmp % 1000;
+		tmp /= 1000;
+		long sec = tmp % 60;
+		tmp /= 60;
+		long min = tmp % 60;
+		tmp /= 60;
+		long h = tmp;
+		StringBuilder stringBuilder = new StringBuilder();
+		if(h >= 1){
+			if(h == 1){
+				stringBuilder.append("1 Stunde ");
+			}
+			else {
+				stringBuilder.append(h).append(" Stunden ");
+			}
+		}
+		if(min >= 1){
+			if(min == 1){
+				stringBuilder.append("1 Minute ");
+			}
+			else {
+				stringBuilder.append(min).append(" Minuten ");
+			}
+		}
+		if(sec >= 1){
+			if(sec == 1){
+				stringBuilder.append("1 Sekunde ");
+			}
+			else {
+				stringBuilder.append(sec).append(" Sekunden ");
+			}
+		}
+		if(ms >= 1){
+			if(ms == 1){
+				stringBuilder.append("1 Millisekunde ");
+			}
+			else {
+				stringBuilder.append(ms).append(" Millisekunden ");
+			}
+		}
+		stringBuilder.setLength(stringBuilder.length()-1);
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * Formatiert ein Datum
+	 * @param dateTime Zeitpunkt
+	 * @return String-Wert
+	 */
+	public static String formatDate(final Instant dateTime) {
+		return DATE_TIME_FORMATTER.format(LocalDateTime.ofInstant(dateTime, ZoneId.systemDefault()));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void dataRequest(SystemObject object,
+			DataDescription dataDescription, byte state) {
 		// Quellenanmeldung
 	}
 
-	@Override
-	public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isRequestSupported(SystemObject object,
+			DataDescription dataDescription) {
 		return false;
 	}
 
-	@Override
-	public void aktualisiereDatum(final SystemObject objekt, final Intervall intervallDatum) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void aktualisiereDatum(SystemObject objekt, Intervall intervallDatum) {
 		this.versucheBerechnung(objekt, intervallDatum);
 	}
 

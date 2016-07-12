@@ -1,42 +1,45 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Langzeit-Fehlererkennung LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.langfehlerlve.
+ * 
+ * de.bsvrz.dua.langfehlerlve is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.langfehlerlve is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.langfehlerlve.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 
 package de.bsvrz.dua.langfehlerlve.modell.online;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+
+import java.util.Date;
 
 /**
  * Zeitintervall. Zwei Intervalle sind dann gleich, wenn sie den gleichen Anfang
  * und das gleiche Ende besitzen (unabhaengig von den im Intervall gespeicherten
  * Daten)
- *
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
 public class Intervall {
 
@@ -57,7 +60,7 @@ public class Intervall {
 
 	/**
 	 * Standardkonstruktor.
-	 *
+	 * 
 	 * @param start
 	 *            Intervallbegin (absolute Zeit in ms)
 	 * @param ende
@@ -65,12 +68,13 @@ public class Intervall {
 	 * @param datum
 	 *            das Datum, das zu diesem Intervall gehoert
 	 */
-	public Intervall(final long start, final long ende, final IDELzFhDatum datum) {
+	public Intervall(final long start, final long ende, IDELzFhDatum datum) {
 		if (ende < start) {
-			final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 			throw new RuntimeException("Intervallende (" + //$NON-NLS-1$
-					dateFormat.format(new Date(ende)) + ") liegt vor Intervallbegin (" + //$NON-NLS-1$
-			dateFormat.format(new Date(start)) + ")"); //$NON-NLS-1$
+					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
+					+ ") liegt vor Intervallbegin (" + //$NON-NLS-1$
+					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
+					+ ")"); //$NON-NLS-1$
 		}
 		this.start = start;
 		this.ende = ende;
@@ -84,7 +88,7 @@ public class Intervall {
 
 	/**
 	 * Erfragt Intervallbegin (absolute Zeit in ms).
-	 *
+	 * 
 	 * @return Intervallbegin (absolute Zeit in ms)
 	 */
 	public final long getStart() {
@@ -93,7 +97,7 @@ public class Intervall {
 
 	/**
 	 * Erfragt Intervallende (absolute Zeit in ms).
-	 *
+	 * 
 	 * @return Intervallende (absolute Zeit in ms)
 	 */
 	public final long getEnde() {
@@ -102,7 +106,7 @@ public class Intervall {
 
 	/**
 	 * Erfragt das Datum, das zu diesem Intervall gehoert.
-	 *
+	 * 
 	 * @return das Datum, das zu diesem Intervall gehoert
 	 */
 	public final IDELzFhDatum getDatum() {
@@ -111,35 +115,42 @@ public class Intervall {
 
 	/**
 	 * Erfragt, ob der uebergebene Wert im Intervall [begin, ende) liegt.
-	 *
+	 * 
 	 * @param wert
 	 *            ein Wert
 	 * @return ob der uebergebene Wert im Intervall [begin, ende) liegt
 	 */
 	public final boolean isInIntervall(final long wert) {
-		return (this.start <= wert) && (wert < this.ende);
+		return this.start <= wert && wert < this.ende;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		boolean gleich = false;
 
-		if ((obj != null) && (obj instanceof Intervall)) {
-			final Intervall that = (Intervall) obj;
-			gleich = (this.start == that.start) && (this.ende == that.ende);
+		if (obj != null && obj instanceof Intervall) {
+			Intervall that = (Intervall) obj;
+			gleich = this.start == that.start && this.ende == that.ende;
 		}
 
 		return gleich;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
-		final String s = "Datum:\n" + this.datum + "\n";
-		final SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		String s = "Datum:\n" + this.datum + "\n";
 
 		return "Intervallbegin: " + //$NON-NLS-1$
-				dateFormat.format(new Date(start)) + ", Intervallende: " + //$NON-NLS-1$
-				dateFormat.format(new Date(ende)) + " --> " + s; //$NON-NLS-1$
+				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
+				+ ", Intervallende: " + //$NON-NLS-1$
+				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
+				+ " --> " + s; //$NON-NLS-1$
 	}
 
 }

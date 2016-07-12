@@ -1,33 +1,32 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Langzeit-Fehlererkennung LVE
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.langfehlerlve.
+ * 
+ * de.bsvrz.dua.langfehlerlve is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.langfehlerlve is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.langfehlerlve.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 
 package de.bsvrz.dua.langfehlerlve.langfehlerlve;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
@@ -41,6 +40,9 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Die SWE DE Langzeit-Fehlererkennung dient zur Erkennung von systematischen
@@ -57,63 +59,77 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
  * Überschreitung gewisser pro Messstellengruppe (topographisch sinnvolle
  * Zusammenfassung mehrerer Messstellen bzw. Messquerschnitte) definierter
  * Grenzwerte werden Betriebsmeldungen ausgegeben.
- *
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
 public class DELangZeitFehlerErkennung implements StandardApplication {
 
-	private static final Debug LOGGER = Debug.getLogger();
 	/**
 	 * die Argumente der Kommandozeile.
 	 */
-	private final ArrayList<String> komArgumente = new ArrayList<String>();
+	private ArrayList<String> komArgumente = new ArrayList<String>();
 
 	/**
 	 * Erfragt den Namen dieser Applikation.
-	 *
+	 * 
 	 * @return der Name dieser Applikation
 	 */
 	public static final String getName() {
 		return "DE Langzeit-Fehlererkennung";
 	}
 
-	@Override
-	public void initialize(final ClientDavInterface dav) throws Exception {
-		final Collection<ConfigurationArea> kbFilter = DUAUtensilien.getKonfigurationsBereicheAlsObjekte(dav,
-				DUAUtensilien.getArgument(DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID, this.komArgumente));
-
-		MessageSender.getInstance().setApplicationLabel("DE-Langzeitfehlererkennung");
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(ClientDavInterface dav) throws Exception {
+		Collection<ConfigurationArea> kbFilter = DUAUtensilien
+				.getKonfigurationsBereicheAlsObjekte(dav, DUAUtensilien
+						.getArgument(
+								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
+								this.komArgumente));
+		
+		MessageSender.getInstance().setApplicationLabel("Langzeit-Fehlererkennung Verkehr");
 
 		DuaVerkehrsNetz.initialisiere(dav);
 
-		final Collection<SystemObject> msgObjekte = DUAUtensilien
-				.getBasisInstanzen(dav.getDataModel().getType(DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav, kbFilter);
+		Collection<SystemObject> msgObjekte = DUAUtensilien.getBasisInstanzen(
+				dav.getDataModel().getType(
+						DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav, kbFilter);
 
 		String config = "Ueberwachte Messstellengruppen:\n";
-		for (final SystemObject msgObjekt : msgObjekte) {
+		for (SystemObject msgObjekt : msgObjekte) {
 			config += msgObjekt + "\n";
 		}
-		DELangZeitFehlerErkennung.LOGGER.config(config);
+		Debug.getLogger().config(config);
 
-		for (final SystemObject msgObjekt : msgObjekte) {
-			new DELzFhMessStellenGruppe(dav, msgObjekt, DELzFhMessStellenGruppe.LANGZEIT_AUSWERTUNG);
-			new DELzFhMessStellenGruppe(dav, msgObjekt, DELzFhMessStellenGruppe.KURZZEIT_AUSWERTUNG);
+		for (SystemObject msgObjekt : msgObjekte) {
+			new DELzFhMessStellenGruppe(dav, msgObjekt,
+					DELzFhMessStellenGruppe.LANGZEIT_AUSWERTUNG);
+			new DELzFhMessStellenGruppe(dav, msgObjekt,
+					DELzFhMessStellenGruppe.KURZZEIT_AUSWERTUNG);
 		}
 	}
 
-	@Override
-	public void parseArguments(final ArgumentList argumente) throws Exception {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void parseArguments(ArgumentList argumente) throws Exception {
 
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(final Thread t, final Throwable e) {
-				DELangZeitFehlerErkennung.LOGGER.error("Applikation wird wegen" + " unerwartetem Fehler beendet", e);
-				e.printStackTrace();
-				Runtime.getRuntime().exit(-1);
-			}
-		});
+		Thread
+				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+					public void uncaughtException(@SuppressWarnings("unused")
+					Thread t, Throwable e) {
+						Debug.getLogger().error(
+								"Applikation wird wegen"
+										+ " unerwartetem Fehler beendet", e);
+						e.printStackTrace();
+						Runtime.getRuntime().exit(-1);
+					}
+				});
 
-		for (final String s : argumente.getArgumentStrings()) {
+		for (String s : argumente.getArgumentStrings()) {
 			if (s != null) {
 				this.komArgumente.add(s);
 			}
@@ -124,12 +140,13 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 
 	/**
 	 * Startet diese Applikation.
-	 *
+	 * 
 	 * @param argumente
 	 *            Argumente der Kommandozeile
 	 */
-	public static void main(final String[] argumente) {
-		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(), argumente);
+	public static void main(String[] argumente) {
+		StandardApplicationRunner.run(new DELangZeitFehlerErkennung(),
+				argumente);
 	}
 
 }

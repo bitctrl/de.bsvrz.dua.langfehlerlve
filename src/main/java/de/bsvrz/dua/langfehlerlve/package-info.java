@@ -1,6 +1,5 @@
 /*
  * Segment Datenübernahme und Aufbereitung (DUA), SWE Langzeit-Fehlererkennung LVE
- * Copyright (C) 2007 BitCtrl Systems GmbH 
  * Copyright 2016 by Kappich Systemberatung Aachen
  * 
  * This file is part of de.bsvrz.dua.langfehlerlve.
@@ -26,28 +25,9 @@
  * mail: <info@kappich.de>
  */
 
-package de.bsvrz.dua.langfehlerlve.parameter;
-
 /**
- * Hoert auf Veraenderungen der Attributgruppe (<code>atg.parameterMessStellenGruppe</code>).
- * 
- * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Langzeit-Fehlererkennung LVE
+ *
+ * @author Kappich Systemberatung
  */
-public interface IAtgParameterMessStellenGruppeListener {
-
-	/**
-	 * Aktualisiert die Parameter der Attributgruppe
-	 * <code>atg.parameterMessStellenGruppe</code> getrennt fuer die KZD- und
-	 * LZD-Ueberwachung.
-	 * 
-	 * @param kzParameter
-	 *            aktuelle Parameter fuer die KZD-Ueberwachung
-	 * @param lzParameter
-	 *            aktuelle Parameter fuer die LZD-Ueberwachung
-	 */
-	void aktualisiereMsgParameter(IMsgDatenartParameter kzParameter,
-			IMsgDatenartParameter lzParameter);
-
-}
+package de.bsvrz.dua.langfehlerlve;
