@@ -1,0 +1,43 @@
+Knotenpunkte:;;;;;;;;;;;
+Q1;QZ11;QA11;QZ12;QA12;Q2;QZ2;QA2;Q3;Q4;QZ4;QA4
+20;19;16;13;78;235;166;18;29;94;222;2
+30;8;24;100;32;87;67;105;29;17;182;3
+121;34;34;201;122;116;158;130;20;fehlerhaft;103;1
+180;18;24;51;90;241;138;21;10;30;149;13
+90;29;4;4;96;176;37;155;29;105;61;13
+;
+;
+;
+QxMessQuerschnitt1;;QxMessStelle1;;;BilanzQx1;ZwischenBilanzQx1;;AbweichungQ1;;;
+88,2;;79,6;;;#WERT!;fehlerhaft/nicht ermittelbar;;fehlerhaft/nicht ermittelbar;;;
+QxMessQuerschnitt2;;QxMessStelle2;;;BilanzQx2;ZwischenBilanzQx2;;AbweichungQ2;;;
+171;;198,4;;;266,4;91,4;;114,8241206;;;
+QxMessQuerschnitt3;;QxMessStelle3;;;BilanzQx3;ZwischenBilanzQx3;;AbweichungQ3;;;
+23,4;;23,4;;;#WERT!;-175;;-88,20564516;;;
+QxMessQuerschnitt4;;QxMessStelle4;;;BilanzQx4;ZwischenBilanzQx4;;AbweichungQ4;;;
+#WERT!;;#WERT!;;;#WERT!;#WERT!;;#WERT!;;;
+;;;;;;ZwischenBilanzQx5;;;;;
+;;;;;;fehlerhaft/nicht ermittelbar;;;;;
+;
+;
+;
+Freie Strecke:;;;;;;;;;;;
+Q1;QZ11;QA11;QZ12;QA12;Q2;QZ2;QA2;Q3;Q4;QZ4;QA4
+20;19;16;13;78;235;166;18;29;94;222;2
+30;8;24;100;32;87;67;105;29;17;182;3
+121;34;34;201;122;116;158;130;20;23;103;1
+180;18;24;51;90;241;138;21;10;30;149;13
+90;29;4;4;96;176;37;155;29;105;61;13
+;
+;
+;
+QxMessQuerschnitt1;;QxMessStelle1;;;BilanzQx1;ZwischenBilanzQx1;;AbweichungQ1freieStrecke
+88,2;;79,6;;;#WERT!;fehlerhaft/nicht ermittelbar;;6,607574537
+QxMessQuerschnitt2;;QxMessStelle2;;;BilanzQx2;ZwischenBilanzQx2;;AbweichungQ2freieStrecke
+171;;198,4;;;266,4;91,4;;210,1571947
+QxMessQuerschnitt3;;QxMessStelle3;;;BilanzQx3;ZwischenBilanzQx3;;AbweichungQ3freieStrecke
+23,4;;23,4;;;-205,4;-175;;-77,57188498
+QxMessQuerschnitt4;;QxMessStelle4;;;BilanzQx4;ZwischenBilanzQx4;;AbweichungQ4freieStrecke
+53,8;;190,8;;;#WERT!;30,4;;-42,88747346
+;;;;;;ZwischenBilanzQx5;;
+;;;;;;fehlerhaft/nicht ermittelbar;;
