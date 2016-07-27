@@ -163,23 +163,21 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 	
 	/** Text der Betriebsmeldung */
 	private static final MessageTemplate MESSAGE_TEMPLATE = new MessageTemplate(
-			MessageGrade.WARNING, 
+			MessageGrade.ERROR, 
 			MessageType.APPLICATION_DOMAIN,
 	        MessageTemplate.fixed("Langzeitmessfehler: Der Wert "),
 	        MessageTemplate.variable("attr"),
 	        MessageTemplate.fixed(" weicht um mehr als "),
 			MessageTemplate.variable("abw"),
-	        MessageTemplate.fixed(" % vom erwarteten Wert im Intervall "),
+	        MessageTemplate.fixed("% vom erwarteten Wert im Intervall "),
 			MessageTemplate.variable("von"),
 			MessageTemplate.fixed(" - "),
 			MessageTemplate.variable("bis"),
 			MessageTemplate.fixed(" ("),
 			MessageTemplate.variable("dauer"),
-			MessageTemplate.fixed(") ab am "),
-			MessageTemplate.object(),
-			MessageTemplate.fixed(". "),
+			MessageTemplate.fixed(") ab. "),
 	        MessageTemplate.ids()
-	).withIdFactory(message -> message.getObject().getPidOrId() + " [DUA-PP-MA]");
+			);
 	
 	/**
 	 * Format der Zeitangabe innerhalb der Betriebsmeldung. 
