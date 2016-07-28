@@ -41,6 +41,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IZeitStempel;
 import de.bsvrz.sys.funclib.debug.Debug;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -293,14 +294,16 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 */
 	private void berechneFertigesIntervall(final long start, final long ende) {
 
+		SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+		
 		Debug.getLogger().fine(
 				"Start: "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU
+						+ dateFormat
 								.format(new Date(start))
 						+ " ("
 						+ start
 						+ "), Ende: "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU
+						+ dateFormat
 								.format(new Date(ende)) + " (" + ende + ")");
 
 		Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
@@ -445,7 +448,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 		/**
 		 * Datenzeit dieses Wertes.
 		 */
-		private long datenZeit = -1;
+		private final long datenZeit;
 
 		/**
 		 * der Wert <code>QKfz</code>.
@@ -491,6 +494,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 					this.keineDaten = true;
 				}
 			} else {
+				this.datenZeit = -1;
 				throw new NullPointerException(
 						"<<null>> ist kein gueltiges Argument"); //$NON-NLS-1$
 			}
@@ -521,6 +525,11 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			return ergebnis;
 		}
 
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(datenZeit);
+		}
+		
 		@Override
 		public String toString() {
 			String s = (this.objekt == null ? "kein Objekt" : this.objekt)

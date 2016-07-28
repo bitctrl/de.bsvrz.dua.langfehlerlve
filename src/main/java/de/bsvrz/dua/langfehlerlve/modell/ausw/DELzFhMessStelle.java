@@ -143,14 +143,15 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 					dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
 		}
 
-		dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb,
-				SenderRole.source());
-		dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb,
-				SenderRole.source());
-
 		super.init(dav, messStellenGruppe, langZeit);
 
 		if (this.messStelle != null) {
+			
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb,
+					SenderRole.source());
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb,
+					SenderRole.source());
+			
 			if (this.messStelle.getPruefling() != null) {
 				messStellenGruppe.getMq(
 						this.messStelle.getPruefling().getSystemObject())

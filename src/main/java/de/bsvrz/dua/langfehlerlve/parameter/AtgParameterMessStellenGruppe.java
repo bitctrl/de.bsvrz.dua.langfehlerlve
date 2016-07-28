@@ -48,7 +48,7 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 	/**
 	 * statische Instanzen dieser Klasse.
 	 */
-	protected static Map<SystemObject, AtgParameterMessStellenGruppe> instanzen = new HashMap<SystemObject, AtgParameterMessStellenGruppe>();
+	protected final static Map<SystemObject, AtgParameterMessStellenGruppe> instanzen = new HashMap<SystemObject, AtgParameterMessStellenGruppe>();
 
 	/**
 	 * Menge aller Beobachterobjekte.

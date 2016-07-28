@@ -31,6 +31,7 @@ package de.bsvrz.dua.langfehlerlve.modell.online;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Zeitintervall. Zwei Intervalle sind dann gleich, wenn sie den gleichen Anfang
@@ -44,12 +45,12 @@ public class Intervall {
 	/**
 	 * Intervallbegin (absolute Zeit in ms).
 	 */
-	private long start = -1;
+	private final long start;
 
 	/**
 	 * Intervallende (absolute Zeit in ms).
 	 */
-	private long ende = -1;
+	private final long ende;
 
 	/**
 	 * Das Datum, das zu diesem Intervall gehoert.
@@ -134,6 +135,11 @@ public class Intervall {
 		return gleich;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(start, ende);
+	}
+	
 	@Override
 	public String toString() {
 		String s = "Datum:\n" + this.datum + "\n";
