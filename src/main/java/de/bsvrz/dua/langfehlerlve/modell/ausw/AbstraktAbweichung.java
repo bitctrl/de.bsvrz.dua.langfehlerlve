@@ -60,8 +60,6 @@ import java.util.*;
  * werden hier auch publiziert
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 		ClientSenderInterface, IDELzFhDatenListener {
@@ -430,25 +428,16 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 		return DATE_TIME_FORMATTER.format(LocalDateTime.ofInstant(dateTime, ZoneId.systemDefault()));
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// Quellenanmeldung
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereDatum(SystemObject objekt, Intervall intervallDatum) {
 		this.versucheBerechnung(objekt, intervallDatum);
 	}

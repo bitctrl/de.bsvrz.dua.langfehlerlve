@@ -42,15 +42,13 @@ import java.util.Set;
  * und kapselt dessen aktuelle Parameter (<code>atg.parameterMessStellenGruppe</code>).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 
 	/**
 	 * statische Instanzen dieser Klasse.
 	 */
-	protected static Map<SystemObject, AtgParameterMessStellenGruppe> instanzen = new HashMap<SystemObject, AtgParameterMessStellenGruppe>();
+	protected final static Map<SystemObject, AtgParameterMessStellenGruppe> instanzen = new HashMap<SystemObject, AtgParameterMessStellenGruppe>();
 
 	/**
 	 * Menge aller Beobachterobjekte.
@@ -126,9 +124,6 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {

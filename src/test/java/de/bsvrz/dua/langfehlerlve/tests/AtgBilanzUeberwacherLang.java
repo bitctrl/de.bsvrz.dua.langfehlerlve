@@ -33,14 +33,9 @@ package de.bsvrz.dua.langfehlerlve.tests;
  * <code>asp.messQuerschnittKurzZeit</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 class AtgBilanzUeberwacherLang extends AtgBilanzUeberwacherKurz {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittLangZeit";

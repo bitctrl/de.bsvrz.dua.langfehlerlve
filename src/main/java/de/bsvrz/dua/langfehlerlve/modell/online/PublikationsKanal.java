@@ -40,8 +40,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * aufeinander folgt
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class PublikationsKanal {
 

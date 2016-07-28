@@ -22,6 +22,22 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 ## Versionsgeschichte
 
+### 2.0.2
+
+Release-Datum: 28.07.2016
+
+de.bsvrz.dua.langfehlerlve.modell.ausw.DELzFhMessQuerschnitt.MQDatum
+- Klasse hatte keine geeignete Hash-Funktion wurde aber in einem Set verwendet
+
+de.bsvrz.dua.langfehlerlve.modell.online.Intervall
+- hashCode entsprechend equals-Funktion ergänzt
+
+de.bsvrz.dua.langfehlerlve.modell.ausw.DELzFhMessStelle
+- Prüfung auf null-Object nach der Verwendung bei der Senderanmeldung
+
+- Obsolete SVN-Tags aus Kommentaren entfernt
+- Obsolete inheritDoc-Kommentare entfernt
+
 ### 2.0.1
 
 Release-Datum: 22.07.2016

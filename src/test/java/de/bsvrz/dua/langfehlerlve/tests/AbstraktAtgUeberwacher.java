@@ -42,8 +42,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Ueberprueft den ersten echten (Nutz-)Wert einer Attributgruppe.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 
@@ -110,9 +108,6 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] results) {
 		if (results != null) {
 			if (this.data == null) {

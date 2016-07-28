@@ -40,8 +40,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.MesswertUnskaliert;
  * Liest die Testdaten ein.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 class DatenImporterPrSpezKurz {
 
@@ -171,10 +169,6 @@ class DatenImporterPrSpezKurz {
 
 	/**
 	 * Speichert alle Daten einer Messstellengruppe.
-	 * 
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
-	 * @version $Id$
 	 */
 	final class MSGDaten {
 
@@ -375,10 +369,6 @@ class DatenImporterPrSpezKurz {
 	/**
 	 * Information zu einem Attribut innerhalb der Attributgruppe
 	 * <code>atg.verkehrsDatenKurzZeitMq</code>. 
-	 * 
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
-	 * @version $Id$
 	 */
 	private static final class Attribut {
 

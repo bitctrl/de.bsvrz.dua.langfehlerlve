@@ -61,8 +61,6 @@ import java.util.Collection;
  * Grenzwerte werden Betriebsmeldungen ausgegeben.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DELangZeitFehlerErkennung implements StandardApplication {
 
@@ -80,9 +78,6 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		return "DE Langzeit-Fehlererkennung";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void initialize(ClientDavInterface dav) throws Exception {
 		Collection<ConfigurationArea> kbFilter = DUAUtensilien
 				.getKonfigurationsBereicheAlsObjekte(dav, DUAUtensilien
@@ -112,9 +107,6 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void parseArguments(ArgumentList argumente) throws Exception {
 
 		Thread

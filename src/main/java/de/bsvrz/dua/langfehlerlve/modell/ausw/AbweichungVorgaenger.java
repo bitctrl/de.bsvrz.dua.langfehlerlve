@@ -40,8 +40,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * Vergleich mit Vorgaenger). Diese Daten werden hier auch publiziert
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AbweichungVorgaenger extends AbstraktAbweichung {
 
@@ -91,9 +89,6 @@ public class AbweichungVorgaenger extends AbstraktAbweichung {
 		messStelleMinus1.addListener(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungVorgaenger();
@@ -102,25 +97,16 @@ public class AbweichungVorgaenger extends AbstraktAbweichung {
 						.getVergleichsIntervall());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getKzAspPid() {
 		return "asp.messQuerschnittZumVorgängerKurzZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getLzAspPid() {
 		return "asp.messQuerschnittZumVorgängerLangZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getVergleichsIdentifikation() {
 		return "Vergleich mit Vorgaenger"; //$NON-NLS-1$

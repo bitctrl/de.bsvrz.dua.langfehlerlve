@@ -42,8 +42,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
  * Testet den Modul DE Langzeit-Fehlererkennung nach PruefSpez.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements ClientSenderInterface {
 
@@ -192,17 +190,11 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 		}
 	}
 
-	/**
-		 * {@inheritDoc}
-		 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// 		
 	}
 
-	/**
-		 * {@inheritDoc}
-		 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;
