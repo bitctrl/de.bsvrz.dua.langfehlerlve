@@ -33,8 +33,6 @@ import java.io.File;
  * (Datenverteiler-Verbindung, Basisverzeichnis fuer Quelldaten).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class Verbindung {
 	

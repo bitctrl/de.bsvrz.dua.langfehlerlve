@@ -33,14 +33,9 @@ package de.bsvrz.dua.langfehlerlve.tests;
  * <code>asp.messQuerschnittDerMessStellenGruppeKurzZeit</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 class AtgAbweichungUeberwacherKurzAlle extends AtgAbweichungUeberwacherKurz {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittDerMessStellenGruppeKurzZeit";

@@ -56,8 +56,6 @@ import java.util.Set;
  * weitergereicht
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		IDELzFhDatenListener, ClientSenderInterface {
@@ -224,17 +222,11 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// Quellenanmeldung
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;
@@ -371,9 +363,6 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		this.initMQPuffer();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereDatum(SystemObject mqObjekt,
 			Intervall intervallDatum) {
 		if (intervallDatum.getDatum().isKeineDaten()) {
@@ -416,9 +405,6 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.initMQPuffer();

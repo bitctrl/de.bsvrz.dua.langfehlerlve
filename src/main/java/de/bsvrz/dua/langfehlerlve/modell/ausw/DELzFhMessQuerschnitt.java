@@ -53,8 +53,6 @@ import java.util.*;
  * Messstelle bzw. die Messstellengruppe weitergeleitet
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 		ClientReceiverInterface {
@@ -150,9 +148,6 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
@@ -210,9 +205,6 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.intervallLaengeInitialisiert = true;
@@ -397,9 +389,6 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		String s = "Datenerfassung ("
@@ -507,31 +496,19 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public final boolean isKeineDaten() {
 			return this.keineDaten;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public long getZeitStempel() {
 			return this.datenZeit;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public int compareTo(IZeitStempel that) {
 			return -new Long(this.getZeitStempel()).compareTo(that
 					.getZeitStempel());
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean equals(Object obj) {
 			boolean ergebnis = false;
@@ -544,9 +521,6 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			return ergebnis;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public String toString() {
 			String s = (this.objekt == null ? "kein Objekt" : this.objekt)
@@ -565,9 +539,6 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			return s;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public double getQ(FahrzeugArt fahrzeugArt) {
 			double ergebnis = -1.0;
 
@@ -582,9 +553,6 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			return ergebnis;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
 			boolean ergebnis = true;
 
@@ -599,9 +567,6 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			return ergebnis;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public SystemObject getObjekt() {
 			return this.objekt;
 		}

@@ -42,8 +42,6 @@ import java.util.Set;
  * und kapselt dessen aktuelle Parameter (<code>atg.parameterMessStellenGruppe</code>).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 
@@ -126,9 +124,6 @@ public class AtgParameterMessStellenGruppe implements ClientReceiverInterface {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {

@@ -38,8 +38,6 @@ import java.util.Date;
  * Daten)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class Intervall {
 
@@ -124,9 +122,6 @@ public class Intervall {
 		return this.start <= wert && wert < this.ende;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean gleich = false;
@@ -139,9 +134,6 @@ public class Intervall {
 		return gleich;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		String s = "Datum:\n" + this.datum + "\n";

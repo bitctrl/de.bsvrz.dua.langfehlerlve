@@ -30,8 +30,6 @@ package de.bsvrz.dua.langfehlerlve.tests;
  * Liest die Testdaten ein.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 final class DatenImporterPrSpezLang extends DatenImporterPrSpezKurz {
 
