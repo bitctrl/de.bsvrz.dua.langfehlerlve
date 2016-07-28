@@ -32,8 +32,6 @@ package de.bsvrz.dua.langfehlerlve.parameter;
  * Hoert auf Veraenderungen der Attributgruppe (<code>atg.parameterMessStellenGruppe</code>).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public interface IAtgParameterMessStellenGruppeListener {
 

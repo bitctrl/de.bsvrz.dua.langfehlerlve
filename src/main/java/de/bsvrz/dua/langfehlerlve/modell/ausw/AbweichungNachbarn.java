@@ -41,8 +41,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * publiziert
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class AbweichungNachbarn extends AbstraktAbweichung {
 
@@ -95,9 +93,6 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungMessStellenGruppe();
@@ -106,25 +101,16 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 						.getVergleichsIntervall());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getKzAspPid() {
 		return "asp.messQuerschnittDerMessStellenGruppeKurzZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getLzAspPid() {
 		return "asp.messQuerschnittDerMessStellenGruppeLangZeit"; //$NON-NLS-1$
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected String getVergleichsIdentifikation() {
 		return "Vergleich mit Nachbarn"; //$NON-NLS-1$

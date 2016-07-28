@@ -32,14 +32,9 @@ package de.bsvrz.dua.langfehlerlve.tests;
  * <code>atg.intervallVerkehrsStärke</code>, <code>asp.messQuerschnittLangZeit</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 class AtgIntervallUeberwacherMqLang extends AtgIntervallUeberwacherMqKurz {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittLangZeit";

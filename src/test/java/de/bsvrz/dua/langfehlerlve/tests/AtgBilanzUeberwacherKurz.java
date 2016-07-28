@@ -32,22 +32,14 @@ package de.bsvrz.dua.langfehlerlve.tests;
  * <code>atg.bilanzVerkehrsStärke</code>, <code>asp.messQuerschnittKurzZeit</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 class AtgBilanzUeberwacherKurz extends AbstraktAtgUeberwacher {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAspPid() {
 		return "asp.messQuerschnittKurzZeit";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	String getAtgPid() {
 		return "atg.bilanzVerkehrsStärke";

@@ -46,8 +46,6 @@ import java.util.*;
  * hier auch publiziert
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class MessStellenBilanz implements ClientSenderInterface,
 		IDELzFhDatenListener {
@@ -479,25 +477,16 @@ public class MessStellenBilanz implements ClientSenderInterface,
 		this.kanal.publiziere(publikationsDatum);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// Quellenanmeldung
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereDatum(SystemObject mqObjekt,
 			Intervall intervallDatum) {
 		Debug.getLogger().fine(
@@ -517,9 +506,6 @@ public class MessStellenBilanz implements ClientSenderInterface,
 				+ "<--\n";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		String text = "Pufferinhalt:\n";
@@ -538,10 +524,6 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * Sollte geworfen werden, wenn beim Einfuegen eines Intervalls in diesen
 	 * Puffer die Intervalle (in Bezug auf ihre Intervallgrenzen) inkompatibel
 	 * werden.
-	 * 
-	 * @author BitCtrl Systems GmbH, Thierfelder
-	 * 
-	 * @version $Id$
 	 */
 	private class PufferException extends Exception {
 

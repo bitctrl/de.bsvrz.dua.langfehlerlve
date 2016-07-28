@@ -48,8 +48,6 @@ import java.util.Set;
  * Verbindung gesetzt.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DELzFhMessStellenGruppe {
 
@@ -264,9 +262,6 @@ public class DELzFhMessStellenGruppe {
 		return this.messStellen.get(msObjekt);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.objekt.toString();

@@ -35,8 +35,6 @@ import java.util.Set;
  * Alle Fahrzeugarten die innerhalb der SWE 4.DELzFh benoetigt werden.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class FahrzeugArt {
 
@@ -95,9 +93,6 @@ public final class FahrzeugArt {
 		return this.attributName;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "Attributname: " + this.attributName; //$NON-NLS-1$

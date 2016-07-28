@@ -56,8 +56,6 @@ import java.util.Set;
  * weitergereicht
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		IDELzFhDatenListener, ClientSenderInterface {
@@ -145,14 +143,15 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 					dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
 		}
 
-		dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb,
-				SenderRole.source());
-		dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb,
-				SenderRole.source());
-
 		super.init(dav, messStellenGruppe, langZeit);
 
 		if (this.messStelle != null) {
+			
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb,
+					SenderRole.source());
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb,
+					SenderRole.source());
+			
 			if (this.messStelle.getPruefling() != null) {
 				messStellenGruppe.getMq(
 						this.messStelle.getPruefling().getSystemObject())
@@ -224,17 +223,11 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void dataRequest(SystemObject object,
 			DataDescription dataDescription, byte state) {
 		// Quellenanmeldung
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isRequestSupported(SystemObject object,
 			DataDescription dataDescription) {
 		return false;
@@ -371,9 +364,6 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		this.initMQPuffer();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereDatum(SystemObject mqObjekt,
 			Intervall intervallDatum) {
 		if (intervallDatum.getDatum().isKeineDaten()) {
@@ -416,9 +406,6 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.initMQPuffer();

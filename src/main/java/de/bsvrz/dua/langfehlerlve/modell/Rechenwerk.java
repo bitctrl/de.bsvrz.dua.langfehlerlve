@@ -39,8 +39,6 @@ import java.util.*;
  * Schnittstelle einzeln miteinander verknuepft
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public final class Rechenwerk {
 	
@@ -407,23 +405,14 @@ public final class Rechenwerk {
 			this.werte.put(fahrzeugArt, wert);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
 			return this.auswertbar.get(fahrzeugArt);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public double getQ(FahrzeugArt fahrzeugArt) {
 			return this.werte.get(fahrzeugArt);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		public boolean isKeineDaten() {
 			return false;
 		}
