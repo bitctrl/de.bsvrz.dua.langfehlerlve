@@ -22,7 +22,11 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 ## Versionsgeschichte
 
-### 2.0.2
+### Version 2.0.3
+
+- Applikationsname für MessageSender entsprechend NERZ-Vorgabe gesetzt
+
+### Version 2.0.2
 
 Release-Datum: 28.07.2016
 
@@ -38,13 +42,13 @@ de.bsvrz.dua.langfehlerlve.modell.ausw.DELzFhMessStelle
 - Obsolete SVN-Tags aus Kommentaren entfernt
 - Obsolete inheritDoc-Kommentare entfernt
 
-### 2.0.1
+### Version 2.0.1
 
 Release-Datum: 22.07.2016
 
 - Umpacketierung gemäß NERZ-Konvention
 
-### 2.0.0
+### Version 2.0.0
 
 Release-Datum: 31.05.2016
 
@@ -62,46 +66,46 @@ Folgende Änderungen gegenüber vorhergehenden Versionen wurden durchgeführt:
   Betriebsmeldungen werden jetzt auch über die Debug-Funktion mit Level INFO
   ausgegeben.
 
-### 1.6.0
+### Version 1.6.0
 
 - Umstellung auf Java 8 und UTF-8
 
-### 1.5.0
+### Version 1.5.0
 
 - Umstellung auf Funclib-Bitctrl-Dua
 
-### 1.4.0
+### Version 1.4.0
 
 - Umstellung auf Maven-Build
 
-### 1.3.2
+### Version 1.3.2
 
  - Bei Betriebsmeldungen wird ab sofort der betroffene Messquerschnitt im Meldungstext
    mit erwaehnt (vor nur Systemobjekt-Referenz).  
 
-### 1.3.1
+### Version 1.3.1
 
  - Senden von reinen Betriebsmeldungen in DUA um die Umsetzung von Objekt-PID/ID nach
    Betriebsmeldungs-ID erweitert.  
 
-### 1.3.0
+### Version 1.3.0
 
  - Laufzeitexception bei veraltetem Zeitstempel entfernt.
          
-### 1.2.2
+### Version 1.2.2
 
  - FIX: Sämtliche Konstruktoren DataDescription(atg, asp, sim) ersetzt durch
         DataDescription(atg, asp)
 
-### 1.2.0
+### Version 1.2.0
 
  - Bash-Startskript hinzu
   
-### 1.1.0
+### Version 1.1.0
 
  - Verfeinerung der Testumgebung
   
-### 1.0.0
+### Version 1.0.0
 
  - Erste Auslieferung
 

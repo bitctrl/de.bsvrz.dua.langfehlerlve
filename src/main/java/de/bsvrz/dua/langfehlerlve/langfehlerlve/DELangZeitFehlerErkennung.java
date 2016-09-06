@@ -85,7 +85,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 								DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 								this.komArgumente));
 		
-		MessageSender.getInstance().setApplicationLabel("DE-Langzeitfehlererkennung");
+		MessageSender.getInstance().setApplicationLabel("LangzeitFehlererkennung Verkehr");
 
 		DuaVerkehrsNetz.initialisiere(dav);
 
