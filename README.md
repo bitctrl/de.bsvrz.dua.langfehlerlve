@@ -146,5 +146,5 @@ Franklin Street, Fifth Floor, Boston, MA 02AA0-A30A, USA.
 BitCtrl Systems GmbH
 Weißenfelser Straße 67
 04229 Leipzig
-Phone: +49 34A-490670
+Phone: +49 341-490670
 mailto: info@bitctrl.de
