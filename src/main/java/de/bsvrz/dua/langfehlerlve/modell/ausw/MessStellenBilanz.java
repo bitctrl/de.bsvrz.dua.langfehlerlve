@@ -31,7 +31,6 @@ package de.bsvrz.dua.langfehlerlve.modell.ausw;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -57,8 +56,7 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class MessStellenBilanz implements ClientSenderInterface,
-		IDELzFhDatenListener {
+public class MessStellenBilanz implements ClientSenderInterface, IDELzFhDatenListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -69,7 +67,8 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	private static final double BILANZ_MIN = -100000000.0;
 
 	/**
-	 * Obere Grenze des Attributtyps <code>att.verkehrsStärkeStundeBilanz</code>.
+	 * Obere Grenze des Attributtyps
+	 * <code>att.verkehrsStärkeStundeBilanz</code>.
 	 */
 	private static final double BILANZ_MAX = 100000000.0;
 
@@ -85,11 +84,12 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 */
 	private static final Comparator<Intervall> INTERVALL_SORTIERER = new Comparator<Intervall>() {
 
+		@Override
 		public int compare(Intervall int1, Intervall int2) {
-			int res = new Long(int1.getStart()).compareTo(int2.getStart());
+			int res = Long.compare(int1.getStart(), int2.getStart());
 
 			if (res == 0) {
-				res = new Long(int1.getEnde()).compareTo(int2.getEnde());
+				res = Long.compare(int1.getEnde(), int2.getEnde());
 			}
 
 			return res;
@@ -151,7 +151,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * puffert alle aktuellen hier benoetigten Onlinedaten zur Berechnung der
 	 * (Zwischen-)Bilanzen.
 	 */
-	private Map<SystemObject, Intervall> puffer = new HashMap<SystemObject, Intervall>();
+	private Map<SystemObject, Intervall> puffer = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
@@ -174,19 +174,15 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected MessStellenBilanz(ClientDavInterface dav,
-			DELzFhMessStelle messStelle, DELzFhMessStelle messStelleMinus1,
-			DELzFhMessQuerschnitt messQuerschnittPlus1,
-			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
+	protected MessStellenBilanz(ClientDavInterface dav, DELzFhMessStelle messStelle, DELzFhMessStelle messStelleMinus1,
+			DELzFhMessQuerschnitt messQuerschnittPlus1, DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
 			throws Exception {
 		if (dDav == null) {
 			dDav = dav;
-			pubBeschreibungLz = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.bilanzVerkehrsStärke"), //$NON-NLS-1$
-					dav.getDataModel().getAspect("asp.messQuerschnittLangZeit")); //$NON-NLS-1$
-			pubBeschreibungKz = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.bilanzVerkehrsStärke"), //$NON-NLS-1$
-					dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
+			pubBeschreibungLz = new DataDescription(dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsStärke"),
+					dav.getDataModel().getAspect("asp.messQuerschnittLangZeit"));
+			pubBeschreibungKz = new DataDescription(dav.getDataModel().getAttributeGroup("atg.bilanzVerkehrsStärke"),
+					dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit"));
 		}
 		this.kanal = new PublikationsKanal(dav);
 		this.langZeit = langZeit;
@@ -197,8 +193,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 		this.initPuffer();
 
 		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
-				langZeit ? pubBeschreibungLz : pubBeschreibungKz, SenderRole
-						.source());
+				langZeit ? pubBeschreibungLz : pubBeschreibungKz, SenderRole.source());
 
 		messStelle.addListener(this);
 		messStelleMinus1.addListener(this);
@@ -210,66 +205,46 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * Initialisiert (loescht) den Online-Puffer dieser Klasse.
 	 */
 	private void initPuffer() {
-		LOGGER.fine(
-				getInfo()
-						+ "Initialisiere Puffer fuer Messstelle ("
-						+ this.messStelle.getMessStelle().getSystemObject()
-								.getPid()
-						+ "), Messquerschnitt ("
-						+ this.messQuerschnitt.getObjekt().getPid()
-						+ "), Vorgaenger-Messstelle ("
-						+ this.messStelleMinus1.getMessStelle()
-								.getSystemObject().getPid()
-						+ "), Nachfolger-Messquerschnitt ("
-						+ this.messQuerschnittPlus1.getObjekt().getPid() + ")");
+		LOGGER.fine(getInfo() + "Initialisiere Puffer fuer Messstelle ("
+				+ this.messStelle.getMessStelle().getSystemObject().getPid() + "), Messquerschnitt ("
+				+ this.messQuerschnitt.getObjekt().getPid() + "), Vorgaenger-Messstelle ("
+				+ this.messStelleMinus1.getMessStelle().getSystemObject().getPid() + "), Nachfolger-Messquerschnitt ("
+				+ this.messQuerschnittPlus1.getObjekt().getPid() + ")");
 		synchronized (this.puffer) {
-			Intervall msIntervall = this.puffer.get(this.messStelle
-					.getMessStelle().getSystemObject());
+			Intervall msIntervall = this.puffer.get(this.messStelle.getMessStelle().getSystemObject());
 			if (msIntervall != null) {
 				if (msIntervall.getDatum() == null
-						|| (msIntervall.getDatum() != null && !msIntervall
-								.getDatum().isKeineDaten())) {
-					this.puffer.put(this.messStelle.getMessStelle()
-							.getSystemObject(), null);
+						|| (msIntervall.getDatum() != null && !msIntervall.getDatum().isKeineDaten())) {
+					this.puffer.put(this.messStelle.getMessStelle().getSystemObject(), null);
 				}
 			} else {
-				this.puffer.put(this.messStelle.getMessStelle()
-						.getSystemObject(), null);
+				this.puffer.put(this.messStelle.getMessStelle().getSystemObject(), null);
 			}
 
-			Intervall msMinus1Intervall = this.puffer.get(this.messStelleMinus1
-					.getMessStelle().getSystemObject());
+			Intervall msMinus1Intervall = this.puffer.get(this.messStelleMinus1.getMessStelle().getSystemObject());
 			if (msMinus1Intervall != null) {
 				if (msMinus1Intervall.getDatum() == null
-						|| (msMinus1Intervall.getDatum() != null && !msMinus1Intervall
-								.getDatum().isKeineDaten())) {
-					this.puffer.put(this.messStelleMinus1.getMessStelle()
-							.getSystemObject(), null);
+						|| (msMinus1Intervall.getDatum() != null && !msMinus1Intervall.getDatum().isKeineDaten())) {
+					this.puffer.put(this.messStelleMinus1.getMessStelle().getSystemObject(), null);
 				}
 			} else {
-				this.puffer.put(this.messStelleMinus1.getMessStelle()
-						.getSystemObject(), null);
+				this.puffer.put(this.messStelleMinus1.getMessStelle().getSystemObject(), null);
 			}
 
-			Intervall mqPlus1Intervall = this.puffer
-					.get(this.messQuerschnittPlus1.getObjekt());
+			Intervall mqPlus1Intervall = this.puffer.get(this.messQuerschnittPlus1.getObjekt());
 			if (mqPlus1Intervall != null) {
 				if (mqPlus1Intervall.getDatum() == null
-						|| (mqPlus1Intervall.getDatum() != null && !mqPlus1Intervall
-								.getDatum().isKeineDaten())) {
-					this.puffer
-							.put(this.messQuerschnittPlus1.getObjekt(), null);
+						|| (mqPlus1Intervall.getDatum() != null && !mqPlus1Intervall.getDatum().isKeineDaten())) {
+					this.puffer.put(this.messQuerschnittPlus1.getObjekt(), null);
 				}
 			} else {
 				this.puffer.put(this.messQuerschnittPlus1.getObjekt(), null);
 			}
 
-			Intervall mqIntervall = this.puffer.get(this.messQuerschnitt
-					.getObjekt());
+			Intervall mqIntervall = this.puffer.get(this.messQuerschnitt.getObjekt());
 			if (mqIntervall != null) {
 				if (mqIntervall.getDatum() == null
-						|| (mqIntervall.getDatum() != null && !mqIntervall
-								.getDatum().isKeineDaten())) {
+						|| (mqIntervall.getDatum() != null && !mqIntervall.getDatum().isKeineDaten())) {
 					this.puffer.put(this.messQuerschnitt.getObjekt(), null);
 				}
 			} else {
@@ -286,13 +261,11 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * @param intervallDatum
 	 *            ein gerade empfangenes Intervalldatum != null
 	 */
-	private void versucheBerechnung(SystemObject objekt,
-			Intervall intervallDatum) {
+	private void versucheBerechnung(SystemObject objekt, Intervall intervallDatum) {
 
 		if (intervallDatum.getDatum().isKeineDaten()) {
-			ResultData resultat = new ResultData(messStelle.getMessStelle()
-					.getSystemObject(), this.langZeit ? pubBeschreibungLz
-					: pubBeschreibungKz, intervallDatum.getStart(), null);
+			ResultData resultat = new ResultData(messStelle.getMessStelle().getSystemObject(),
+					this.langZeit ? pubBeschreibungLz : pubBeschreibungKz, intervallDatum.getStart(), null);
 			this.fillPuffer(objekt, intervallDatum);
 			this.kanal.publiziere(resultat);
 			this.initPuffer();
@@ -302,34 +275,21 @@ public class MessStellenBilanz implements ClientSenderInterface,
 					Intervall protoTyp = this.getPrototypischesPufferElement();
 
 					if (protoTyp == null) {
-						LOGGER
-								.fine(
-										getInfo()
-												+ "Puffer (noch vollstaendig leer) wird fuer "
-												+ objekt.getPid()
-												+ " beschrieben mit:\n"
-												+ intervallDatum);
+						LOGGER.fine(getInfo() + "Puffer (noch vollstaendig leer) wird fuer " + objekt.getPid()
+								+ " beschrieben mit:\n" + intervallDatum);
 						this.fillPuffer(objekt, intervallDatum);
 					} else {
-						LOGGER.fine(
-								this.getInfo() + "Prototyp: " + protoTyp);
+						LOGGER.fine(this.getInfo() + "Prototyp: " + protoTyp);
 						if (protoTyp.getStart() == intervallDatum.getStart()) {
-							LOGGER.fine(
-									getInfo() + "Fuege neues Element ein:\n"
-											+ intervallDatum);
+							LOGGER.fine(getInfo() + "Fuege neues Element ein:\n" + intervallDatum);
 							this.fillPuffer(objekt, intervallDatum);
 						} else {
 							this.initPuffer();
 							if (protoTyp.getStart() > intervallDatum.getStart()) {
-								LOGGER
-										.warning(
-												getInfo()
-														+ "Veralteten Datensatz fuer " + //$NON-NLS-1$
-														objekt
-														+ " empfangen:\n" + intervallDatum + "\n" + this.toString()); //$NON-NLS-1$
+								LOGGER.warning(getInfo() + "Veralteten Datensatz fuer " + objekt + " empfangen:\n"
+										+ intervallDatum + "\n" + this.toString());
 							} else {
-								MessStellenBilanz.this.puffer.put(objekt,
-										intervallDatum);
+								MessStellenBilanz.this.puffer.put(objekt, intervallDatum);
 							}
 						}
 					}
@@ -339,11 +299,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 						this.initPuffer();
 					}
 				} catch (PufferException e) {
-					LOGGER
-							.error(
-									getInfo()
-											+ "Intervallanfang kann nicht betimmt werden.",
-									e);
+					LOGGER.error(getInfo() + "Intervallanfang kann nicht betimmt werden.", e);
 					this.initPuffer();
 				}
 			}
@@ -359,8 +315,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 *            ein zu speicherndes Intervalldatum != null
 	 */
 	public void fillPuffer(SystemObject objekt, Intervall intervallDatum) {
-		String debug = "Fuege Element ein fuer " + objekt.getPid() + ":\n"
-				+ intervallDatum;
+		String debug = "Fuege Element ein fuer " + objekt.getPid() + ":\n" + intervallDatum;
 
 		synchronized (this.puffer) {
 			this.puffer.put(objekt, intervallDatum);
@@ -379,8 +334,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 
 		synchronized (this.puffer) {
 			for (SystemObject obj : this.puffer.keySet()) {
-				if (this.puffer.get(obj) == null
-						|| this.puffer.get(obj).getDatum().isKeineDaten()) {
+				if (this.puffer.get(obj) == null || this.puffer.get(obj).getDatum().isKeineDaten()) {
 					datenVollstaendig = false;
 					break;
 				}
@@ -406,23 +360,19 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	public Intervall getPrototypischesPufferElement() throws PufferException {
 		Intervall ergebnis = null;
 
-		SortedMap<Intervall, SystemObject> intervalleSortiert = new TreeMap<Intervall, SystemObject>(
-				INTERVALL_SORTIERER);
+		SortedMap<Intervall, SystemObject> intervalleSortiert = new TreeMap<>(INTERVALL_SORTIERER);
 		synchronized (this.puffer) {
-			for (Entry<SystemObject,Intervall> entry : puffer.entrySet()) {
+			puffer.entrySet().stream().forEach((entry) -> {
 				Intervall intervall = entry.getValue();
-				if (intervall != null && intervall.getDatum() != null
-						&& !intervall.getDatum().isKeineDaten()) {
+				if (intervall != null && intervall.getDatum() != null && !intervall.getDatum().isKeineDaten()) {
 					intervalleSortiert.put(intervall, entry.getKey());
 				}
-			}
+			});
 			if (intervalleSortiert.size() > 0) {
 				if (intervalleSortiert.size() > 1) {
 					String fehlerMeldung = "\nInkompatible Intervalle im Puffer:\n";
 					for (Intervall intervall : intervalleSortiert.keySet()) {
-						fehlerMeldung += intervalleSortiert.get(intervall)
-								.getPid()
-								+ ": " + intervall + "\n";
+						fehlerMeldung += intervalleSortiert.get(intervall).getPid() + ": " + intervall + "\n";
 					}
 					throw new PufferException(fehlerMeldung);
 				}
@@ -438,69 +388,54 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * DUA-BW-C1C2-7 fuer alle zur Zeit im lokalen Puffer stehenden Daten.
 	 */
 	private void erzeugeErgebnis() {
-		LOGGER.fine(
-				getInfo() + "Erzeuge VerkehrsStaerkeStundeBilanz fuer "
-						+ this.messStelle.getMessStelle().getPid());
+		LOGGER.fine(getInfo() + "Erzeuge VerkehrsStaerkeStundeBilanz fuer " + this.messStelle.getMessStelle().getPid());
 
 		IDELzFhDatum bilanz = null;
 		long datenZeit = -1;
 		synchronized (this.puffer) {
-			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt())
-					.getStart();
+			datenZeit = this.puffer.get(this.messQuerschnitt.getObjekt()).getStart();
 
-			IDELzFhDatum zwischenBilanzI = Rechenwerk.subtrahiere(this.puffer
-					.get(this.messQuerschnitt.getObjekt()).getDatum(),
-					this.puffer.get(
-							this.messStelleMinus1.getMessStelle()
-									.getSystemObject()).getDatum());
+			IDELzFhDatum zwischenBilanzI = Rechenwerk.subtrahiere(
+					this.puffer.get(this.messQuerschnitt.getObjekt()).getDatum(),
+					this.puffer.get(this.messStelleMinus1.getMessStelle().getSystemObject()).getDatum());
 			IDELzFhDatum zwischenBilanzIPlus1 = Rechenwerk.subtrahiere(
-					this.puffer.get(this.messQuerschnittPlus1.getObjekt())
-							.getDatum(), this.puffer.get(
-							this.messStelle.getMessStelle().getSystemObject())
-							.getDatum());
+					this.puffer.get(this.messQuerschnittPlus1.getObjekt()).getDatum(),
+					this.puffer.get(this.messStelle.getMessStelle().getSystemObject()).getDatum());
 
-			bilanz = Rechenwerk.subtrahiere(zwischenBilanzI,
-					zwischenBilanzIPlus1);
+			bilanz = Rechenwerk.subtrahiere(zwischenBilanzI, zwischenBilanzIPlus1);
 		}
 
-		DataDescription datenBeschreibung = this.langZeit ? pubBeschreibungLz
-				: pubBeschreibungKz;
+		DataDescription datenBeschreibung = this.langZeit ? pubBeschreibungLz : pubBeschreibungKz;
 		Data nutzDatum = dDav.createData(datenBeschreibung.getAttributeGroup());
 
 		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
-			if (bilanz.isAuswertbar(fahrzeugArt)
-					&& bilanz.getQ(fahrzeugArt) >= BILANZ_MIN
+			if (bilanz.isAuswertbar(fahrzeugArt) && bilanz.getQ(fahrzeugArt) >= BILANZ_MIN
 					&& bilanz.getQ(fahrzeugArt) <= BILANZ_MAX) {
-				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(
-						bilanz.getQ(fahrzeugArt));
+				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(bilanz.getQ(fahrzeugArt));
 			} else {
-				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(
-						NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				nutzDatum.getUnscaledValue(fahrzeugArt.getAttributName()).set(NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 		}
 
-		ResultData publikationsDatum = new ResultData(this.messStelle
-				.getMessStelle().getSystemObject(), datenBeschreibung,
-				datenZeit, nutzDatum);
+		ResultData publikationsDatum = new ResultData(this.messStelle.getMessStelle().getSystemObject(),
+				datenBeschreibung, datenZeit, nutzDatum);
 
 		this.kanal.publiziere(publikationsDatum);
 	}
 
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
 		// Quellenanmeldung
 	}
 
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		return false;
 	}
 
-	public void aktualisiereDatum(SystemObject mqObjekt,
-			Intervall intervallDatum) {
-		LOGGER.fine(
-				getInfo() + "Datum fuer " + mqObjekt + " empfangen:\n"
-						+ intervallDatum);
+	@Override
+	public void aktualisiereDatum(SystemObject mqObjekt, Intervall intervallDatum) {
+		LOGGER.fine(getInfo() + "Datum fuer " + mqObjekt + " empfangen:\n" + intervallDatum);
 		MessStellenBilanz.this.versucheBerechnung(mqObjekt, intervallDatum);
 	}
 
@@ -510,9 +445,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * @return eine Debug-Information ueber die Instanz dieser Klasse.
 	 */
 	private String getInfo() {
-		return "-->"
-				+ this.messStelle.getMessStelle().getSystemObject().getPid()
-				+ "<--\n";
+		return "-->" + this.messStelle.getMessStelle().getSystemObject().getPid() + "<--\n";
 	}
 
 	@Override
@@ -521,8 +454,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 		synchronized (this.puffer) {
 			for (SystemObject obj : this.puffer.keySet()) {
 				Intervall intervall = this.puffer.get(obj);
-				text += "  " + obj.getPid() + ": "
-						+ (intervall == null ? "<<null>>\n" : intervall + "\n");
+				text += "  " + obj.getPid() + ": " + (intervall == null ? "<<null>>\n" : intervall + "\n");
 			}
 		}
 

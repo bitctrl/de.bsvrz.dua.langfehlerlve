@@ -29,8 +29,9 @@
 package de.bsvrz.dua.langfehlerlve.parameter;
 
 /**
- * Schnittstelle zu den Informationen der Attributgruppe (<code>atg.parameterMessStellenGruppe</code>)
- * fuer sowohl LZ-Vergleich- wie KZ-Vergleichswerte.
+ * Schnittstelle zu den Informationen der Attributgruppe
+ * (<code>atg.parameterMessStellenGruppe</code>) fuer sowohl LZ-Vergleich- wie
+ * KZ-Vergleichswerte.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  */

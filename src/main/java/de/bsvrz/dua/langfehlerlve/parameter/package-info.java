@@ -31,4 +31,3 @@
  */
 
 package de.bsvrz.dua.langfehlerlve.parameter;
-

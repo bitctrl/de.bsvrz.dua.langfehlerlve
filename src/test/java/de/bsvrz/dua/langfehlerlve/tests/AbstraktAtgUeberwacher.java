@@ -82,10 +82,10 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	 */
 	void init(ClientDavInterface dav, SystemObject objekt, int wert1) {
 		this.wert = wert1;
-		dav.subscribeReceiver(this, objekt, new DataDescription(dav
-				.getDataModel().getAttributeGroup(this.getAtgPid()), dav
-				.getDataModel().getAspect(this.getAspPid())), ReceiveOptions
-				.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, objekt,
+				new DataDescription(dav.getDataModel().getAttributeGroup(this.getAtgPid()),
+						dav.getDataModel().getAspect(this.getAspPid())),
+				ReceiveOptions.normal(), ReceiverRole.receiver());
 	}
 
 	/**
@@ -94,20 +94,18 @@ abstract class AbstraktAtgUeberwacher implements ClientReceiverInterface {
 	 */
 	void ueberpruefe() {
 		if (data != null) {
-			for (FahrzeugArt art : FahrzeugArt.getInstanzen()) {
-				Assert.assertEquals("\n---\n" + this.getClass().getSimpleName()
-						+ ":\nFehler in " + data.getObject() + "\n"
-						+ art.toString() + "\n", wert, data.getData()
-						.getUnscaledValue(art.getAttributName()).isState() ? -3
-						: data.getData().getScaledValue(art.getAttributName())
-								.longValue());
-			}
+			FahrzeugArt.getInstanzen().stream()
+					.forEach((art) -> Assert.assertEquals(
+							"\n---\n" + this.getClass().getSimpleName() + ":\nFehler in " + data.getObject() + "\n"
+									+ art.toString() + "\n",
+							wert, data.getData().getUnscaledValue(art.getAttributName()).isState() ? -3
+									: data.getData().getScaledValue(art.getAttributName()).longValue()));
 		} else {
-			Assert.assertTrue("\n---\n" + this.getClass().getSimpleName()
-					+ ":\nKein Datum empfangen!\n", wert < 0);
+			Assert.assertTrue("\n---\n" + this.getClass().getSimpleName() + ":\nKein Datum empfangen!\n", wert < 0);
 		}
 	}
 
+	@Override
 	public void update(ResultData[] results) {
 		if (results != null) {
 			if (this.data == null) {

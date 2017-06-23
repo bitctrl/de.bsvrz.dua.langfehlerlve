@@ -28,6 +28,11 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
@@ -35,11 +40,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittAllgemein;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStellenGruppe;
 import de.bsvrz.sys.funclib.debug.Debug;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * In dieser Klasse werden alle Systemobjekte unterhalb einer Messstellengruppe
@@ -72,12 +72,12 @@ public class DELzFhMessStellenGruppe {
 	 * alle an dieser Messstellengruppe (indirekt ueber Messstellen)
 	 * konfigurierten Messquerschnitte.
 	 */
-	private Map<SystemObject, DELzFhMessQuerschnitt> messQuerschnitte = new HashMap<SystemObject, DELzFhMessQuerschnitt>();
+	private Map<SystemObject, DELzFhMessQuerschnitt> messQuerschnitte = new HashMap<>();
 
 	/**
 	 * alle an dieser Messstellengruppe konfigurierten Messstellen.
 	 */
-	private Map<SystemObject, DELzFhMessStelle> messStellen = new HashMap<SystemObject, DELzFhMessStelle>();
+	private Map<SystemObject, DELzFhMessStelle> messStellen = new HashMap<>();
 
 	/**
 	 * Standardkonstruktor.
@@ -93,32 +93,25 @@ public class DELzFhMessStellenGruppe {
 	 * @throws Exception
 	 *             wenn es Probleme bei der Initialisierung dieses Objektes gibt
 	 */
-	public DELzFhMessStellenGruppe(ClientDavInterface dav,
-			SystemObject msgObjekt, boolean langZeit) throws Exception {
+	public DELzFhMessStellenGruppe(ClientDavInterface dav, SystemObject msgObjekt, boolean langZeit) throws Exception {
 		this.objekt = msgObjekt;
 
 		if (MessStellenGruppe.getInstanz(msgObjekt).getMessStellen().length > 1) {
-			for (MessStelle ms : MessStellenGruppe.getInstanz(msgObjekt)
-					.getMessStellen()) {
+			for (MessStelle ms : MessStellenGruppe.getInstanz(msgObjekt).getMessStellen()) {
 				if (ms.getPruefling() != null) {
-					this.messQuerschnitte.put(ms.getPruefling()
-							.getSystemObject(),
-							new DELzFhMessQuerschnitt(dav, ms.getPruefling()
-									.getSystemObject(), this, langZeit));
+					this.messQuerschnitte.put(ms.getPruefling().getSystemObject(),
+							new DELzFhMessQuerschnitt(dav, ms.getPruefling().getSystemObject(), this, langZeit));
 				} else {
-					throw new DUAInitialisierungsException(
-							"Messstelle " + ms + " hat keinen MQ-Pruefling.");
+					throw new DUAInitialisierungsException("Messstelle " + ms + " hat keinen MQ-Pruefling.");
 				}
 
 				for (MessQuerschnittAllgemein mqAbfahrt : ms.getAbfahrten()) {
 					this.messQuerschnitte.put(mqAbfahrt.getSystemObject(),
-							new DELzFhMessQuerschnitt(dav, mqAbfahrt
-									.getSystemObject(), this, langZeit));
+							new DELzFhMessQuerschnitt(dav, mqAbfahrt.getSystemObject(), this, langZeit));
 				}
 				for (MessQuerschnittAllgemein mqZufahrt : ms.getZufahrten()) {
 					this.messQuerschnitte.put(mqZufahrt.getSystemObject(),
-							new DELzFhMessQuerschnitt(dav, mqZufahrt
-									.getSystemObject(), this, langZeit));
+							new DELzFhMessQuerschnitt(dav, mqZufahrt.getSystemObject(), this, langZeit));
 				}
 			}
 
@@ -126,110 +119,87 @@ public class DELzFhMessStellenGruppe {
 			 * Messstellen erst initialisieren, wenn deren Messquerschnitte
 			 * bereits initialisiert sind
 			 */
-			for (MessStelle ms : MessStellenGruppe.getInstanz(msgObjekt)
-					.getMessStellen()) {
+			for (MessStelle ms : MessStellenGruppe.getInstanz(msgObjekt).getMessStellen()) {
 				this.messStellen.put(ms.getSystemObject(),
-						new DELzFhMessStelle(dav, ms.getSystemObject(), this,
-								langZeit));
+						new DELzFhMessStelle(dav, ms.getSystemObject(), this, langZeit));
 			}
 
-			final int anzahlMessStellen = MessStellenGruppe.getInstanz(
-					msgObjekt).getMessStellen().length;
-			final MessStelle[] msFeld = MessStellenGruppe.getInstanz(msgObjekt)
-					.getMessStellen();
+			final int anzahlMessStellen = MessStellenGruppe.getInstanz(msgObjekt).getMessStellen().length;
+			final MessStelle[] msFeld = MessStellenGruppe.getInstanz(msgObjekt).getMessStellen();
 			/**
 			 * Ermittlung der Bilanzwerte anstossen
 			 */
 			if (anzahlMessStellen > 2) {
 
 				for (int i = 1; i < anzahlMessStellen - 1; i++) {
-					DELzFhMessStelle messStelle = this.messStellen
-							.get(msFeld[i].getSystemObject());
-					DELzFhMessStelle messStelleMinus1 = this.messStellen
-							.get(msFeld[i - 1].getSystemObject());
+					DELzFhMessStelle messStelle = this.messStellen.get(msFeld[i].getSystemObject());
+					DELzFhMessStelle messStelleMinus1 = this.messStellen.get(msFeld[i - 1].getSystemObject());
 					DELzFhMessQuerschnitt messQuerschnittPlus1 = this.messQuerschnitte
 							.get(msFeld[i + 1].getPruefling().getSystemObject());
 					DELzFhMessQuerschnitt messQuerschnitt = this.messQuerschnitte
 							.get(msFeld[i].getPruefling().getSystemObject());
-					if (messStelle != null && messStelleMinus1 != null
-							&& messQuerschnittPlus1 != null
+					if (messStelle != null && messStelleMinus1 != null && messQuerschnittPlus1 != null
 							&& messQuerschnitt != null) {
-						new MessStellenBilanz(dav, messStelle,
-								messStelleMinus1, messQuerschnittPlus1,
-								messQuerschnitt, langZeit);
+						new MessStellenBilanz(dav, messStelle, messStelleMinus1, messQuerschnittPlus1, messQuerschnitt,
+								langZeit);
 					} else {
-						LOGGER
-								.warning("Ermittlung der Bilanzwerte konnte nicht angestossen werden\nfuer Messstelle: " + //$NON-NLS-1$
-										msFeld[i].getSystemObject()
-										+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$
+						LOGGER.warning("Ermittlung der Bilanzwerte konnte nicht angestossen werden\nfuer Messstelle: "
+								+ msFeld[i].getSystemObject() + "\nan Messstellengruppe: " + this);
 					}
 				}
 			}
 
-			if (MessStellenGruppe.getInstanz(msgObjekt)
-					.isSystematischeDetektorfehler()) {
+			if (MessStellenGruppe.getInstanz(msgObjekt).isSystematischeDetektorfehler()) {
 				/**
 				 * Ermittlung der Abweichungen zu den Nachbarmessstellen
 				 * anstossen
 				 */
 				if (anzahlMessStellen > 1) {
 					for (int i = 0; i < anzahlMessStellen; i++) {
-						DELzFhMessStelle messStelle = this.messStellen
-								.get(msFeld[i].getSystemObject());
+						DELzFhMessStelle messStelle = this.messStellen.get(msFeld[i].getSystemObject());
 						DELzFhMessQuerschnitt messQuerschnitt = this.messQuerschnitte
 								.get(msFeld[i].getPruefling().getSystemObject());
-						Set<DELzFhMessStelle> restMessStellen = new HashSet<DELzFhMessStelle>();
+						Set<DELzFhMessStelle> restMessStellen = new HashSet<>();
 						for (int j = 0; j < anzahlMessStellen; j++) {
 							if (i != j) {
-								restMessStellen.add(this.messStellen
-										.get(msFeld[j].getSystemObject()));
+								restMessStellen.add(this.messStellen.get(msFeld[j].getSystemObject()));
 							}
 						}
 
-						if (messStelle != null && messQuerschnitt != null
-								&& !restMessStellen.isEmpty()) {
+						if (messStelle != null && messQuerschnitt != null && !restMessStellen.isEmpty()) {
 							new AbweichungNachbarn(dav, messStelle, this,
-									restMessStellen
-											.toArray(new DELzFhMessStelle[0]),
-									messQuerschnitt, langZeit);
+									restMessStellen.toArray(new DELzFhMessStelle[0]), messQuerschnitt, langZeit);
 						} else {
-							LOGGER
-									.warning("Ermittlung der Abweichung zu den Nachbarn konnte nicht angestossen werden\nfuer Messstelle: " + //$NON-NLS-1$
-											msFeld[i].getSystemObject()
-											+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$
+							LOGGER.warning(
+									"Ermittlung der Abweichung zu den Nachbarn konnte nicht angestossen werden\nfuer Messstelle: "
+											+ msFeld[i].getSystemObject() + "\nan Messstellengruppe: " + this);
 						}
 					}
-				} 
+				}
 			} else {
 				/**
 				 * Ermittlung der Abweichungen zum Vorgaenger anstossen
 				 */
 				if (anzahlMessStellen > 1) {
 					for (int i = 1; i < anzahlMessStellen; i++) {
-						DELzFhMessStelle messStelle = this.messStellen
-								.get(msFeld[i].getSystemObject());
-						DELzFhMessStelle messStelleMinus1 = this.messStellen
-								.get(msFeld[i - 1].getSystemObject());
+						DELzFhMessStelle messStelle = this.messStellen.get(msFeld[i].getSystemObject());
+						DELzFhMessStelle messStelleMinus1 = this.messStellen.get(msFeld[i - 1].getSystemObject());
 						DELzFhMessQuerschnitt messQuerschnitt = this.messQuerschnitte
 								.get(msFeld[i].getPruefling().getSystemObject());
 
-						if (messStelle != null && messQuerschnitt != null
-								&& messStelleMinus1 != null) {
-							new AbweichungVorgaenger(dav, messStelle, this,
-									messStelleMinus1, messQuerschnitt, langZeit);
+						if (messStelle != null && messQuerschnitt != null && messStelleMinus1 != null) {
+							new AbweichungVorgaenger(dav, messStelle, this, messStelleMinus1, messQuerschnitt,
+									langZeit);
 						} else {
-							LOGGER
-									.warning("Ermittlung der Abweichung zum Vorgaenger konnte nicht angestossen werden\nfuer Messstelle: " + //$NON-NLS-1$
-											msFeld[i].getSystemObject()
-											+ "\nan Messstellengruppe: " + this); //$NON-NLS-1$
+							LOGGER.warning(
+									"Ermittlung der Abweichung zum Vorgaenger konnte nicht angestossen werden\nfuer Messstelle: "
+											+ msFeld[i].getSystemObject() + "\nan Messstellengruppe: " + this);
 						}
 					}
-				}				
+				}
 			}
 		} else {
-			throw new DUAInitialisierungsException(
-					"Messstellengruppe " + msgObjekt + //$NON-NLS-1$
-							" hat weniger als 2 Messstellen"); //$NON-NLS-1$
+			throw new DUAInitialisierungsException("Messstellengruppe " + msgObjekt + " hat weniger als 2 Messstellen");
 		}
 	}
 

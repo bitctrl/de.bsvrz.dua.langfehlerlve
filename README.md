@@ -26,6 +26,7 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 - Applikationsname für MessageSender entsprechend NERZ-Vorgabe gesetzt
 - DEBUG-Ausgaben optimiert
+- Java8 - Code-Anpassungen
 
 ### Version 2.0.2
 

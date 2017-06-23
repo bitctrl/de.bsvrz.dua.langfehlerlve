@@ -52,16 +52,12 @@ class DatenImporterPrSpezKurz {
 	 * Alle Attribute der Attributgruppe
 	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
 	 */
-	private static final Attribut[] ATTRIBUTE = new Attribut[] {
-			new Attribut("QKfz", true), new Attribut("QPkw", true),
-			new Attribut("QLkw", true), new Attribut("VKfz", false),
-			new Attribut("VPkw", false), new Attribut("VLkw", false),
-			new Attribut("VgKfz", false), new Attribut("B", false),
-			new Attribut("BMax", false), new Attribut("SKfz", false),
-			new Attribut("ALkw", false), new Attribut("KKfz", false),
-			new Attribut("KLkw", false), new Attribut("KPkw", false),
-			new Attribut("VDelta", false), new Attribut("KB", false),
-			new Attribut("QB", false), };
+	private static final Attribut[] ATTRIBUTE = new Attribut[] { new Attribut("QKfz", true), new Attribut("QPkw", true),
+			new Attribut("QLkw", true), new Attribut("VKfz", false), new Attribut("VPkw", false),
+			new Attribut("VLkw", false), new Attribut("VgKfz", false), new Attribut("B", false),
+			new Attribut("BMax", false), new Attribut("SKfz", false), new Attribut("ALkw", false),
+			new Attribut("KKfz", false), new Attribut("KLkw", false), new Attribut("KPkw", false),
+			new Attribut("VDelta", false), new Attribut("KB", false), new Attribut("QB", false), };
 
 	/**
 	 * Daten fuer Knotenpunkte.
@@ -149,8 +145,7 @@ class DatenImporterPrSpezKurz {
 	 *         <code>atg.verkehrsDatenKurzZeitMq</code>
 	 */
 	static Data getDatensatz(ClientDavInterface dav, long wert) {
-		Data data = dav.createData(dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_KURZZEIT_MQ));
+		Data data = dav.createData(dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ));
 
 		for (Attribut attr : ATTRIBUTE) {
 			MesswertUnskaliert mw = new MesswertUnskaliert(attr.getName());
@@ -205,15 +200,16 @@ class DatenImporterPrSpezKurz {
 		/**
 		 * Standardkonstruktor.
 		 * 
-		 * @param qNamen die Namen der einzelnen Spalten
+		 * @param qNamen
+		 *            die Namen der einzelnen Spalten
 		 */
 		protected MSGDaten(final String[] qNamen) {
-			this.spaltenMap = new HashMap<String, Integer>();
-			this.intervallMq = new HashMap<String, Integer>();
-			this.intervallMs = new HashMap<String, Integer>();
-			this.bilanzMs = new HashMap<String, Integer>();
-			this.abweichung = new HashMap<String, Integer>();
-			this.zeilenMap = new ArrayList<Integer[]>();
+			this.spaltenMap = new HashMap<>();
+			this.intervallMq = new HashMap<>();
+			this.intervallMs = new HashMap<>();
+			this.bilanzMs = new HashMap<>();
+			this.abweichung = new HashMap<>();
+			this.zeilenMap = new ArrayList<>();
 			for (int i = 0; i < qNamen.length; i++) {
 				this.spaltenMap.put(qNamen[i], i);
 			}
@@ -222,43 +218,47 @@ class DatenImporterPrSpezKurz {
 		/**
 		 * Erfragt einen Bilanzwert einer Messstelle.
 		 * 
-		 * @param ms eine Messstelle.
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Bilanzwert einer Messstelle.
 		 */
 		protected int getAusgabeBilanz(final String ms) {
 			return this.bilanzMs.get(ms);
 		}
-		
+
 		/**
 		 * Erfragt einen Intervallwert eines MQ an einer Messstelle.
 		 * 
-		 * @param ms eine Messstelle.
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Intervallwert einer MQ an einer Messstelle.
 		 */
 		protected int getAusgabeIntervallMq(final String ms) {
 			return this.intervallMq.get(ms);
 		}
-		
+
 		/**
 		 * Erfragt einen Intervallwert eines MQ an einer Messstelle.
 		 * 
-		 * @param ms eine Messstelle.
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Intervallwert einer MQ an einer Messstelle.
 		 */
 		protected int getAusgabeIntervallMs(final String ms) {
 			return this.intervallMs.get(ms);
 		}
-		
+
 		/**
 		 * Erfragt einen Abweichungswert einer Messstelle.
 		 * 
-		 * @param ms eine Messstelle.
+		 * @param ms
+		 *            eine Messstelle.
 		 * @return ein Abweichungswert einer Messstelle.
 		 */
 		protected int getAusgabeAbweichungMs(final String ms) {
 			return this.abweichung.get(ms);
 		}
-		
+
 		/**
 		 * Fuegt diesem Element eine Zeile hinzu (Eingabedatum).
 		 * 
@@ -269,7 +269,7 @@ class DatenImporterPrSpezKurz {
 			Integer[] intZeile = new Integer[zeile.length];
 
 			for (int i = 0; i < zeile.length; i++) {
-				if (zeile[i].equals("fehlerhaft")) {
+				if ("fehlerhaft".equals(zeile[i])) {
 					intZeile[i] = DUAKonstanten.FEHLERHAFT;
 				} else {
 					intZeile[i] = Integer.parseInt(zeile[i]);
@@ -300,44 +300,36 @@ class DatenImporterPrSpezKurz {
 			}
 
 			if (zeile[0].matches("[-]?[0-9]+([,][0-9]+)?")) {
-				this.intervallMq.put(mqId, (int) Math.round(Double
-						.parseDouble(zeile[0].replaceAll("[,]", "."))));
+				this.intervallMq.put(mqId, (int) Math.round(Double.parseDouble(zeile[0].replaceAll("[,]", "."))));
 			} else {
-				this.intervallMq.put(mqId,
-						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				this.intervallMq.put(mqId, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 			if (DEBUG) {
 				System.out.print("IMQ=" + this.intervallMq.get(mqId));
 			}
 
 			if (zeile[2].matches("[-]?[0-9]+([,][0-9]+)?")) {
-				this.intervallMs.put(mqId, (int) Math.round(Double
-						.parseDouble(zeile[2].replaceAll("[,]", "."))));
+				this.intervallMs.put(mqId, (int) Math.round(Double.parseDouble(zeile[2].replaceAll("[,]", "."))));
 			} else {
-				this.intervallMs.put(mqId,
-						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				this.intervallMs.put(mqId, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 			if (DEBUG) {
 				System.out.print(", IMS=" + this.intervallMs.get(mqId));
 			}
 
 			if (zeile[5].matches("[-]?[0-9]+([,][0-9]+)?")) {
-				this.bilanzMs.put(mqId, (int) Math.round(Double
-						.parseDouble(zeile[5].replaceAll("[,]", "."))));
+				this.bilanzMs.put(mqId, (int) Math.round(Double.parseDouble(zeile[5].replaceAll("[,]", "."))));
 			} else {
-				this.bilanzMs.put(mqId,
-						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				this.bilanzMs.put(mqId, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 			if (DEBUG) {
 				System.out.print(", BIL=" + this.bilanzMs.get(mqId));
 			}
 
 			if (zeile[8].matches("[-]?[0-9]+([,][0-9]+)?")) {
-				this.abweichung.put(mqId, (int) Math.round(Double
-						.parseDouble(zeile[8].replaceAll("[,]", "."))));
+				this.abweichung.put(mqId, (int) Math.round(Double.parseDouble(zeile[8].replaceAll("[,]", "."))));
 			} else {
-				this.abweichung.put(mqId,
-						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				this.abweichung.put(mqId, DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			}
 			if (DEBUG) {
 				System.out.println(", ABW=" + this.abweichung.get(mqId));
@@ -356,8 +348,10 @@ class DatenImporterPrSpezKurz {
 		/**
 		 * Erfragt den Wert eines Querschnittes in einer bestimmten Zeile.
 		 * 
-		 * @param zeile die Zeile.
-		 * @param qName der Name des Querschnitts (Name in der Tabelle)
+		 * @param zeile
+		 *            die Zeile.
+		 * @param qName
+		 *            der Name des Querschnitts (Name in der Tabelle)
 		 * @return den Wert eines Querschnittes in einer bestimmten Zeile.
 		 */
 		long get(int zeile, String qName) {
@@ -368,7 +362,7 @@ class DatenImporterPrSpezKurz {
 
 	/**
 	 * Information zu einem Attribut innerhalb der Attributgruppe
-	 * <code>atg.verkehrsDatenKurzZeitMq</code>. 
+	 * <code>atg.verkehrsDatenKurzZeitMq</code>.
 	 */
 	private static final class Attribut {
 

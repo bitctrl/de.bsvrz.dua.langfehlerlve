@@ -82,15 +82,12 @@ public class PublikationsKanal {
 			} else {
 				if (!this.keineDaten) {
 					this.keineDaten = true;
-					
+
 					sDav.sendData(resultat);
 				}
 			}
-		} catch (DataNotSubscribedException e) {
-			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
-			e.printStackTrace();
-		} catch (SendSubscriptionNotConfirmed e) {
-			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
+		} catch (SendSubscriptionNotConfirmed | DataNotSubscribedException e) {
+			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e);
 			e.printStackTrace();
 		}
 	}

@@ -41,6 +41,7 @@ final class DatenImporterPrSpezLang extends DatenImporterPrSpezKurz {
 	 * @throws Exception
 	 *             wenn die Datei nicht geoeffnet werden kann
 	 */
+	@Override
 	void init(String csvDateiName) throws Exception {
 		CSVImporter importer = new CSVImporter(csvDateiName);
 		importer.getNaechsteZeile();

@@ -28,6 +28,9 @@
 
 package de.bsvrz.dua.langfehlerlve.langfehlerlve;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -40,9 +43,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.lve.DuaVerkehrsNetz;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Die SWE DE Langzeit-Fehlererkennung dient zur Erkennung von systematischen
@@ -68,7 +68,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 	/**
 	 * die Argumente der Kommandozeile.
 	 */
-	private ArrayList<String> komArgumente = new ArrayList<String>();
+	private ArrayList<String> komArgumente = new ArrayList<>();
 
 	/**
 	 * Erfragt den Namen dieser Applikation.
@@ -79,6 +79,7 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		return "DE Langzeit-Fehlererkennung";
 	}
 
+	@Override
 	public void initialize(ClientDavInterface dav) throws Exception {
 		Collection<ConfigurationArea> kbFilter = DUAUtensilien.getKonfigurationsBereicheAlsObjekte(dav,
 				DUAUtensilien.getArgument(DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID, this.komArgumente));
@@ -90,11 +91,13 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		Collection<SystemObject> msgObjekte = DUAUtensilien
 				.getBasisInstanzen(dav.getDataModel().getType(DUAKonstanten.TYP_MESS_STELLEN_GRUPPE), dav, kbFilter);
 
-		String config = "Ueberwachte Messstellengruppen:\n";
+		StringBuilder config = new StringBuilder(2000);
+		config.append("Ueberwachte Messstellengruppen:\n");
 		for (SystemObject msgObjekt : msgObjekte) {
-			config += msgObjekt + "\n";
+			config.append(msgObjekt);
+			config.append('\n');
 		}
-		LOGGER.config(config);
+		LOGGER.config(config.toString());
 
 		for (SystemObject msgObjekt : msgObjekte) {
 			new DELzFhMessStellenGruppe(dav, msgObjekt, DELzFhMessStellenGruppe.LANGZEIT_AUSWERTUNG);
@@ -102,14 +105,13 @@ public class DELangZeitFehlerErkennung implements StandardApplication {
 		}
 	}
 
+	@Override
 	public void parseArguments(ArgumentList argumente) throws Exception {
 
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			public void uncaughtException(Thread t, Throwable e) {
-				LOGGER.error("Applikation wird wegen" + " unerwartetem Fehler beendet", e);
-				e.printStackTrace();
-				Runtime.getRuntime().exit(-1);
-			}
+		Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e) -> {
+			LOGGER.error("Applikation wird wegen" + " unerwartetem Fehler beendet", e);
+			e.printStackTrace();
+			Runtime.getRuntime().exit(-1);
 		});
 
 		for (String s : argumente.getArgumentStrings()) {

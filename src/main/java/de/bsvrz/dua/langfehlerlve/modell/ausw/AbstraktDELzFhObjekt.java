@@ -40,8 +40,7 @@ import de.bsvrz.dua.langfehlerlve.parameter.IMsgDatenartParameter;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public abstract class AbstraktDELzFhObjekt implements
-		IAtgParameterMessStellenGruppeListener {
+public abstract class AbstraktDELzFhObjekt implements IAtgParameterMessStellenGruppeListener {
 
 	/**
 	 * statische Datenverteiler-Verbindung.
@@ -70,16 +69,14 @@ public abstract class AbstraktDELzFhObjekt implements
 	 *            indiziert, ob sich dieses Objekt um das
 	 *            Langzeit-Vergleichsintervall kuemmern soll
 	 */
-	protected final void init(final ClientDavInterface dav,
-			final DELzFhMessStellenGruppe messStellenGruppe1,
+	protected final void init(final ClientDavInterface dav, final DELzFhMessStellenGruppe messStellenGruppe1,
 			final boolean langZeit1) {
 		if (dDav == null) {
 			dDav = dav;
 		}
 		this.messStellenGruppe = messStellenGruppe1;
 		this.langZeit = langZeit1;
-		AtgParameterMessStellenGruppe.getInstanz(dav,
-				messStellenGruppe1.getObjekt()).addListener(this);
+		AtgParameterMessStellenGruppe.getInstanz(dav, messStellenGruppe1.getObjekt()).addListener(this);
 	}
 
 	/**
@@ -89,8 +86,7 @@ public abstract class AbstraktDELzFhObjekt implements
 	 * @param parameter
 	 *            aktuelle Parameter fuer die Ueberwachung
 	 */
-	protected abstract void aktualisiereMsgParameter(
-			IMsgDatenartParameter parameter);
+	protected abstract void aktualisiereMsgParameter(IMsgDatenartParameter parameter);
 
 	/**
 	 * Indiziert, ob sich dieses Objekt um das Langzeit-Vergleichsintervall
@@ -103,8 +99,8 @@ public abstract class AbstraktDELzFhObjekt implements
 		return this.langZeit;
 	}
 
-	public void aktualisiereMsgParameter(IMsgDatenartParameter kzParameter,
-			IMsgDatenartParameter lzParameter) {
+	@Override
+	public void aktualisiereMsgParameter(IMsgDatenartParameter kzParameter, IMsgDatenartParameter lzParameter) {
 		if (this.isLangZeit()) {
 			this.aktualisiereMsgParameter(lzParameter);
 		} else {

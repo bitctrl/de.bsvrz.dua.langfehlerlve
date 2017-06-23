@@ -26,13 +26,14 @@
 
 package de.bsvrz.dua.langfehlerlve.tests;
 
+import org.junit.Before;
+
 import de.bsvrz.dua.langfehlerlve.langfehlerlve.DELangZeitFehlerErkennung;
 import de.bsvrz.dua.tests.DuATestBase;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.kappich.annotations.NotNull;
 import de.bsvrz.sys.funclib.operatingMessage.OperatingMessageInterface;
 import de.bsvrz.sys.funclib.operatingMessage.OperatingMessageSink;
-import org.junit.Before;
 
 /**
  * TBD Dokumentation
@@ -40,30 +41,30 @@ import org.junit.Before;
  * @author Kappich Systemberatung
  */
 public class DuaLangFehlerLveTestBase extends DuATestBase {
-	private DELangZeitFehlerErkennung _deLangZeitFehlerErkennung;
-	
 	static {
 		OperatingMessageSink.register(new OperatingMessageSink() {
-			                              @Override
-			                              public void publish(final OperatingMessageInterface message) {
-				                              System.out.println("BM: " + message);
-			                              }
-		                              }
-		);
+			@Override
+			public void publish(final OperatingMessageInterface message) {
+				System.out.println("BM: " + message);
+			}
+		});
 	}
-	
+
+	private DELangZeitFehlerErkennung deLangZeitFehlerErkennung;
+
 	@NotNull
 	@Override
 	protected String[] getConfigurationAreas() {
-		return new String[]{"kb.deLzFhTest1", "kb.deLzFhTest2"};
+		return new String[] { "kb.deLzFhTest1", "kb.deLzFhTest2" };
 	}
 
-
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		_deLangZeitFehlerErkennung = new DELangZeitFehlerErkennung();
-		_deLangZeitFehlerErkennung.parseArguments(new ArgumentList(new String[]{"-KonfigurationsBereichsPid=kb.deLzFhTest1,kb.deLzFhTest2"}));
-		_deLangZeitFehlerErkennung.initialize(_connection);
+		deLangZeitFehlerErkennung = new DELangZeitFehlerErkennung();
+		deLangZeitFehlerErkennung.parseArguments(
+				new ArgumentList(new String[] { "-KonfigurationsBereichsPid=kb.deLzFhTest1,kb.deLzFhTest2" }));
+		deLangZeitFehlerErkennung.initialize(_connection);
 	}
 }

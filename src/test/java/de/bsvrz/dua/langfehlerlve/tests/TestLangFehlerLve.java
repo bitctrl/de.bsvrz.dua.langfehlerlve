@@ -26,15 +26,20 @@
 
 package de.bsvrz.dua.langfehlerlve.tests;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import de.bsvrz.dav.daf.main.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.bsvrz.dav.daf.main.ClientSenderInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
@@ -48,37 +53,31 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 	/**
 	 * Alle hier betrachteten Systemobjekte.
 	 */
-	static final String[] OBJEKTE_KURZ = new String[] { "Q1", "QZ11",
-			"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
-			"QA4" };
+	static final String[] OBJEKTE_KURZ = new String[] { "Q1", "QZ11", "QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3",
+			"Q4", "QZ4", "QA4" };
 	/**
 	 * Alle hier betrachteten Messstellen.
 	 */
-	static final String[] MS_OBJEKTE_KURZ = new String[] { "Q1", "Q2", "Q3",
-			"Q4" };
+	static final String[] MS_OBJEKTE_KURZ = new String[] { "Q1", "Q2", "Q3", "Q4" };
 	/**
 	 * Pfad zu Testdaten.
 	 */
-	private static final String DATEN_QUELLE_LANG = Verbindung.TEST_DATEN_VERZEICHNIS
-			+ "Langzeitdat_3.0.csv"; //$NON-NLS-1$
-	
+	private static final String DATEN_QUELLE_LANG = Verbindung.TEST_DATEN_VERZEICHNIS + "Langzeitdat_3.0.csv";
+
 	/**
 	 * Alle hier betrachteten Systemobjekte.
 	 */
-	private static final String[] OBJEKTE_LANG = new String[] { "Q1", "QZ11",
-			"QA11", "QA12", "QZ12", "Q2", "QZ2", "QA2", "Q3", "Q4", "QZ4",
-			"QA4" };
+	private static final String[] OBJEKTE_LANG = new String[] { "Q1", "QZ11", "QA11", "QA12", "QZ12", "Q2", "QZ2",
+			"QA2", "Q3", "Q4", "QZ4", "QA4" };
 
 	/**
 	 * Alle hier betrachteten Messstellen.
 	 */
-	private static final String[] MS_OBJEKTE_LANG = new String[] { "Q1", "Q2", "Q3",
-			"Q4" };
+	private static final String[] MS_OBJEKTE_LANG = new String[] { "Q1", "Q2", "Q3", "Q4" };
 	/**
 	 * Pfad zu Testdaten.
 	 */
-	private static final String DATEN_QUELLE_KURZ = Verbindung.TEST_DATEN_VERZEICHNIS
-			+ "Kurzzeitdat_3.0.csv"; //$NON-NLS-1$
+	private static final String DATEN_QUELLE_KURZ = Verbindung.TEST_DATEN_VERZEICHNIS + "Kurzzeitdat_3.0.csv";
 
 	/**
 	 * Testet nach PruefSpez.
@@ -90,49 +89,39 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 		DatenImporterPrSpezLang daten = new DatenImporterPrSpezLang();
 		daten.init(DATEN_QUELLE_LANG);
 
-		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
+		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<>();
 		for (String ms : MS_OBJEKTE_LANG) {
-			SystemObject objJa = _connection.getDataModel()
-					.getObject("ms.sys.ja." + ms.substring(1));
-			SystemObject objNein = _connection.getDataModel().getObject(
-					"ms.sys.nein." + ms.substring(1));
+			SystemObject objJa = _connection.getDataModel().getObject("ms.sys.ja." + ms.substring(1));
+			SystemObject objNein = _connection.getDataModel().getObject("ms.sys.nein." + ms.substring(1));
 
 			/**
 			 * MQ-Intervall
 			 */
 			AbstraktAtgUeberwacher dummy = null;
 			dummy = new AtgIntervallUeberwacherMqLang();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMq(ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsLang();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMs(ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherLang();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(
-					ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherLang();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeAbweichungMs(ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 
 			dummy = new AtgIntervallUeberwacherMqLang();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMq(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsLang();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMs(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherLang();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeBilanz(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherLangAlle();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeAbweichungMs(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 		}
 
@@ -145,25 +134,25 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 
-		System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(cal
-				.getTimeInMillis())));
+		System.out.println(
+				new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR).format(new Date(cal.getTimeInMillis())));
 
-		DataDescription ddMq = new DataDescription(_connection.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), _connection
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+		DataDescription ddMq = new DataDescription(
+				_connection.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				_connection.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		for (int i = 0; i < daten.getKnotenpunkteTab().getAnzahlZeilen() + 1; i++) {
 			for (String objPidEnd : OBJEKTE_LANG) {
 				Data dataJa = DatenImporterPrSpezKurz.getDatensatz(_connection,
-				                                                   daten.getKnotenpunkteTab().get(i % 4, objPidEnd));
+						daten.getKnotenpunkteTab().get(i % 4, objPidEnd));
 				Data dataNein = DatenImporterPrSpezKurz.getDatensatz(_connection,
-				                                                     daten.getFreieStreckeTab().get(i % 4, objPidEnd));
-				ResultData resultatJa = new ResultData(_connection.getDataModel()
-						.getObject("ms.sys.ja." + objPidEnd.toLowerCase()),
-						ddMq, cal.getTimeInMillis(), dataJa);
-				ResultData resultatNein = new ResultData(_connection.getDataModel()
-						.getObject("ms.sys.nein." + objPidEnd.toLowerCase()),
-						ddMq, cal.getTimeInMillis(), dataNein);
+						daten.getFreieStreckeTab().get(i % 4, objPidEnd));
+				ResultData resultatJa = new ResultData(
+						_connection.getDataModel().getObject("ms.sys.ja." + objPidEnd.toLowerCase()), ddMq,
+						cal.getTimeInMillis(), dataJa);
+				ResultData resultatNein = new ResultData(
+						_connection.getDataModel().getObject("ms.sys.nein." + objPidEnd.toLowerCase()), ddMq,
+						cal.getTimeInMillis(), dataNein);
 				_connection.sendData(resultatJa);
 				_connection.sendData(resultatNein);
 			}
@@ -185,18 +174,16 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 			//
 		}
 
-		for (AbstraktAtgUeberwacher uw : ueberwacher) {
-			uw.ueberpruefe();
-		}
+		ueberwacher.stream().forEach(AbstraktAtgUeberwacher::ueberpruefe);
 	}
 
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
-		// 		
+	@Override
+	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
+		//
 	}
 
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		return false;
 	}
 
@@ -206,30 +193,29 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 
-		DataDescription ddMq = new DataDescription(_connection.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), _connection
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+		DataDescription ddMq = new DataDescription(
+				_connection.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				_connection.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		for (String objPidEnd : OBJEKTE_KURZ) {
-			System.out.println("Anmeldung: " + "ms.sys.ja."
-					+ objPidEnd.toLowerCase() + ", " + "ms.sys.nein."
+			System.out.println("Anmeldung: " + "ms.sys.ja." + objPidEnd.toLowerCase() + ", " + "ms.sys.nein."
 					+ objPidEnd.toLowerCase());
-			_connection.subscribeSender(this, _connection.getDataModel().getObject(
-					"ms.sys.ja." + objPidEnd.toLowerCase()), ddMq, SenderRole
-					.source());
-			_connection.subscribeSender(this, _connection.getDataModel().getObject(
-					"ms.sys.nein." + objPidEnd.toLowerCase()), ddMq, SenderRole
-					.source());
+			_connection.subscribeSender(this,
+					_connection.getDataModel().getObject("ms.sys.ja." + objPidEnd.toLowerCase()), ddMq,
+					SenderRole.source());
+			_connection.subscribeSender(this,
+					_connection.getDataModel().getObject("ms.sys.nein." + objPidEnd.toLowerCase()), ddMq,
+					SenderRole.source());
 		}
 
-		Util.parametriere(_connection, _connection.getDataModel().getObject("gruppe.sys.ja"),
-				5, 4, 114, 114, 90, 90);
-		Util.parametriere(_connection, _connection.getDataModel().getObject("gruppe.sys.nein"),
-				5, 4, 103, 103, 111, 111);
+		Util.parametriere(_connection, _connection.getDataModel().getObject("gruppe.sys.ja"), 5, 4, 114, 114, 90, 90);
+		Util.parametriere(_connection, _connection.getDataModel().getObject("gruppe.sys.nein"), 5, 4, 103, 103, 111,
+				111);
 
 		Thread.sleep(5000L);
 	}
@@ -244,49 +230,39 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 		DatenImporterPrSpezKurz daten = new DatenImporterPrSpezKurz();
 		daten.init(DATEN_QUELLE_KURZ);
 
-		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<AbstraktAtgUeberwacher>();
+		ArrayList<AbstraktAtgUeberwacher> ueberwacher = new ArrayList<>();
 		for (String ms : MS_OBJEKTE_KURZ) {
-			SystemObject objJa = _connection.getDataModel()
-					.getObject("ms.sys.ja." + ms.substring(1));
-			SystemObject objNein = _connection.getDataModel().getObject(
-					"ms.sys.nein." + ms.substring(1));
+			SystemObject objJa = _connection.getDataModel().getObject("ms.sys.ja." + ms.substring(1));
+			SystemObject objNein = _connection.getDataModel().getObject("ms.sys.nein." + ms.substring(1));
 
 			/**
 			 * MQ-Intervall
 			 */
 			AbstraktAtgUeberwacher dummy = null;
 			dummy = new AtgIntervallUeberwacherMqKurz();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMq(ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsKurz();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeIntervallMs(ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherKurz();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(
-					ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherKurz();
-			dummy.init(_connection, objJa, daten.getKnotenpunkteTab()
-					.getAusgabeAbweichungMs(ms));
+			dummy.init(_connection, objJa, daten.getKnotenpunkteTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 
 			dummy = new AtgIntervallUeberwacherMqKurz();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMq(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeIntervallMq(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgIntervallUeberwacherMsKurz();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeIntervallMs(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeIntervallMs(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgBilanzUeberwacherKurz();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeBilanz(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeBilanz(ms));
 			ueberwacher.add(dummy);
 			dummy = new AtgAbweichungUeberwacherKurzAlle();
-			dummy.init(_connection, objNein, daten.getFreieStreckeTab()
-					.getAusgabeAbweichungMs(ms));
+			dummy.init(_connection, objNein, daten.getFreieStreckeTab().getAusgabeAbweichungMs(ms));
 			ueberwacher.add(dummy);
 		}
 
@@ -299,25 +275,25 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 		int naechsterStart = (((int) (aktuelleMinute / 5)) + 1) * 5;
 		cal.set(Calendar.MINUTE, naechsterStart);
 
-		System.out.println(DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(cal
-				.getTimeInMillis())));
+		System.out.println(
+				new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR).format(new Date(cal.getTimeInMillis())));
 
-		DataDescription ddMq = new DataDescription(_connection.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), _connection
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+		DataDescription ddMq = new DataDescription(
+				_connection.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				_connection.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		for (int i = 0; i < daten.getKnotenpunkteTab().getAnzahlZeilen() + 1; i++) {
 			for (String objPidEnd : OBJEKTE_KURZ) {
 				Data dataJa = DatenImporterPrSpezKurz.getDatensatz(_connection,
-				                                                   daten.getKnotenpunkteTab().get(i % 5, objPidEnd));
+						daten.getKnotenpunkteTab().get(i % 5, objPidEnd));
 				Data dataNein = DatenImporterPrSpezKurz.getDatensatz(_connection,
-				                                                     daten.getFreieStreckeTab().get(i % 5, objPidEnd));
-				ResultData resultatJa = new ResultData(_connection.getDataModel()
-						.getObject("ms.sys.ja." + objPidEnd.toLowerCase()),
-				                                       ddMq, cal.getTimeInMillis(), dataJa);
-				ResultData resultatNein = new ResultData(_connection.getDataModel()
-						.getObject("ms.sys.nein." + objPidEnd.toLowerCase()),
-						ddMq, cal.getTimeInMillis(), dataNein);
+						daten.getFreieStreckeTab().get(i % 5, objPidEnd));
+				ResultData resultatJa = new ResultData(
+						_connection.getDataModel().getObject("ms.sys.ja." + objPidEnd.toLowerCase()), ddMq,
+						cal.getTimeInMillis(), dataJa);
+				ResultData resultatNein = new ResultData(
+						_connection.getDataModel().getObject("ms.sys.nein." + objPidEnd.toLowerCase()), ddMq,
+						cal.getTimeInMillis(), dataNein);
 				_connection.sendData(resultatJa);
 				_connection.sendData(resultatNein);
 			}
@@ -339,9 +315,7 @@ public class TestLangFehlerLve extends DuaLangFehlerLveTestBase implements Clien
 			//
 		}
 
-		for (AbstraktAtgUeberwacher uw : ueberwacher) {
-			uw.ueberpruefe();
-		}
+		ueberwacher.stream().forEach(AbstraktAtgUeberwacher::ueberpruefe);
 	}
 
 	@Test

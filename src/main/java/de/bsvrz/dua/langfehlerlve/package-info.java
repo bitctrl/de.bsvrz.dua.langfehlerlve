@@ -26,7 +26,8 @@
  */
 
 /**
- * Segment Datenübernahme und Aufbereitung (DUA), SWE Langzeit-Fehlererkennung LVE
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE Langzeit-Fehlererkennung
+ * LVE
  *
  * @author Kappich Systemberatung
  */
