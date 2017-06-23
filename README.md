@@ -22,6 +22,8 @@ bzw. Messquerschnitte) definierter Grenzwerte werden Betriebsmeldungen ausgegebe
 
 ## Versionsgeschichte
 
+### Version 2.0.4
+
 ### Version 2.0.3
 
 - Applikationsname für MessageSender entsprechend NERZ-Vorgabe gesetzt
