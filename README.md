@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.langfehlerlve.svg?branch=develop)](https://travis-ci.org/bitctrl/de.bsvrz.dua.langfehlerlve)
+[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.langfehlerlve.svg?branch=master)](https://travis-ci.org/bitctrl/de.bsvrz.dua.langfehlerlve)
 [![Build Status](https://api.bintray.com/packages/bitctrl/maven/de.bsvrz.dua.langfehlerlve/images/download.svg)](https://bintray.com/bitctrl/maven/de.bsvrz.dua.langfehlerlve)
 
 # Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.DELzFh DE Langzeit-Fehlererkennung
