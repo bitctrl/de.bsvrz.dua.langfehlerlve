@@ -26,7 +26,6 @@
 
 package de.bsvrz.dua.langfehlerlve.tests;
 
-
 /**
  * Ueberprueft den ersten echten (Nutz-)Wert von
  * <code>atg.abweichungVerkehrsStärke</code>,

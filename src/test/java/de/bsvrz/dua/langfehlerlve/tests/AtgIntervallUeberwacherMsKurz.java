@@ -26,10 +26,10 @@
 
 package de.bsvrz.dua.langfehlerlve.tests;
 
-
 /**
  * Ueberprueft den ersten echten (Nutz-)Wert von
- * <code>atg.intervallVerkehrsStärke</code>, <code>asp.messStelleKurzZeit</code>.
+ * <code>atg.intervallVerkehrsStärke</code>,
+ * <code>asp.messStelleKurzZeit</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -39,5 +39,5 @@ class AtgIntervallUeberwacherMsKurz extends AtgIntervallUeberwacherMqKurz {
 	String getAspPid() {
 		return "asp.messStelleKurzZeit";
 	}
-	
+
 }

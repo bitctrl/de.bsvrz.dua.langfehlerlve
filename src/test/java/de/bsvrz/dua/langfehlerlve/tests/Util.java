@@ -40,14 +40,14 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public final class Util {
-	
+
 	/**
 	 * Standardkonstruktor.
 	 */
 	private Util() {
 		//
 	}
-	
+
 	/**
 	 * Parametriert die Messstellengruppe.
 	 * 
@@ -63,61 +63,51 @@ public final class Util {
 	 *            Maximale Abweichung fuer KZD zum Vorgaenger
 	 * @param maxAbwGrpKurz
 	 *            Maximale Abweichung fuer KZD zur Gruppe
-   	 * @param maxAbwVorLang
+	 * @param maxAbwVorLang
 	 *            Maximale Abweichung fuer LZD zum Vorgaenger
 	 * @param maxAbwGrpLang
 	 *            Maximale Abweichung fuer LZD zur Gruppe
 	 * @throws Exception
 	 *             Wird beim Sende-fehler geworfen
 	 */
-	public static void parametriere(ClientDavInterface dav, SystemObject mg1,
-			long kurzZeitAgg, long langZeitAgg, long maxAbwVorKurz,
-			long maxAbwGrpKurz, long maxAbwVorLang, long maxAbwGrpLang)
-			throws Exception {
+	public static void parametriere(ClientDavInterface dav, SystemObject mg1, long kurzZeitAgg, long langZeitAgg,
+			long maxAbwVorKurz, long maxAbwGrpKurz, long maxAbwVorLang, long maxAbwGrpLang) throws Exception {
 
-		DataDescription ddParam = new DataDescription(dav.getDataModel()
-				.getAttributeGroup("atg.parameterMessStellenGruppe"), dav
-				.getDataModel().getAspect("asp.parameterSoll"));
+		DataDescription ddParam = new DataDescription(
+				dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"),
+				dav.getDataModel().getAspect("asp.parameterSoll"));
 		ClientSenderInterface sender = new ClientSenderInterface() {
 
-			public void dataRequest(SystemObject object,
-					DataDescription dataDescription, byte state) {
+			@Override
+			public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
 				//
 			}
 
-			public boolean isRequestSupported(SystemObject object,
-					DataDescription dataDescription) {
+			@Override
+			public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 				return false;
 			}
 
 		};
 		dav.subscribeSender(sender, mg1, ddParam, SenderRole.source());
-		
+
 		Data data;
 		ResultData resultat;
-		data = dav.createData(dav.getDataModel().getAttributeGroup(
-				"atg.parameterMessStellenGruppe")); //$NON-NLS-1$
+		data = dav.createData(dav.getDataModel().getAttributeGroup("atg.parameterMessStellenGruppe"));
 
-		data
-				.getItem("VergleichsIntervallKurzZeit").asUnscaledValue().set(kurzZeitAgg); //$NON-NLS-1$
-		data
-				.getItem("maxAbweichungVorgängerKurzZeit").asUnscaledValue().set(maxAbwVorKurz); //$NON-NLS-1$
-		data
-				.getItem("maxAbweichungMessStellenGruppeKurzZeit").asUnscaledValue().set(maxAbwGrpKurz); //$NON-NLS-1$
+		data.getItem("VergleichsIntervallKurzZeit").asUnscaledValue().set(kurzZeitAgg);
+		data.getItem("maxAbweichungVorgängerKurzZeit").asUnscaledValue().set(maxAbwVorKurz);
+		data.getItem("maxAbweichungMessStellenGruppeKurzZeit").asUnscaledValue().set(maxAbwGrpKurz);
 
-		data
-				.getItem("VergleichsIntervallLangZeit").asUnscaledValue().set(langZeitAgg); //$NON-NLS-1$
-		data
-				.getItem("maxAbweichungVorgängerLangZeit").asUnscaledValue().set(maxAbwVorLang); //$NON-NLS-1$
-		data
-				.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(maxAbwGrpLang); //$NON-NLS-1$
+		data.getItem("VergleichsIntervallLangZeit").asUnscaledValue().set(langZeitAgg);
+		data.getItem("maxAbweichungVorgängerLangZeit").asUnscaledValue().set(maxAbwVorLang);
+		data.getItem("maxAbweichungMessStellenGruppeLangZeit").asUnscaledValue().set(maxAbwGrpLang);
 
-		resultat = new ResultData(mg1, ddParam, System.currentTimeMillis(),
-				data);
-		
+		resultat = new ResultData(mg1, ddParam, System.currentTimeMillis(), data);
+
 		Thread.sleep(2000L);
 		dav.sendData(resultat);
-		
+
 		dav.unsubscribeSender(sender, mg1, ddParam);
 	}
 

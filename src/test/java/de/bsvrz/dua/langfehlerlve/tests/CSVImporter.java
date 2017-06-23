@@ -26,20 +26,14 @@
 
 package de.bsvrz.dua.langfehlerlve.tests;
 
-import com.bitctrl.Constants;
-import com.google.common.collect.ImmutableList;
-import de.bsvrz.dua.tests.DuATestBase;
-import de.bsvrz.sys.funclib.debug.Debug;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+
 import de.kappich.sys.funclib.csv.CsvParseException;
 import de.kappich.sys.funclib.csv.CsvReader;
 import de.kappich.sys.funclib.csv.IterableCsvData;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * TBD Dokumentation
@@ -48,36 +42,37 @@ import java.util.List;
  */
 public class CSVImporter {
 
-
 	private final String _csvDateiName;
-	private Iterator<IterableCsvData.CsvRow> _data;
+	private Iterator<IterableCsvData.CsvRow> data;
 
 	/**
 	 * Standardkonstruktor
 	 *
-	 * @param csvDateiName Name der CSV-Datei (mit oder ohne Suffix)
-	 * @throws Exception wenn die Datei nicht geöffnet werden kann
+	 * @param csvDateiName
+	 *            Name der CSV-Datei (mit oder ohne Suffix)
+	 * @throws Exception
+	 *             wenn die Datei nicht geöffnet werden kann
 	 */
 	public CSVImporter(final String csvDateiName) throws Exception {
 		_csvDateiName = csvDateiName;
 		InputStream inputStream = getClass().getResourceAsStream("testdata/" + csvDateiName);
 		CsvReader csvReader = new CsvReader(Charset.forName("UTF-8"), inputStream, ';', '"');
-		_data = csvReader.read(null).iterator();
+		data = csvReader.read(null).iterator();
 	}
 
 	/**
-	 * Gibt alle Spalten einer Zeile der Tabelle als
-	 * String-Array zurück.
+	 * Gibt alle Spalten einer Zeile der Tabelle als String-Array zurück.
 	 *
-	 * @return ein String-Array mit den Spalten einer Zeile
-	 * oder <code>null</code>, wenn das Dateiende erreicht ist
+	 * @return ein String-Array mit den Spalten einer Zeile oder
+	 *         <code>null</code>, wenn das Dateiende erreicht ist
 	 */
 	public final String[] getNaechsteZeile() {
-		if(!_data.hasNext()) return null;
-		try {
-			return _data.next().asList().toArray(new String[0]);
+		if (!data.hasNext()) {
+			return null;
 		}
-		catch(CsvParseException e) {
+		try {
+			return data.next().asList().toArray(new String[0]);
+		} catch (CsvParseException e) {
 			throw new AssertionError(e);
 		}
 	}
@@ -89,9 +84,8 @@ public class CSVImporter {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/" + _csvDateiName);
 		CsvReader csvReader = new CsvReader(Charset.forName("UTF-8"), inputStream, ';', '"');
 		try {
-			_data = csvReader.read(null).iterator();
-		}
-		catch(IOException e) {
+			data = csvReader.read(null).iterator();
+		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
 	}

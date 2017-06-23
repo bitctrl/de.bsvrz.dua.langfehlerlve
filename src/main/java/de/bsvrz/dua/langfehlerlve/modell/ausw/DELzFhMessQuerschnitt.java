@@ -28,7 +28,25 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
-import de.bsvrz.dav.daf.main.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientReceiverInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ReceiveOptions;
+import de.bsvrz.dav.daf.main.ReceiverRole;
+import de.bsvrz.dav.daf.main.ResultData;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.dua.langfehlerlve.modell.Rechenwerk;
@@ -41,9 +59,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IZeitStempel;
 import de.bsvrz.sys.funclib.debug.Debug;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 /**
  * Diese Klasse korrespondiert mit einem DAV-Objekt vom Typ
  * <code>typ.messQuerschnittAllgemein</code> und kapselt direkt oder indirekt
@@ -55,13 +70,14 @@ import java.util.*;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
-		ClientReceiverInterface {
+public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements ClientReceiverInterface {
+
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * nach Zeitstempeln sortierter Datenpuffer.
 	 */
-	private SortedSet<MQDatum> puffer = new TreeSet<MQDatum>();
+	private SortedSet<MQDatum> puffer = new TreeSet<>();
 
 	/**
 	 * aktuelle Maximallaenge des Pufferintervalls.
@@ -81,7 +97,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	/**
 	 * Menge von Beobachtern der Online-Daten dieses Objektes.
 	 */
-	private Set<IDELzFhDatenListener> listenerMenge = new HashSet<IDELzFhDatenListener>();
+	private Set<IDELzFhDatenListener> listenerMenge = new HashSet<>();
 
 	/**
 	 * wenn dieser Wert auf <code>!= null</code> steht, bedeutet das, dass das
@@ -106,21 +122,19 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 * @throws DUAInitialisierungsException
 	 *             wenn das Objekt nicht sinnvoll initialisiert werden konnte
 	 */
-	protected DELzFhMessQuerschnitt(ClientDavInterface dav,
-			SystemObject mqObjekt, DELzFhMessStellenGruppe messStellenGruppe,
-			final boolean langZeit) throws DUAInitialisierungsException {
+	protected DELzFhMessQuerschnitt(ClientDavInterface dav, SystemObject mqObjekt,
+			DELzFhMessStellenGruppe messStellenGruppe, final boolean langZeit) throws DUAInitialisierungsException {
 		this.intervallLaengeInitialisiert = false;
 		this.mqObjekt = mqObjekt;
 
-		DataDescription fsAnalyseDatenBeschreibung = new DataDescription(dav
-				.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ), dav
-				.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
+		DataDescription fsAnalyseDatenBeschreibung = new DataDescription(
+				dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_KURZZEIT_MQ),
+				dav.getDataModel().getAspect(DUAKonstanten.ASP_ANALYSE));
 
 		super.init(dav, messStellenGruppe, langZeit);
 
-		dav.subscribeReceiver(this, mqObjekt, fsAnalyseDatenBeschreibung,
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, mqObjekt, fsAnalyseDatenBeschreibung, ReceiveOptions.normal(),
+				ReceiverRole.receiver());
 	}
 
 	/**
@@ -141,65 +155,53 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 */
 	public final void addListener(final IDELzFhDatenListener listener) {
 		synchronized (this) {
-			if (this.listenerMenge.add(listener)
-					&& this.fertigesIntervall != null) {
-				listener.aktualisiereDatum(this.mqObjekt,
-						this.fertigesIntervall);
+			if (this.listenerMenge.add(listener) && this.fertigesIntervall != null) {
+				listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall);
 			}
 		}
 	}
 
+	@Override
 	public void update(ResultData[] resultate) {
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
 				if (resultat != null) {
 					if (resultat.getData() == null) {
 						synchronized (this) {
-							this.fertigesIntervall = new Intervall(resultat
-									.getDataTime(), resultat.getDataTime(),
+							this.fertigesIntervall = new Intervall(resultat.getDataTime(), resultat.getDataTime(),
 									new IDELzFhDatum() {
 
-										public double getQ(
-												FahrzeugArt fahrzeugArt) {
+										@Override
+										public double getQ(FahrzeugArt fahrzeugArt) {
 											return -1;
 										}
 
+										@Override
 										public boolean isKeineDaten() {
 											return true;
 										}
 
-										public boolean isAuswertbar(
-												FahrzeugArt fahrzeugArt) {
+										@Override
+										public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
 											return false;
 										}
 
+										@Override
 										public SystemObject getObjekt() {
 											return mqObjekt;
 										}
 
 									});
 
-							/**
-							 * "Keine Daten" wird sofort weitergereicht an alle
-							 * Listener.
-							 */
-							for (IDELzFhDatenListener listener : this.listenerMenge) {
-								listener.aktualisiereDatum(this.mqObjekt,
-										this.fertigesIntervall);
-							}
-							Debug
-									.getLogger()
-									.finer(
-											this
-													+ "Habe \"keine Daten\" empfangen. Puffer wird geloescht.");
+							this.listenerMenge.stream().forEach(
+									(listener) -> listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall));
+							LOGGER.finer("Habe \"keine Daten\" empfangen. Puffer wird geloescht.", this);
 							this.puffer.clear();
 						}
 					} else {
 						MQDatum dummy = new MQDatum(resultat);
 						this.addDatum(dummy);
-						Debug.getLogger().finer(
-								"Habe Datum empfangen:\n" + dummy + ":\n"
-										+ this);
+						LOGGER.finer("Habe Datum empfangen.", new Object[] { dummy, this });
 					}
 				}
 			}
@@ -254,19 +256,16 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 					}
 				}
 
-				final long intervallEnde = this
-						.getEndeLetztesIntervallVor(aktuelleDatenZeit);
-				final long intervallAnfang = intervallEnde
-						- this.intervallLaenge;
+				if (zweitLetztesDatum == null) {
+					return;
+				}
 
-				Debug.getLogger().fine(
-						"Intervallende: "
-								+ DUAKonstanten.ZEIT_FORMAT_GENAU
-										.format(new Date(intervallEnde))
-								+ " Intervallanfang: "
-								+ DUAKonstanten.ZEIT_FORMAT_GENAU
-										.format(new Date(intervallAnfang))
-								+ ", i: " + this.intervallLaenge);
+				final long intervallEnde = this.getEndeLetztesIntervallVor(aktuelleDatenZeit);
+				final long intervallAnfang = intervallEnde - this.intervallLaenge;
+
+				SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
+				LOGGER.fine("Intervallende: " + dateFormat.format(new Date(intervallEnde)) + " Intervallanfang: "
+						+ dateFormat.format(new Date(intervallAnfang)) + ", i: " + this.intervallLaenge);
 
 				if (intervallAnfang <= zweitLetztesDatum.getZeitStempel()
 						&& zweitLetztesDatum.getZeitStempel() < intervallEnde
@@ -277,8 +276,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 					 * vergangenen Intervalls liegen
 					 */
 
-					this.berechneFertigesIntervall(intervallAnfang,
-							intervallEnde);
+					this.berechneFertigesIntervall(intervallAnfang, intervallEnde);
 				}
 			}
 		}
@@ -295,32 +293,21 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	private void berechneFertigesIntervall(final long start, final long ende) {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
-		
-		Debug.getLogger().fine(
-				"Start: "
-						+ dateFormat
-								.format(new Date(start))
-						+ " ("
-						+ start
-						+ "), Ende: "
-						+ dateFormat
-								.format(new Date(ende)) + " (" + ende + ")");
 
-		Set<IDELzFhDatum> datenImIntervall = new HashSet<IDELzFhDatum>();
-		for (MQDatum mQDatum : this.puffer) {
-			if (start <= mQDatum.getZeitStempel()
-					&& mQDatum.getZeitStempel() < ende) {
-				datenImIntervall.add(mQDatum);
-				Debug.getLogger().fine(mQDatum.toString());
-			}
-		}
+		LOGGER.fine("Start: " + dateFormat.format(new Date(start)) + " (" + start + "), Ende: "
+				+ dateFormat.format(new Date(ende)) + " (" + ende + ")");
 
-		this.fertigesIntervall = new Intervall(start, ende, Rechenwerk
-				.durchschnitt(datenImIntervall));
+		Set<IDELzFhDatum> datenImIntervall = new HashSet<>();
+		this.puffer.stream().filter((mQDatum) -> start <= mQDatum.getZeitStempel() && mQDatum.getZeitStempel() < ende)
+				.forEach((mQDatum) -> {
+					datenImIntervall.add(mQDatum);
+					LOGGER.fine("Bewerte Datum", mQDatum);
+				});
 
-		for (IDELzFhDatenListener listener : this.listenerMenge) {
-			listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall);
-		}
+		this.fertigesIntervall = new Intervall(start, ende, Rechenwerk.durchschnitt(datenImIntervall));
+
+		this.listenerMenge.stream()
+				.forEach((listener) -> listener.aktualisiereDatum(this.mqObjekt, this.fertigesIntervall));
 	}
 
 	/**
@@ -343,13 +330,10 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			nullElement.set(Calendar.HOUR_OF_DAY, 0);
 		}
 
-		final long jetztMinus0Element = zeitStempel
-				- nullElement.getTimeInMillis();
-		final long vollstaendigVergangeneIntervalleBisJetzt = jetztMinus0Element
-				/ this.intervallLaenge;
+		final long jetztMinus0Element = zeitStempel - nullElement.getTimeInMillis();
+		final long vollstaendigVergangeneIntervalleBisJetzt = jetztMinus0Element / this.intervallLaenge;
 		final long intervallEnde = nullElement.getTimeInMillis()
-				+ vollstaendigVergangeneIntervalleBisJetzt
-				* this.intervallLaenge;
+				+ vollstaendigVergangeneIntervalleBisJetzt * this.intervallLaenge;
 
 		return intervallEnde;
 	}
@@ -361,10 +345,8 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 	 *            der Jetzt-Zeitpunkt
 	 */
 	private synchronized void setJetzt(final long jetzt) {
-		Debug.getLogger().fine(
-				"Jetzt: "
-						+ DUAKonstanten.ZEIT_FORMAT_GENAU
-								.format(new Date(jetzt)) + " (" + jetzt + ")");
+		LOGGER.fine("Jetzt: " + new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR).format(new Date(jetzt)) + " ("
+				+ jetzt + ")");
 
 		if (this.puffer.size() > 1) {
 			int i = 0;
@@ -376,17 +358,19 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 				}
 			}
 
-			long aeltesterErlaubterZeitStempel = this
-					.getEndeLetztesIntervallVor(zweitLetztesDatum
-							.getZeitStempel());
-
-			Collection<MQDatum> zuLoeschendeElemente = new ArrayList<MQDatum>();
-			for (MQDatum pufferElement : this.puffer) {
-				if (pufferElement.getZeitStempel() < aeltesterErlaubterZeitStempel) {
-					zuLoeschendeElemente.add(pufferElement);
-					Debug.getLogger().fine("Loesche: " + pufferElement);
-				}
+			if (zweitLetztesDatum == null) {
+				return;
 			}
+
+			long aeltesterErlaubterZeitStempel = this.getEndeLetztesIntervallVor(zweitLetztesDatum.getZeitStempel());
+
+			Collection<MQDatum> zuLoeschendeElemente = new ArrayList<>();
+			this.puffer.stream()
+					.filter((pufferElement) -> pufferElement.getZeitStempel() < aeltesterErlaubterZeitStempel)
+					.forEach((pufferElement) -> {
+						zuLoeschendeElemente.add(pufferElement);
+						LOGGER.fine("Loesche Element", pufferElement);
+					});
 
 			this.puffer.removeAll(zuLoeschendeElemente);
 		}
@@ -394,11 +378,9 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 
 	@Override
 	public String toString() {
-		String s = "Datenerfassung ("
-				+ (this.langZeit ? "langzeit" : "kurzzeit") + "): "
-				+ this.mqObjekt.getPid() + "\n";
-		s += "  Aktuelle Intervalllaenge: " + (this.intervallLaenge / 1000L)
-				+ "s\n";
+		String s = "Datenerfassung (" + (this.langZeit ? "langzeit" : "kurzzeit") + "): " + this.mqObjekt.getPid()
+				+ "\n";
+		s += "  Aktuelle Intervalllaenge: " + (this.intervallLaenge / 1000L) + "s\n";
 
 		synchronized (this) {
 			s += "  Pufferdaten: ";
@@ -406,22 +388,16 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 				s += "leer\n";
 			} else {
 				s += "\n";
+				SimpleDateFormat dateFormat = new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR);
 				for (MQDatum element : this.puffer) {
-					s += "    "
-							+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-									element.getZeitStempel())) + ": ";
+					s += "    " + dateFormat.format(new Date(element.getZeitStempel())) + ": ";
 					if (element.isKeineDaten()) {
 						s += "keine Daten\n";
 					} else {
-						s += "QKfz: "
-								+ (element.getQ(FahrzeugArt.KFZ) < 0 ? "/"
-										: element.getQ(FahrzeugArt.KFZ));
-						s += ", QLkw: "
-								+ (element.getQ(FahrzeugArt.LKW) < 0 ? "/"
-										: element.getQ(FahrzeugArt.LKW));
-						s += ", QPkw: "
-								+ (element.getQ(FahrzeugArt.PKW) < 0 ? "/"
-										: element.getQ(FahrzeugArt.PKW)) + "\n";
+						s += "QKfz: " + (element.getQ(FahrzeugArt.KFZ) < 0 ? "/" : element.getQ(FahrzeugArt.KFZ));
+						s += ", QLkw: " + (element.getQ(FahrzeugArt.LKW) < 0 ? "/" : element.getQ(FahrzeugArt.LKW));
+						s += ", QPkw: " + (element.getQ(FahrzeugArt.PKW) < 0 ? "/" : element.getQ(FahrzeugArt.PKW))
+								+ "\n";
 					}
 				}
 			}
@@ -484,33 +460,31 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 
 				if (resultat.getData() != null) {
 					Data data = resultat.getData();
-					this.qKfz = data
-							.getItem("QKfz").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-					this.qLkw = data
-							.getItem("QLkw").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
-					this.qPkw = data
-							.getItem("QPkw").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+					this.qKfz = data.getItem("QKfz").getUnscaledValue("Wert").doubleValue();
+					this.qLkw = data.getItem("QLkw").getUnscaledValue("Wert").doubleValue();
+					this.qPkw = data.getItem("QPkw").getUnscaledValue("Wert").doubleValue();
 				} else {
 					this.keineDaten = true;
 				}
 			} else {
 				this.datenZeit = -1;
-				throw new NullPointerException(
-						"<<null>> ist kein gueltiges Argument"); //$NON-NLS-1$
+				throw new NullPointerException("<<null>> ist kein gueltiges Argument");
 			}
 		}
 
+		@Override
 		public final boolean isKeineDaten() {
 			return this.keineDaten;
 		}
 
+		@Override
 		public long getZeitStempel() {
 			return this.datenZeit;
 		}
 
+		@Override
 		public int compareTo(IZeitStempel that) {
-			return -new Long(this.getZeitStempel()).compareTo(that
-					.getZeitStempel());
+			return -Long.compare(this.getZeitStempel(), that.getZeitStempel());
 		}
 
 		@Override
@@ -529,25 +503,25 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 		public int hashCode() {
 			return Objects.hashCode(datenZeit);
 		}
-		
+
 		@Override
 		public String toString() {
-			String s = (this.objekt == null ? "kein Objekt" : this.objekt)
-					+ " --> "
-					+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(
-							this.datenZeit)) + " (" + this.datenZeit + ")\n";
+			String s = (this.objekt == null ? "kein Objekt" : this.objekt) + " --> "
+					+ new SimpleDateFormat(DUAKonstanten.ZEIT_FORMAT_GENAU_STR).format(new Date(this.datenZeit)) + " ("
+					+ this.datenZeit + ")\n";
 
 			if (this.keineDaten) {
-				s += "keine Daten"; //$NON-NLS-1$
+				s += "keine Daten";
 			} else {
-				s += "QKfz: " + (this.qKfz < 0 ? "/" : this.qKfz); //$NON-NLS-1$//$NON-NLS-2$
-				s += ", QLkw: " + (this.qLkw < 0 ? "/" : this.qLkw); //$NON-NLS-1$//$NON-NLS-2$
-				s += ", QPkw: " + (this.qPkw < 0 ? "/" : this.qPkw); //$NON-NLS-1$//$NON-NLS-2$
+				s += "QKfz: " + (this.qKfz < 0 ? "/" : this.qKfz);
+				s += ", QLkw: " + (this.qLkw < 0 ? "/" : this.qLkw);
+				s += ", QPkw: " + (this.qPkw < 0 ? "/" : this.qPkw);
 			}
 
 			return s;
 		}
 
+		@Override
 		public double getQ(FahrzeugArt fahrzeugArt) {
 			double ergebnis = -1.0;
 
@@ -562,6 +536,7 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			return ergebnis;
 		}
 
+		@Override
 		public boolean isAuswertbar(FahrzeugArt fahrzeugArt) {
 			boolean ergebnis = true;
 
@@ -576,9 +551,9 @@ public class DELzFhMessQuerschnitt extends AbstraktDELzFhObjekt implements
 			return ergebnis;
 		}
 
+		@Override
 		public SystemObject getObjekt() {
 			return this.objekt;
 		}
-
 	}
 }

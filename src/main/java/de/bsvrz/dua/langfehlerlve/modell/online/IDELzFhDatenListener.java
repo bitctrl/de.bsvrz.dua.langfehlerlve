@@ -33,9 +33,9 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 /**
  * Hoert auf Aktualisierungen der DELzFh-Intervalldaten eines Messquerschnitts
  * bzw. einer Messstelle. Dies sind:<br>
- *  - <code>QKfz(MessQuerschnitt)</code><br> -
- * <code>QLkw(MessQuerschnitt)</code><br> -
- * <code>QPkw(MessQuerschnitt)</code><br>
+ * - <code>QKfz(MessQuerschnitt)</code><br>
+ * - <code>QLkw(MessQuerschnitt)</code><br>
+ * - <code>QPkw(MessQuerschnitt)</code><br>
  * 
  * berechnet analog DUA-BW-C1C2-2
  * 

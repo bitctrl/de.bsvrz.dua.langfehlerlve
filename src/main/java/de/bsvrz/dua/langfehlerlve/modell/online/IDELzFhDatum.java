@@ -56,9 +56,10 @@ public interface IDELzFhDatum {
 	/**
 	 * Indiziert, dass der ueber diese Schnittstelle erfragbare Wert fuer die
 	 * uebergebene Fahrzeugart <b>nicht</b> auf einem der folgenden Zustaende
-	 * steht:<br> - <code>nicht ermittelbar</code>,<br> -
-	 * <code>fehlerhaft</code>,<br> -
-	 * <code>nicht ermittelbar oder fehlerhaft</code>.
+	 * steht:<br>
+	 * - <code>nicht ermittelbar</code>,<br>
+	 * - <code>fehlerhaft</code>,<br>
+	 * - <code>nicht ermittelbar oder fehlerhaft</code>.
 	 * 
 	 * @param fahrzeugArt
 	 *            eine Fahrzeugart

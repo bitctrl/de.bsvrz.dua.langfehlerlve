@@ -28,7 +28,17 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
-import de.bsvrz.dav.daf.main.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientSenderInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.dua.langfehlerlve.modell.Rechenwerk;
@@ -42,11 +52,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessQuerschnittAllgemein;
 import de.bsvrz.sys.funclib.bitctrl.dua.lve.MessStelle;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Diese Klasse korrespondiert mit einem DAV-Objekt vom Typ
  * <code>typ.messStelle</code> und kapselt direkt oder indirekt saemtliche
@@ -57,8 +62,7 @@ import java.util.Set;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
-		IDELzFhDatenListener, ClientSenderInterface {
+public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements IDELzFhDatenListener, ClientSenderInterface {
 
 	/**
 	 * diese Messstelle.
@@ -80,12 +84,12 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	/**
 	 * Aktuelle Daten aller mit der Messstelle assoziierten Messquerschnitte.
 	 */
-	private Map<SystemObject, Intervall> mqPuffer = new HashMap<SystemObject, Intervall>();
+	private Map<SystemObject, Intervall> mqPuffer = new HashMap<>();
 
 	/**
 	 * Menge von Beobachtern der Online-Daten dieses Objektes.
 	 */
-	private Set<IDELzFhDatenListener> listenerMenge = new HashSet<IDELzFhDatenListener>();
+	private Set<IDELzFhDatenListener> listenerMenge = new HashSet<>();
 
 	/**
 	 * wenn dieser Wert auf <code>!= null</code> steht, bedeutet das, dass das
@@ -120,63 +124,45 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 * @throws Exception
 	 *             wenn das Objekt nicht sinnvoll initialisiert werden konnte
 	 */
-	protected DELzFhMessStelle(ClientDavInterface dav, SystemObject msObjekt,
-			DELzFhMessStellenGruppe messStellenGruppe, final boolean langZeit)
-			throws Exception {
+	protected DELzFhMessStelle(ClientDavInterface dav, SystemObject msObjekt, DELzFhMessStellenGruppe messStellenGruppe,
+			final boolean langZeit) throws Exception {
 		this.messStelle = MessStelle.getInstanz(msObjekt);
 
 		this.mqKanal = new PublikationsKanal(dav);
 		this.msKanal = new PublikationsKanal(dav);
 
-		this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup(
-				"atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit")); //$NON-NLS-1$
-		this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup(
-				"atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-				dav.getDataModel().getAspect("asp.messStelleKurzZeit")); //$NON-NLS-1$
+		this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
+				dav.getDataModel().getAspect("asp.messQuerschnittKurzZeit"));
+		this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
+				dav.getDataModel().getAspect("asp.messStelleKurzZeit"));
 		if (langZeit) {
-			this.mqDb = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-					dav.getDataModel().getAspect("asp.messQuerschnittLangZeit")); //$NON-NLS-1$
-			this.msDb = new DataDescription(dav.getDataModel()
-					.getAttributeGroup("atg.intervallVerkehrsStärke"), //$NON-NLS-1$
-					dav.getDataModel().getAspect("asp.messStelleLangZeit")); //$NON-NLS-1$
+			this.mqDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
+					dav.getDataModel().getAspect("asp.messQuerschnittLangZeit"));
+			this.msDb = new DataDescription(dav.getDataModel().getAttributeGroup("atg.intervallVerkehrsStärke"),
+					dav.getDataModel().getAspect("asp.messStelleLangZeit"));
 		}
 
 		super.init(dav, messStellenGruppe, langZeit);
 
 		if (this.messStelle != null) {
-			
-			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb,
-					SenderRole.source());
-			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb,
-					SenderRole.source());
-			
-			if (this.messStelle.getPruefling() != null) {
-				messStellenGruppe.getMq(
-						this.messStelle.getPruefling().getSystemObject())
-						.addListener(this);
 
-				for (MessQuerschnittAllgemein abfahrt : this.messStelle
-						.getAbfahrten()) {
-					messStellenGruppe.getMq(abfahrt.getSystemObject())
-							.addListener(this);
-				}
-				for (MessQuerschnittAllgemein zufahrt : this.messStelle
-						.getZufahrten()) {
-					messStellenGruppe.getMq(zufahrt.getSystemObject())
-							.addListener(this);
-				}
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.mqDb, SenderRole.source());
+			dav.subscribeSender(this, this.messStelle.getSystemObject(), this.msDb, SenderRole.source());
+
+			if (this.messStelle.getPruefling() != null) {
+				messStellenGruppe.getMq(this.messStelle.getPruefling().getSystemObject()).addListener(this);
+
+				this.messStelle.getAbfahrten().stream()
+						.forEach((abfahrt) -> messStellenGruppe.getMq(abfahrt.getSystemObject()).addListener(this));
+				this.messStelle.getZufahrten().stream()
+						.forEach((zufahrt) -> messStellenGruppe.getMq(zufahrt.getSystemObject()).addListener(this));
 				this.initMQPuffer();
 			} else {
 				System.out.println(this.messStelle.getPruefling());
-				throw new DUAInitialisierungsException(
-						"Messstelle " + msObjekt + //$NON-NLS-1$
-								" besitzt keinen Pruefling (MQ)"); //$NON-NLS-1$				
+				throw new DUAInitialisierungsException("Messstelle " + msObjekt + " besitzt keinen Pruefling (MQ)");
 			}
 		} else {
-			throw new DUAInitialisierungsException("Messstelle " + msObjekt + //$NON-NLS-1$
-					" konnte nicht ausgelesen werden"); //$NON-NLS-1$
+			throw new DUAInitialisierungsException("Messstelle " + msObjekt + " konnte nicht ausgelesen werden");
 		}
 	}
 
@@ -194,15 +180,12 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 */
 	private void initMQPuffer() {
 		synchronized (this.mqPuffer) {
-			this.mqPuffer.put(this.messStelle.getPruefling().getSystemObject(),
-					null);
+			this.mqPuffer.put(this.messStelle.getPruefling().getSystemObject(), null);
 
-			for (MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
-				this.mqPuffer.put(abfahrt.getSystemObject(), null);
-			}
-			for (MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
-				this.mqPuffer.put(zufahrt.getSystemObject(), null);
-			}			
+			this.messStelle.getAbfahrten().stream()
+					.forEach((abfahrt) -> this.mqPuffer.put(abfahrt.getSystemObject(), null));
+			this.messStelle.getZufahrten().stream()
+					.forEach((zufahrt) -> this.mqPuffer.put(zufahrt.getSystemObject(), null));
 		}
 	}
 
@@ -215,21 +198,19 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 */
 	public final void addListener(final IDELzFhDatenListener listener) {
 		synchronized (this.listenerMenge) {
-			if (this.listenerMenge.add(listener)
-					&& this.fertigesIntervall != null) {
-				listener.aktualisiereDatum(this.messStelle.getSystemObject(),
-						this.fertigesIntervall);
+			if (this.listenerMenge.add(listener) && this.fertigesIntervall != null) {
+				listener.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall);
 			}
 		}
 	}
 
-	public void dataRequest(SystemObject object,
-			DataDescription dataDescription, byte state) {
+	@Override
+	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
 		// Quellenanmeldung
 	}
 
-	public boolean isRequestSupported(SystemObject object,
-			DataDescription dataDescription) {
+	@Override
+	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		return false;
 	}
 
@@ -243,8 +224,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 * @param neuesDatum
 	 *            ein MQ-Datum mit Nutzdaten
 	 */
-	private synchronized void versucheMessStellenBerechnung(
-			SystemObject mqObjekt, Intervall neuesDatum) {
+	private synchronized void versucheMessStellenBerechnung(SystemObject mqObjekt, Intervall neuesDatum) {
 		synchronized (this.mqPuffer) {
 			if (this.mqPuffer.size() > 0) {
 				if (this.mqPuffer.size() > 1) {
@@ -253,18 +233,17 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 					for (SystemObject mq : this.mqPuffer.keySet()) {
 						Intervall aktuellesIntervall = this.mqPuffer.get(mq);
 						if (aktuellesIntervall != null) {
-							if (neuesDatum.getStart() > aktuellesIntervall
-									.getStart()) {
+							if (neuesDatum.getStart() > aktuellesIntervall.getStart()) {
 								veroeffentlicheAktuellenMsWert();
 								this.mqPuffer.put(mqObjekt, neuesDatum);
 								return;
 							} else {
-								if (neuesDatum.getStart() == aktuellesIntervall
-										.getStart()) {
+								if (neuesDatum.getStart() == aktuellesIntervall.getStart()) {
 									schonEingetroffeneIntervalle++;
-//								} else {
-//									throw new RuntimeException(
-//											"Veralteten Zeitstempel empfangen: " + mqObjekt); //$NON-NLS-1$
+									// } else {
+									// throw new RuntimeException(
+									// "Veralteten Zeitstempel empfangen: " +
+									// mqObjekt);
 								}
 							}
 						}
@@ -278,7 +257,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 					this.mqPuffer.put(mqObjekt, neuesDatum);
 					veroeffentlicheAktuellenMsWert();
 				}
-			}			
+			}
 		}
 	}
 
@@ -288,8 +267,8 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 	 */
 	private void veroeffentlicheAktuellenMsWert() {
 		IDELzFhDatum pDatum = null;
-		Set<IDELzFhDatum> abfahrtsDaten = new HashSet<IDELzFhDatum>();
-		Set<IDELzFhDatum> zufahrtsDaten = new HashSet<IDELzFhDatum>();
+		Set<IDELzFhDatum> abfahrtsDaten = new HashSet<>();
+		Set<IDELzFhDatum> zufahrtsDaten = new HashSet<>();
 
 		Intervall intervall = null;
 
@@ -305,8 +284,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 				}
 
 				if (!brk) {
-					for (MessQuerschnittAllgemein zufahrt : this.messStelle
-							.getZufahrten()) {
+					for (MessQuerschnittAllgemein zufahrt : this.messStelle.getZufahrten()) {
 						if (zufahrt.getSystemObject().equals(mq)) {
 							zufahrtsDaten.add(aktuellesIntervall.getDatum());
 							brk = true;
@@ -316,8 +294,7 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 				}
 
 				if (!brk) {
-					for (MessQuerschnittAllgemein abfahrt : this.messStelle
-							.getAbfahrten()) {
+					for (MessQuerschnittAllgemein abfahrt : this.messStelle.getAbfahrten()) {
 						if (abfahrt.getSystemObject().equals(mq)) {
 							abfahrtsDaten.add(aktuellesIntervall.getDatum());
 							break;
@@ -327,35 +304,29 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 			}
 		}
 
-		IDELzFhDatum ergebnis = Rechenwerk.subtrahiere(Rechenwerk.addiere(
-				pDatum, Rechenwerk.addiere(zufahrtsDaten)), Rechenwerk
-				.addiere(abfahrtsDaten));
+		IDELzFhDatum ergebnis = Rechenwerk.subtrahiere(Rechenwerk.addiere(pDatum, Rechenwerk.addiere(zufahrtsDaten)),
+				Rechenwerk.addiere(abfahrtsDaten));
 
-		this.fertigesIntervall = new Intervall(intervall.getStart(), intervall
-				.getEnde(), ergebnis);
+		this.fertigesIntervall = new Intervall(intervall.getStart(), intervall.getEnde(), ergebnis);
 
 		Data nutzDaten = dDav.createData(this.msDb.getAttributeGroup());
-		for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
+		FahrzeugArt.getInstanzen().stream().forEach((fahrzeugArt) -> {
 			if (this.fertigesIntervall.getDatum().getQ(fahrzeugArt) < 0.0) {
-				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName()).set(
-						DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+						.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 			} else {
-				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName()).set(
-						Math.round(this.fertigesIntervall.getDatum().getQ(
-								fahrzeugArt)));
+				nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+						.set(Math.round(this.fertigesIntervall.getDatum().getQ(fahrzeugArt)));
 			}
-		}
+		});
 
-		ResultData msIntervallVSResultat = new ResultData(this.messStelle
-				.getSystemObject(), this.msDb, this.fertigesIntervall
-				.getStart(), nutzDaten);
+		ResultData msIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.msDb,
+				this.fertigesIntervall.getStart(), nutzDaten);
 		this.msKanal.publiziere(msIntervallVSResultat);
 
 		synchronized (this.listenerMenge) {
-			for (IDELzFhDatenListener listener : this.listenerMenge) {
-				listener.aktualisiereDatum(this.messStelle.getSystemObject(),
-						this.fertigesIntervall);
-			}
+			this.listenerMenge.stream().forEach((listener) -> listener
+					.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall));
 		}
 
 		/**
@@ -364,17 +335,15 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 		this.initMQPuffer();
 	}
 
-	public void aktualisiereDatum(SystemObject mqObjekt,
-			Intervall intervallDatum) {
+	@Override
+	public void aktualisiereDatum(SystemObject mqObjekt, Intervall intervallDatum) {
 		if (intervallDatum.getDatum().isKeineDaten()) {
 			ResultData msIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.msDb,
 					intervallDatum.getStart(), null);
 			this.fertigesIntervall = intervallDatum;
 			synchronized (this.listenerMenge) {
-				for (IDELzFhDatenListener listener : this.listenerMenge) {
-					listener.aktualisiereDatum(this.messStelle
-							.getSystemObject(), this.fertigesIntervall);
-				}
+				this.listenerMenge.stream().forEach((listener) -> listener
+						.aktualisiereDatum(this.messStelle.getSystemObject(), this.fertigesIntervall));
 			}
 			this.msKanal.publiziere(msIntervallVSResultat);
 		} else {
@@ -387,21 +356,17 @@ public class DELzFhMessStelle extends AbstraktDELzFhObjekt implements
 				nutzDaten = dDav.createData(this.mqDb.getAttributeGroup());
 				for (FahrzeugArt fahrzeugArt : FahrzeugArt.getInstanzen()) {
 					if (intervallDatum.getDatum().getQ(fahrzeugArt) < 0.0) {
-						nutzDaten.getUnscaledValue(
-								fahrzeugArt.getAttributName()).set(
-								DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
+						nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+								.set(DUAKonstanten.NICHT_ERMITTELBAR_BZW_FEHLERHAFT);
 					} else {
-						nutzDaten.getUnscaledValue(
-								fahrzeugArt.getAttributName()).set(
-								Math.round(intervallDatum.getDatum().getQ(
-										fahrzeugArt)));
+						nutzDaten.getUnscaledValue(fahrzeugArt.getAttributName())
+								.set(Math.round(intervallDatum.getDatum().getQ(fahrzeugArt)));
 					}
 				}
 			}
 
-			ResultData mqIntervallVSResultat = new ResultData(this.messStelle
-					.getSystemObject(), this.mqDb, intervallDatum.getStart(),
-					nutzDaten);
+			ResultData mqIntervallVSResultat = new ResultData(this.messStelle.getSystemObject(), this.mqDb,
+					intervallDatum.getStart(), nutzDaten);
 			this.mqKanal.publiziere(mqIntervallVSResultat);
 		}
 	}

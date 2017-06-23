@@ -28,10 +28,10 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.online;
 
-import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
-
 import java.util.Date;
 import java.util.Objects;
+
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 
 /**
  * Zeitintervall. Zwei Intervalle sind dann gleich, wenn sie den gleichen Anfang
@@ -69,17 +69,14 @@ public class Intervall {
 	 */
 	public Intervall(final long start, final long ende, IDELzFhDatum datum) {
 		if (ende < start) {
-			throw new RuntimeException("Intervallende (" + //$NON-NLS-1$
-					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
-					+ ") liegt vor Intervallbegin (" + //$NON-NLS-1$
-					DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
-					+ ")"); //$NON-NLS-1$
+			throw new RuntimeException("Intervallende (" + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
+					+ ") liegt vor Intervallbegin (" + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start)) + ")");
 		}
 		this.start = start;
 		this.ende = ende;
 
 		if (datum == null) {
-			throw new NullPointerException("Es wurde kein Datum uebergeben"); //$NON-NLS-1$
+			throw new NullPointerException("Es wurde kein Datum uebergeben");
 		}
 
 		this.datum = datum;
@@ -139,16 +136,13 @@ public class Intervall {
 	public int hashCode() {
 		return Objects.hash(start, ende);
 	}
-	
+
 	@Override
 	public String toString() {
 		String s = "Datum:\n" + this.datum + "\n";
 
-		return "Intervallbegin: " + //$NON-NLS-1$
-				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start))
-				+ ", Intervallende: " + //$NON-NLS-1$
-				DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende))
-				+ " --> " + s; //$NON-NLS-1$
+		return "Intervallbegin: " + DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(start)) + ", Intervallende: "
+				+ DUAKonstanten.ZEIT_FORMAT_GENAU.format(new Date(ende)) + " --> " + s;
 	}
 
 }

@@ -26,10 +26,10 @@
 
 package de.bsvrz.dua.langfehlerlve.tests;
 
-
 /**
  * Ueberprueft den ersten echten (Nutz-)Wert von
- * <code>atg.intervallVerkehrsStärke</code>, <code>asp.messStelleLangZeit</code>.
+ * <code>atg.intervallVerkehrsStärke</code>,
+ * <code>asp.messStelleLangZeit</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  */

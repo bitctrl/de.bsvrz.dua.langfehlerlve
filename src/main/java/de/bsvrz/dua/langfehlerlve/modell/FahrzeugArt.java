@@ -41,22 +41,22 @@ public final class FahrzeugArt {
 	/**
 	 * alle statischen Instanzen dieser Klasse.
 	 */
-	private static Set<FahrzeugArt> instanzen = new HashSet<FahrzeugArt>();
+	private static Set<FahrzeugArt> instanzen = new HashSet<>();
 
 	/**
 	 * <code>Kfz</code>.
 	 */
-	public static final FahrzeugArt KFZ = new FahrzeugArt("QKfz"); //$NON-NLS-1$
+	public static final FahrzeugArt KFZ = new FahrzeugArt("QKfz");
 
 	/**
 	 * <code>Pkw</code>.
 	 */
-	public static final FahrzeugArt PKW = new FahrzeugArt("QPkw"); //$NON-NLS-1$
+	public static final FahrzeugArt PKW = new FahrzeugArt("QPkw");
 
 	/**
 	 * <code>Lkw</code>.
 	 */
-	public static final FahrzeugArt LKW = new FahrzeugArt("QLkw"); //$NON-NLS-1$
+	public static final FahrzeugArt LKW = new FahrzeugArt("QLkw");
 
 	/**
 	 * der Name des Attributs Q...
@@ -95,7 +95,7 @@ public final class FahrzeugArt {
 
 	@Override
 	public String toString() {
-		return "Attributname: " + this.attributName; //$NON-NLS-1$
+		return "Attributname: " + this.attributName;
 	}
 
 }

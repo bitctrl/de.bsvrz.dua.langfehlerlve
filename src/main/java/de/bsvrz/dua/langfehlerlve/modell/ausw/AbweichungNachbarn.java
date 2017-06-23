@@ -65,14 +65,10 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 	 * @throws Exception
 	 *             wird weitergereicht
 	 */
-	protected AbweichungNachbarn(ClientDavInterface dav,
-			DELzFhMessStelle messStelle,
-			DELzFhMessStellenGruppe messStellenGruppe,
-			DELzFhMessStelle[] restMessStellen,
-			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit)
-			throws Exception {
-		super(dav, messStelle, messStellenGruppe, restMessStellen,
-				messQuerschnitt, langZeit);
+	protected AbweichungNachbarn(ClientDavInterface dav, DELzFhMessStelle messStelle,
+			DELzFhMessStellenGruppe messStellenGruppe, DELzFhMessStelle[] restMessStellen,
+			DELzFhMessQuerschnitt messQuerschnitt, boolean langZeit) throws Exception {
+		super(dav, messStelle, messStellenGruppe, restMessStellen, messQuerschnitt, langZeit);
 
 		for (DELzFhMessStelle rms : restMessStellen) {
 			this.restMessStellen.add(rms.getMessStelle().getPruefling().getSystemObject());
@@ -80,11 +76,10 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 		this.initPuffer();
 
 		dav.subscribeSender(this, messStelle.getMessStelle().getSystemObject(),
-				langZeit ? new DataDescription(dav.getDataModel()
-						.getAttributeGroup(ATG_PID), dav.getDataModel()
-						.getAspect(this.getLzAspPid())) : new DataDescription(
-						dav.getDataModel().getAttributeGroup(ATG_PID), dav
-								.getDataModel().getAspect(this.getKzAspPid())),
+				langZeit ? new DataDescription(dav.getDataModel().getAttributeGroup(ATG_PID),
+						dav.getDataModel().getAspect(this.getLzAspPid()))
+						: new DataDescription(dav.getDataModel().getAttributeGroup(ATG_PID),
+								dav.getDataModel().getAspect(this.getKzAspPid())),
 				SenderRole.source());
 
 		messQuerschnitt.addListener(this);
@@ -96,24 +91,22 @@ public class AbweichungNachbarn extends AbstraktAbweichung {
 	@Override
 	protected void aktualisiereMsgParameter(IMsgDatenartParameter parameter) {
 		this.abweichungMax = parameter.getMaxAbweichungMessStellenGruppe();
-		this.vergleichsIntervall = DUAUtensilien
-				.getVergleichsIntervallInText(parameter
-						.getVergleichsIntervall());
+		this.vergleichsIntervall = DUAUtensilien.getVergleichsIntervallInText(parameter.getVergleichsIntervall());
 	}
 
 	@Override
 	protected String getKzAspPid() {
-		return "asp.messQuerschnittDerMessStellenGruppeKurzZeit"; //$NON-NLS-1$
+		return "asp.messQuerschnittDerMessStellenGruppeKurzZeit";
 	}
 
 	@Override
 	protected String getLzAspPid() {
-		return "asp.messQuerschnittDerMessStellenGruppeLangZeit"; //$NON-NLS-1$
+		return "asp.messQuerschnittDerMessStellenGruppeLangZeit";
 	}
 
 	@Override
 	protected String getVergleichsIdentifikation() {
-		return "Vergleich mit Nachbarn"; //$NON-NLS-1$
+		return "Vergleich mit Nachbarn";
 	}
 
 }
