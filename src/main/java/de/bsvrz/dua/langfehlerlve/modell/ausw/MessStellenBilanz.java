@@ -28,7 +28,19 @@
 
 package de.bsvrz.dua.langfehlerlve.modell.ausw;
 
-import de.bsvrz.dav.daf.main.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.ClientSenderInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.dua.langfehlerlve.modell.FahrzeugArt;
 import de.bsvrz.dua.langfehlerlve.modell.Rechenwerk;
@@ -37,8 +49,6 @@ import de.bsvrz.dua.langfehlerlve.modell.online.IDELzFhDatum;
 import de.bsvrz.dua.langfehlerlve.modell.online.Intervall;
 import de.bsvrz.dua.langfehlerlve.modell.online.PublikationsKanal;
 import de.bsvrz.sys.funclib.debug.Debug;
-
-import java.util.*;
 
 /**
  * Diese Klasse fuehrt alle Berechnungen durch, die zur Fehlererkennung ueber
@@ -49,6 +59,8 @@ import java.util.*;
  */
 public class MessStellenBilanz implements ClientSenderInterface,
 		IDELzFhDatenListener {
+
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Untere Grenze des Attributtyps
@@ -198,7 +210,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * Initialisiert (loescht) den Online-Puffer dieser Klasse.
 	 */
 	private void initPuffer() {
-		Debug.getLogger().fine(
+		LOGGER.fine(
 				getInfo()
 						+ "Initialisiere Puffer fuer Messstelle ("
 						+ this.messStelle.getMessStelle().getSystemObject()
@@ -290,8 +302,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 					Intervall protoTyp = this.getPrototypischesPufferElement();
 
 					if (protoTyp == null) {
-						Debug
-								.getLogger()
+						LOGGER
 								.fine(
 										getInfo()
 												+ "Puffer (noch vollstaendig leer) wird fuer "
@@ -300,18 +311,17 @@ public class MessStellenBilanz implements ClientSenderInterface,
 												+ intervallDatum);
 						this.fillPuffer(objekt, intervallDatum);
 					} else {
-						Debug.getLogger().fine(
+						LOGGER.fine(
 								this.getInfo() + "Prototyp: " + protoTyp);
 						if (protoTyp.getStart() == intervallDatum.getStart()) {
-							Debug.getLogger().fine(
+							LOGGER.fine(
 									getInfo() + "Fuege neues Element ein:\n"
 											+ intervallDatum);
 							this.fillPuffer(objekt, intervallDatum);
 						} else {
 							this.initPuffer();
 							if (protoTyp.getStart() > intervallDatum.getStart()) {
-								Debug
-										.getLogger()
+								LOGGER
 										.warning(
 												getInfo()
 														+ "Veralteten Datensatz fuer " + //$NON-NLS-1$
@@ -329,8 +339,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 						this.initPuffer();
 					}
 				} catch (PufferException e) {
-					Debug
-							.getLogger()
+					LOGGER
 							.error(
 									getInfo()
 											+ "Intervallanfang kann nicht betimmt werden.",
@@ -357,7 +366,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 			this.puffer.put(objekt, intervallDatum);
 		}
 
-		Debug.getLogger().fine(getInfo() + debug + "\n" + this.toString());
+		LOGGER.fine(getInfo() + debug, this);
 	}
 
 	/**
@@ -400,11 +409,11 @@ public class MessStellenBilanz implements ClientSenderInterface,
 		SortedMap<Intervall, SystemObject> intervalleSortiert = new TreeMap<Intervall, SystemObject>(
 				INTERVALL_SORTIERER);
 		synchronized (this.puffer) {
-			for (SystemObject obj : this.puffer.keySet()) {
-				Intervall intervall = this.puffer.get(obj);
+			for (Entry<SystemObject,Intervall> entry : puffer.entrySet()) {
+				Intervall intervall = entry.getValue();
 				if (intervall != null && intervall.getDatum() != null
 						&& !intervall.getDatum().isKeineDaten()) {
-					intervalleSortiert.put(intervall, obj);
+					intervalleSortiert.put(intervall, entry.getKey());
 				}
 			}
 			if (intervalleSortiert.size() > 0) {
@@ -429,7 +438,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 	 * DUA-BW-C1C2-7 fuer alle zur Zeit im lokalen Puffer stehenden Daten.
 	 */
 	private void erzeugeErgebnis() {
-		Debug.getLogger().fine(
+		LOGGER.fine(
 				getInfo() + "Erzeuge VerkehrsStaerkeStundeBilanz fuer "
 						+ this.messStelle.getMessStelle().getPid());
 
@@ -489,7 +498,7 @@ public class MessStellenBilanz implements ClientSenderInterface,
 
 	public void aktualisiereDatum(SystemObject mqObjekt,
 			Intervall intervallDatum) {
-		Debug.getLogger().fine(
+		LOGGER.fine(
 				getInfo() + "Datum fuer " + mqObjekt + " empfangen:\n"
 						+ intervallDatum);
 		MessStellenBilanz.this.versucheBerechnung(mqObjekt, intervallDatum);

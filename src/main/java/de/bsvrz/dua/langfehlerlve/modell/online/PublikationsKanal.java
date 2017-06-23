@@ -43,6 +43,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class PublikationsKanal {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * statische Datenverteiler-Verbindung.
 	 */
@@ -85,10 +87,10 @@ public class PublikationsKanal {
 				}
 			}
 		} catch (DataNotSubscribedException e) {
-			Debug.getLogger().error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
+			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
 			e.printStackTrace();
 		} catch (SendSubscriptionNotConfirmed e) {
-			Debug.getLogger().error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
+			LOGGER.error("Datum kann nicht publiziert werden:\n" + resultat, e); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

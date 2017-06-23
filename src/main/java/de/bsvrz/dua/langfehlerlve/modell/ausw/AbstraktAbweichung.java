@@ -64,6 +64,8 @@ import java.util.*;
 public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 		ClientSenderInterface, IDELzFhDatenListener {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	private static final BetriebsmeldungIdKonverter KONVERTER = new DefaultBetriebsMeldungsIdKonverter();
 
 	/**
@@ -256,7 +258,7 @@ public abstract class AbstraktAbweichung extends AbstraktDELzFhObjekt implements
 					} else {
 						this.initPuffer();
 						if (pufferZeit > intervallDatum.getStart()) {
-							Debug.getLogger().warning(
+							LOGGER.warning(
 									"Veralteten Datensatz fuer " + //$NON-NLS-1$
 											objekt
 											+ " empfangen:\n" + intervallDatum); //$NON-NLS-1$
